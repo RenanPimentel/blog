@@ -47,12 +47,11 @@ router.route("/").post(async (req, res) => {
   try {
     const hashedPassword = await argon2.hash(password || "");
     const response = await pgClient.query(
-      "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING (id, password)",
+      "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id, password",
       [username, email, hashedPassword]
     );
 
     const user = response.rows[0];
-
     setCookie(res, "me", user);
     res.status(200).json({ user });
   } catch (err) {
