@@ -5,7 +5,10 @@ import { pgClient } from "../index";
 import { setCookie } from "../utils/setCookie";
 import { validateEmail } from "../utils/validateEmail";
 
-/* url: /login */
+/*
+  url: /login
+  response: { errors?: FieldError[], user?: Object }
+*/
 const router = Router();
 type LoginBody = { login?: string; password?: string };
 type FieldError = { field: "login" | "password"; reason: string };
@@ -17,7 +20,8 @@ router.route("/").post(async (req, res) => {
 
   if (!usernameOrEmail) {
     errors.push({ field: "login", reason: "Missing login" });
-  } else if (!password || password.length < 5) {
+  }
+  if (!password || password.length < 5) {
     errors.push({
       field: "password",
       reason: "Password must have at least 5 characters",

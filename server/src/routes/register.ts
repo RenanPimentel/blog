@@ -5,7 +5,10 @@ import { pgClient } from "../index";
 import { setCookie } from "../utils/setCookie";
 import { validateEmail } from "../utils/validateEmail";
 
-/* url: /register */
+/*
+  url: /register
+  response: { errors?: FieldError[], user?: Object }
+*/
 const router = Router();
 type RegisterBody = { username?: string; email?: string; password?: string };
 type FieldError = { field: "username" | "email" | "password"; reason: string };

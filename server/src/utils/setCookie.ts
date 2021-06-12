@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Response, CookieOptions } from "express";
 import { production } from "../constants";
 
 export function setCookie(res: Response, name: string, data: Object): void {
@@ -9,7 +9,7 @@ export function setCookie(res: Response, name: string, data: Object): void {
     encode: (val: string) => {
       return val;
     },
-  };
+  } as CookieOptions;
 
   res.cookie(name, data, cookieOptions);
 }
