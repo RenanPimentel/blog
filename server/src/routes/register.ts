@@ -1,13 +1,11 @@
-/*
-  url: /register
-*/
 import argon2 from "argon2";
 import { Router } from "express";
-import { setCookie } from "../utils/setCookie";
-import { pgClient } from "../index";
-import { validateEmail } from "../utils/validateEmail";
 import { errCodes } from "../constants";
+import { pgClient } from "../index";
+import { setCookie } from "../utils/setCookie";
+import { validateEmail } from "../utils/validateEmail";
 
+/* url: /register */
 const router = Router();
 type RegisterBody = { username?: string; email?: string; password?: string };
 type FieldError = { field: "username" | "email" | "password"; reason: string };
@@ -58,7 +56,10 @@ router.route("/").post(async (req, res) => {
     if (err.code in errCodes) {
       errCodes[err.code](res, err);
     } else {
-      res.status(500).json({ errors: ["Internal error"] });
+      console.log(err);
+      res
+        .status(500)
+        .json({ errors: [{ field: "server", reason: "Internal error" }] });
     }
   }
 });

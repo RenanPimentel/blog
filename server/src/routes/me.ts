@@ -1,9 +1,7 @@
-/*
-  url: /me
-*/
 import { Router } from "express";
 import { setCookie } from "../utils/setCookie";
 
+/* url: /me */
 const router = Router();
 
 router.get("/", (req, res) => {

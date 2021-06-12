@@ -1,10 +1,10 @@
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import express from "express";
 import { Client } from "pg";
-import meRouter from "./routes/me";
-import cookieParser from "cookie-parser";
-import registerRouter from "./routes/register";
 import loginRouter from "./routes/login";
+import meRouter from "./routes/me";
+import registerRouter from "./routes/register";
 dotenv.config({ path: "src/config/config.env" });
 
 const pgClient = new Client();
