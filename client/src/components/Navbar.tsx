@@ -16,6 +16,11 @@ function Navbar() {
             Me
           </Link>
         </li>
+        <li>
+          <Link className="link" to="/register">
+            Register
+          </Link>
+        </li>
       </ul>
       <ToggleDark />
     </nav>

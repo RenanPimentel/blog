@@ -2,25 +2,29 @@
 
 :root {
   --main-color: rgb(100, 0, 255);
-  --black: rgb(15, 20, 25);
-  --white: white;
+  --main-black: rgb(15, 20, 25);
+  --main-white: whitesmoke;
+  --pure-black: black;
+  --pure-white: white;
   --padding: 0.5rem 2rem;
 }
 
 #root {
   min-height: 100vh;
-  background: var(--white);
-  color: var(--black);
+  background: var(--main-white);
+  color: var(--main-black);
 }
 
 .dark {
-  --white: rgb(15, 20, 25);
-  --black: white;
+  --main-white: rgb(15, 20, 25);
+  --main-black: whitesmoke;
+  --pure-black: white;
+  --pure-white: black;
   transition: all 0.3s ease-out;
 }
 
 * {
-  color: var(--black);
+  color: var(--main-black);
 }
 
 body {
@@ -30,19 +34,48 @@ body {
   font-family: "Ubuntu", sans-serif;
 }
 
-a.btn {
+.btn {
   display: block;
   width: max-content;
   background: var(--main-color);
   color: white;
   text-decoration: none;
   padding: 0.5rem 0.75rem;
+  border: none;
   border-radius: 50px;
   transition: color 0.5s ease, transform 0.05s ease;
+  cursor: pointer;
 }
 
-a.btn:active {
+.btn:active {
   transform: scale(1.1);
+}
+
+.btn-large {
+  font-size: 17px;
+  padding: 0.75rem 1rem;
+}
+
+.form-container {
+  width: 50vw;
+  min-width: 250px;
+  height: 20rem;
+  margin: auto;
+}
+
+.form-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin-bottom: 1rem;
+}
+
+.form-control input {
+  font-size: 16px;
+  line-height: 2rem;
+  padding: 0 0.2rem;
+  background: var(--pure-white);
+  border: none;
 }
 
 .nav {
@@ -50,6 +83,7 @@ a.btn:active {
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
+  height: 50px;
   font-size: 23px;
   line-height: 35px;
   position: relative;
@@ -57,7 +91,7 @@ a.btn:active {
 
 .nav .link {
   display: block;
-  color: var(--black);
+  color: var(--main-black);
   text-decoration: none;
   font-weight: bolder;
   transition: color 0.3s ease;
@@ -83,7 +117,7 @@ a.btn:active {
   height: 60px;
   top: calc(95vh - 60px);
   left: calc(95vw - 60px);
-  background: var(--black);
+  background: var(--main-black);
   border-radius: 50%;
   cursor: pointer;
 }
@@ -97,11 +131,28 @@ a.btn:active {
 }
 
 .toggle-dark button svg {
-  fill: var(--white);
+  fill: var(--main-white);
   width: 35px;
   height: 35px;
 }
 
 .wrapper {
   padding: var(--padding);
+}
+
+.error {
+  color: red;
+  background: rgba(255, 0, 0, 0.1);
+  line-height: 30px;
+  padding: 0 0.2rem;
+}
+
+input.border-red {
+  border: 1px solid red;
+}
+
+@media (max-width: 350px) {
+  :root {
+    --padding: 0.25rem 0.5rem;
+  }
 }

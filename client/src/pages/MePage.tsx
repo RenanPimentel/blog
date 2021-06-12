@@ -1,7 +1,7 @@
 import React from "react";
 
 function MePage() {
-  return <div>Me Page</div>;
+  return <main className="wrapper">me page</main>;
 }
 
 export default MePage;
