@@ -1,15 +1,15 @@
 import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
-import MePage from "./pages/MePage";
-import UserPage from "./pages/UserPage";
 import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import MePostsUpdatePage from "./pages/MePostsUpdatePage";
+import MePage from "./pages/MePage";
 import MePostsCreatePage from "./pages/MePostsCreatePage";
 import MePostsPage from "./pages/MePostsPage";
+import MePostsUpdatePage from "./pages/MePostsUpdatePage";
+import RegisterPage from "./pages/RegisterPage";
+import UserPage from "./pages/UserPage";
 
 function App() {
   return (

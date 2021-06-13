@@ -1,13 +1,17 @@
 import axios from "axios";
 import React, { MutableRefObject, useRef, useState } from "react";
+import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 
+type DataError = { field: string; reason: string };
+
 function RegisterPage() {
+  const formEl: MutableRefObject<null | HTMLFormElement> = useRef(null);
   const history = useHistory();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const formEl: MutableRefObject<null | HTMLFormElement> = useRef(null);
+  const [cookies, setCookie] = useCookies(["cookie-name"]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,10 +22,9 @@ function RegisterPage() {
         password,
       });
       history.push("/me");
-      document.cookie = JSON.stringify(post.data);
+      setCookie("me", post.data.user);
     } catch (e) {
-      const errors: { field: string; reason: string }[] =
-        e.response.data.errors;
+      const errors: DataError[] = e.response.data.errors;
 
       errors.forEach(err => {
         const input = formEl.current?.querySelector(
