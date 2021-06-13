@@ -9,6 +9,8 @@ export function setCookie(res: Response, name: string, data: Object): void {
     encode: (val: string) => {
       return val;
     },
+    httpOnly: true,
+    path: "/",
   } as CookieOptions;
 
   res.cookie(name, data, cookieOptions);

@@ -2,7 +2,6 @@ import argon2 from "argon2";
 import { Router } from "express";
 import { errCodes } from "../constants";
 import { pgClient } from "../index";
-import { setCookie } from "../utils/setCookie";
 import { validateEmail } from "../utils/validateEmail";
 
 /*
@@ -57,7 +56,6 @@ router.route("/").post(async (req, res) => {
     );
 
     const user = response.rows[0];
-    setCookie(res, "me", user);
     res.status(200).json({ user });
   } catch (err) {
     if (err.code in errCodes) {

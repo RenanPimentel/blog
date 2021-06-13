@@ -1,21 +1,19 @@
 import React, { useEffect, useContext } from "react";
-import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
 import { MyContext } from "../context/context";
 import { api } from "../util/api";
 
 function MePage() {
-  const [cookies] = useCookies(["me"]);
-  const { setMe } = useContext(MyContext) as MainContext;
+  const { me, setMe } = useContext(MyContext) as MainContext;
 
   useEffect(() => {
     (async () => {
-      const me = await api.post("/me", { me: cookies.me });
-      setMe(me.data.user);
+      const response = await api.get("/me");
+      setMe(response.data.user);
     })();
   }, []);
 
-  if (!cookies.me) {
+  if (!me) {
     return (
       <main className="wrapper">
         <h1>You are not logged in!</h1>
@@ -29,7 +27,11 @@ function MePage() {
     );
   }
 
-  return <main className="wrapper"></main>;
+  return (
+    <main className="wrapper">
+      <h1>you are {me.username}</h1>
+    </main>
+  );
 }
 
 export default MePage;
