@@ -1,7 +1,8 @@
-import axios from "axios";
+/* eslint-disable no-restricted-globals */
 import React, { MutableRefObject, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
+import { api } from "../util/api";
 
 type DataError = { field: string; reason: string };
 
@@ -11,17 +12,14 @@ function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [cookies, setCookie] = useCookies(["cookie-name"]);
+  const [, setCookie] = useCookies(["me"]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const post = await axios.post("http://localhost:4000/register", {
-        username,
-        email,
-        password,
-      });
+      const post = await api.post("/register", { username, email, password });
       history.push("/me");
+      location.reload();
       setCookie("me", post.data.user);
     } catch (e) {
       const errors: DataError[] = e.response.data.errors;

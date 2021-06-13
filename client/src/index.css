@@ -147,6 +147,12 @@ body {
   padding: 0 0.2rem;
 }
 
+a.no-bg {
+  background: none;
+  padding: 0 !important;
+  margin-top: 1rem;
+}
+
 input.border-red {
   border: 1px solid red;
 }

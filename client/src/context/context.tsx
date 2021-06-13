@@ -1,9 +1,11 @@
 import React, { createContext, useReducer, ReactElement } from "react";
 import { reducer } from "./reducer";
 
-const MyContext = createContext({});
+const MyContext = createContext({} as MainContext);
 
-const defaultState = {};
+const defaultState = {
+  me: {},
+} as IState;
 
 interface Props {
   children: ReactElement;
@@ -12,7 +14,12 @@ interface Props {
 function MyContextProvider({ children }: Props) {
   const [state, dispatch] = useReducer(reducer, defaultState);
 
-  return <MyContext.Provider value={state}>{children}</MyContext.Provider>;
+  const setMe = (me: IMe) => {
+    dispatch({ type: "SET_ME", payload: me });
+  };
+
+  const value: MainContext = { setMe, ...state };
+  return <MyContext.Provider value={value}>{children}</MyContext.Provider>;
 }
 
-export default MyContextProvider;
+export { MyContextProvider, MyContext };

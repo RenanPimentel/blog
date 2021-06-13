@@ -1,7 +1,12 @@
-interface State {}
+interface Action {
+  type: string;
+  payload: any;
+}
 
-interface Action {}
+export function reducer(state: IState, action: Action): IState {
+  if (action.type === "SET_ME") {
+    return { ...state, me: action.payload };
+  }
 
-export function reducer(state: State, action: Action): State {
-  return state;
+  throw new Error("reducer couldn't find it");
 }
