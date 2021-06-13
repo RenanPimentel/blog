@@ -35,4 +35,19 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.post("/avatar", async (req, res) => {
+  try {
+    const response = await pgClient.query(
+      "UPDATE users SET avatar = $1 WHERE id = $2 AND password = $3 RETURNING *",
+      [req.body.avatar, req.cookies.me.id, req.cookies.me.password]
+    );
+
+    res.json({ user: response.rows[0] });
+  } catch (e) {
+    res
+      .status(500)
+      .json({ errors: [{ field: "server", reason: "Internal error" }] });
+  }
+});
+
 export default router;

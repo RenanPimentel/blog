@@ -1,12 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
 function ErrorPage() {
+  const history = useHistory();
+  const sendBack = () => {
+    history.goBack();
+  };
+
   return (
     <div className="wrapper">
       <h1>Page not found</h1>
-      <Link className="btn" to="/">
+      <button className="btn" onClick={sendBack}>
         Go Back
-      </Link>
+      </button>
     </div>
   );
 }

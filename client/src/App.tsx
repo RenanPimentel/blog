@@ -9,6 +9,7 @@ import MePostsCreatePage from "./pages/MePostsCreatePage";
 import MePostsPage from "./pages/MePostsPage";
 import MePostsUpdatePage from "./pages/MePostsUpdatePage";
 import RegisterPage from "./pages/RegisterPage";
+import SettingsPage from "./pages/SettingsPage";
 import UserPage from "./pages/UserPage";
 
 function App() {
@@ -39,6 +40,9 @@ function App() {
         </Route>
         <Route exact path="/users/:user_id">
           <UserPage />
+        </Route>
+        <Route exact path="/settings">
+          <SettingsPage />
         </Route>
         <Route path="*">
           <ErrorPage />

@@ -4,6 +4,9 @@ interface IMe {
   password?: string;
   username?: string;
   email?: string;
+  avatar?: string;
+  banner?: string;
+  last_login?: string;
 }
 
 interface IState {
@@ -11,6 +14,8 @@ interface IState {
 }
 
 interface MainContext {
+  defaultAvatar: string;
   me: IMe;
+  logout(): void;
   setMe(me: IMe): void;
 }

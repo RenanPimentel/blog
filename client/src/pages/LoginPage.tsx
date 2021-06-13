@@ -10,7 +10,7 @@ type DataError = { field: string; reason: string };
 
 function LoginPage() {
   const formEl: MutableRefObject<null | HTMLFormElement> = useRef(null);
-  const { me, setMe } = useContext(MyContext) as MainContext;
+  const { me } = useContext(MyContext) as MainContext;
   const history = useHistory();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
