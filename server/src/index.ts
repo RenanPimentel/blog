@@ -21,7 +21,7 @@ app.use("/login", loginRouter);
 
 app.listen(4000, async () => {
   await pgClient.connect();
-  console.log("ready at http://localhost:4000");
+  console.log("ready at port 4000");
 });
 
 export { pgClient };

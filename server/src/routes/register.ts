@@ -32,7 +32,12 @@ router.route("/").post(async (req, res) => {
       reason: "Password must have at least 5 characters",
     });
   }
-  if (!/[a-z]|[A-Z]|[0-9]|_|-|\!|\?/.test(username || "abc")) {
+
+  if (
+    !username
+      ?.split("")
+      .every(letter => /[a-z]|[A-Z]|[0-9]|_|\!|\?/.test(letter))
+  ) {
     errors.push({
       field: "username",
       reason: "Invalid characters in username",

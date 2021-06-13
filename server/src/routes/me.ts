@@ -9,15 +9,18 @@ import { setCookie } from "../utils/setCookie";
 */
 const router = Router();
 
-router.get("/", async (req, res) => {
-  if (req.cookies.me) {
-    setCookie(res, "me", req.cookies.me);
+router.post("/", async (req, res) => {
+  if (req.body.me) {
+    setCookie(res, "me", req.body.me);
   } else {
     res.send(null);
+
     return;
   }
 
-  const { id, password }: { [key: string]: string } = req.cookies.me;
+  type Obj = { [key: string]: string };
+
+  const { id, password }: Obj = req.body.me;
 
   try {
     const response = await pgClient.query(

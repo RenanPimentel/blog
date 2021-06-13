@@ -43,7 +43,7 @@ router.route("/").post(async (req, res) => {
     if (!user) {
       res
         .status(400)
-        .json({ errors: [{ field: "login", reason: "Invalid login" }] });
+        .json({ errors: [{ field: "login", reason: "Login not valid" }] });
       return;
     }
 
