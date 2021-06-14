@@ -8,28 +8,36 @@ function NavUser() {
   return (
     <div className="nav-user">
       <div className="profile-container">
-        <Link to="/me" className="profile-picture">
+        <div className="profile-picture">
           <img src={me.avatar || defaultAvatar} alt="your profile" />
-        </Link>
-        <div className="profile-settings">
-          <li>
-            <Link to="/me/posts" className="link">
-              My posts
-            </Link>
-            <div className="line"></div>
-          </li>
-          <li>
-            <Link to="/settings" className="link">
-              Settings
-            </Link>
-            <div className="line"></div>
-          </li>
-          <li>
-            <span onClick={logout} className="link">
-              Logout
-            </span>
-            <div className="line"></div>
-          </li>
+        </div>
+        <div className="container-wrapper">
+          <div className="profile-settings">
+            <li>
+              <Link to="/me" className="link">
+                Me
+              </Link>
+              <div className="line"></div>
+            </li>
+            <li>
+              <Link to="/me/posts" className="link">
+                My posts
+              </Link>
+              <div className="line"></div>
+            </li>
+            <li>
+              <Link to="/settings" className="link">
+                Settings
+              </Link>
+              <div className="line"></div>
+            </li>
+            <li>
+              <span onClick={logout} className="link">
+                Logout
+              </span>
+              <div className="line"></div>
+            </li>
+          </div>
         </div>
       </div>
     </div>
