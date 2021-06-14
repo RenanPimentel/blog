@@ -129,13 +129,12 @@ body {
   top: calc(95vh - 60px);
   left: calc(95vw - 60px);
   background: var(--main-bg);
-  border-radius: 50%;
+  border-radius: 20px;
   cursor: pointer;
-  transition: background 0.3s ease;
 }
 
-.toggle-dark:hover {
-  background: var(--main-color);
+.toggle-dark:hover svg {
+  fill: var(--main-color);
 }
 
 .toggle-dark button {
@@ -150,6 +149,7 @@ body {
   fill: var(--main-fcolor);
   width: 35px;
   height: 35px;
+  transition: fill 0.3s ease;
 }
 
 .wrapper {
@@ -177,7 +177,7 @@ input.border-red {
 .url-settings {
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   gap: 1rem;
 }
 

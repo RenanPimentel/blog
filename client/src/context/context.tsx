@@ -1,10 +1,9 @@
 /* eslint-disable no-restricted-globals */
 import React, { createContext, useReducer, ReactElement } from "react";
-import { useHistory } from "react-router-dom";
 import { api } from "../util/api";
 import { reducer } from "./reducer";
 
-const MyContext = createContext({} as MainContext);
+const MainContext = createContext({} as MainContext);
 
 const defaultState = {
   me: {},
@@ -35,7 +34,7 @@ function MyContextProvider({ children }: Props) {
     setMe,
     ...state,
   };
-  return <MyContext.Provider value={value}>{children}</MyContext.Provider>;
+  return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 }
 
-export { MyContextProvider, MyContext };
+export { MyContextProvider, MainContext };

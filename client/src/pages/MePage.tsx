@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { MyContext } from "../context/context";
+import { MainContext } from "../context/context";
 
 function MePage() {
-  const { me } = useContext(MyContext) as MainContext;
+  const { me } = useContext(MainContext) as MainContext;
 
   if (!me) {
     return (

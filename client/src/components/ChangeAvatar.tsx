@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { MyContext } from "../context/context";
+import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function ChangeAvatar() {
-  const context = useContext(MyContext);
+  const context = useContext(MainContext);
   const [avatar, setAvatar] = useState(
     context.me.avatar || context.defaultAvatar
   );
@@ -13,27 +13,24 @@ function ChangeAvatar() {
   const setProfilePicture = async () => {
     const post = await api.post("/me/avatar", { avatar });
     context.setMe(post.data.user);
-    console.log(post.data.user);
   };
 
   useEffect(() => {
     setAvatar(context.me.avatar || context.defaultAvatar);
-    console.log(context.me.avatar);
+    setPreview(context.me.avatar || "");
   }, [context.defaultAvatar, context.me]);
 
   useEffect(() => {
     (async () => {
       try {
-        const blob = await (await fetch(preview)).blob();
+        const response = await fetch(preview);
+        const blob = await response.blob();
         if (blob.size > 100_000) {
           setError("Select a smaller image");
-          setTimeout(() => {
-            setError("");
-          }, 3000);
+          setTimeout(() => setError(""), 3000);
           setAvatar(context.defaultAvatar);
         } else if (blob.type.startsWith("image/")) {
           setAvatar(preview);
-          console.log(blob);
         } else {
           setAvatar(context.defaultAvatar);
         }
@@ -63,11 +60,7 @@ function ChangeAvatar() {
             value={preview}
           />
         </div>
-        {error ? (
-          <span className="error btn-large">{error}</span>
-        ) : (
-          <span></span>
-        )}
+        {error && <span className="error btn-large">{error}</span>}
         {avatar === context.defaultAvatar ? (
           <button title="missing image" disabled className="btn btn-large">
             Set

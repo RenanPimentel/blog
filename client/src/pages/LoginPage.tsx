@@ -3,14 +3,14 @@ import React, { MutableRefObject, useRef, useState } from "react";
 import { useContext } from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { MyContext } from "../context/context";
+import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 type DataError = { field: string; reason: string };
 
 function LoginPage() {
   const formEl: MutableRefObject<null | HTMLFormElement> = useRef(null);
-  const { me } = useContext(MyContext) as MainContext;
+  const { me } = useContext(MainContext) as MainContext;
   const history = useHistory();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");

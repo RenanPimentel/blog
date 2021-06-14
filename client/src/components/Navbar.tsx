@@ -2,17 +2,17 @@
 import React, { useEffect } from "react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { MyContext } from "../context/context";
+import { MainContext } from "../context/context";
 import { api } from "../util/api";
 import NavUser from "./NavUser";
 import ToggleDark from "./ToggleDark";
 
 function Navbar() {
-  const context = useContext(MyContext) as MainContext;
+  const { setMe, me } = useContext(MainContext) as MainContext;
 
   useEffect(() => {
     api.get("/me").then(response => {
-      context.setMe(response.data.user);
+      setMe(response.data.user);
     });
   }, []);
 
@@ -24,7 +24,7 @@ function Navbar() {
             Home
           </Link>
         </li>
-        {context.me?.id ? (
+        {me?.id ? (
           <NavUser />
         ) : (
           <>
