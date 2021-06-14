@@ -15,7 +15,10 @@ interface IState {
 
 interface MainContext {
   defaultAvatar: string;
+  defaultBanner: string;
   me: IMe;
   logout(): void;
   setMe(me: IMe): void;
 }
+
+type FieldError = { field: string; reason: string };

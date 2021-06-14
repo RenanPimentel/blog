@@ -28,8 +28,12 @@ function MyContextProvider({ children }: Props) {
   const defaultAvatar: string =
     "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ficon-library.com%2Fimages%2Fdefault-profile-icon%2Fdefault-profile-icon-16.jpg&f=1&nofb=1";
 
+  const defaultBanner: string =
+    "https://images.unsplash.com/photo-1622988869811-a4f3d3fe5441?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80";
+
   const value: MainContext = {
     defaultAvatar,
+    defaultBanner,
     logout,
     setMe,
     ...state,

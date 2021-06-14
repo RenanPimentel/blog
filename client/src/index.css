@@ -174,14 +174,14 @@ input.border-red {
   border: 1px solid red;
 }
 
-.url-settings {
+.settings {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
 }
 
-.url-settings input {
+.settings input {
   font-size: 16px;
   line-height: 2rem;
   padding: 0 0.2rem;
@@ -192,6 +192,7 @@ input.border-red {
 .border-left {
   border-left: 1px solid var(--main-color);
   padding-left: 1rem;
+  margin-bottom: 3rem;
 }
 
 .drag-and-drop {
@@ -255,6 +256,19 @@ input.border-red {
 
 .profile-settings li:hover .line {
   max-width: 100%;
+}
+
+.profile-banner {
+  position: relative;
+  width: 600px;
+  height: 100px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.profile-banner img {
+  position: absolute;
 }
 
 .line {

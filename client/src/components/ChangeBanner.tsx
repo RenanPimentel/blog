@@ -2,23 +2,24 @@ import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
-function ChangeAvatar() {
+function ChangeBanner() {
   const context = useContext(MainContext);
-  const [avatar, setAvatar] = useState(
-    context.me?.avatar || context.defaultAvatar
+  const [banner, setBanner] = useState(
+    context.me?.banner || context.defaultBanner
   );
-  const [preview, setPreview] = useState(context.me?.avatar || "");
+  const [preview, setPreview] = useState(context.me?.banner || "");
   const [error, setError] = useState("");
 
-  const setProfilePicture = async () => {
-    const response = await api.post("/me/avatar", { avatar });
+  const setProfileBanner = async () => {
+    const response = await api.post("/me/banner", { banner });
+    console.log(response.data);
     context.setMe(response.data.user);
   };
 
   useEffect(() => {
-    setAvatar(context.me?.avatar || context.defaultAvatar);
-    setPreview(context.me?.avatar || "");
-  }, [context.defaultAvatar, context.me]);
+    setBanner(context.me?.banner || context.defaultBanner);
+    setPreview(context.me?.banner || "");
+  }, [context.defaultBanner, context.me]);
 
   useEffect(() => {
     (async () => {
@@ -28,25 +29,25 @@ function ChangeAvatar() {
         if (blob.size > 100_000) {
           setError("Select a smaller image");
           setTimeout(() => setError(""), 3000);
-          setAvatar(context.defaultAvatar);
+          setBanner(context.defaultBanner);
         } else if (blob.type.startsWith("image/")) {
-          setAvatar(preview);
+          setBanner(preview);
         } else {
-          setAvatar(context.defaultAvatar);
+          setBanner(context.defaultBanner);
         }
       } catch (e) {
-        setAvatar(context.defaultAvatar);
+        setBanner(context.defaultBanner);
       }
     })();
-  }, [context.defaultAvatar, preview]);
+  }, [context.defaultBanner, preview]);
 
   return (
     <div>
-      <h2>Change your avatar</h2>
+      <h2>Change your banner</h2>
       <div className="border-left">
         <h3>Preview</h3>
-        <div className="profile-picture pic-large">
-          <img src={avatar} alt="your profile" />
+        <div className="profile-banner">
+          <img src={banner} alt="your banner" />
         </div>
         <div className="settings">
           <h4>
@@ -55,18 +56,18 @@ function ChangeAvatar() {
           <input
             type="text"
             id="url"
-            placeholder="https://images.unsplash.com/photo-1602694866292-c0597a4452b2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+            placeholder="https://images.unsplash.com/photo-1622988869811-a4f3d3fe5441?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
             onChange={e => setPreview(e.target.value)}
             value={preview}
           />
         </div>
         {error && <span className="error btn-large">{error}</span>}
-        {avatar === context.defaultAvatar || avatar === context.me?.avatar ? (
+        {banner === context.defaultBanner || banner === context.me?.banner ? (
           <button title="missing image" disabled className="btn btn-large">
             Set
           </button>
         ) : (
-          <button onClick={setProfilePicture} className="btn btn-large">
+          <button onClick={setProfileBanner} className="btn btn-large">
             Set
           </button>
         )}
@@ -75,4 +76,4 @@ function ChangeAvatar() {
   );
 }
 
-export default ChangeAvatar;
+export default ChangeBanner;

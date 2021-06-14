@@ -1,5 +1,6 @@
 import argon2 from "argon2";
 import { Router } from "express";
+import { validateName } from "../utils/validateName";
 import { errCodes } from "../constants";
 import { pgClient } from "../index";
 import { validateEmail } from "../utils/validateEmail";
@@ -32,15 +33,9 @@ router.route("/").post(async (req, res) => {
     });
   }
 
-  if (
-    !username
-      ?.split("")
-      .every(letter => /[a-z]|[A-Z]|[0-9]|_|\!|\?/.test(letter))
-  ) {
-    errors.push({
-      field: "username",
-      reason: "Invalid characters in username",
-    });
+  const invalidUsername = validateName(username);
+  if (invalidUsername) {
+    errors.push(invalidUsername);
   }
 
   if (errors.length > 0) {

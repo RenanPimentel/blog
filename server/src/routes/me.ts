@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { validateName } from "../utils/validateName";
 import { errCodes } from "../constants";
 import { pgClient } from "../index";
 
@@ -47,6 +48,43 @@ router.post("/avatar", async (req, res) => {
     res
       .status(500)
       .json({ errors: [{ field: "server", reason: "Internal error" }] });
+  }
+});
+
+router.post("/banner", async (req, res) => {
+  try {
+    const response = await pgClient.query(
+      "UPDATE users SET banner = $1 WHERE id = $2 AND password = $3 RETURNING *",
+      [req.body.banner, req.cookies.me.id, req.cookies.me.password]
+    );
+
+    res.json({ user: response.rows[0] });
+  } catch (e) {
+    res
+      .status(500)
+      .json({ errors: [{ field: "server", reason: "Internal error" }] });
+  }
+});
+
+router.post("/username", async (req, res) => {
+  try {
+    const usernameError = validateName(req.body.username);
+
+    if (usernameError) {
+      res.status(400).json({ errors: [usernameError] });
+      return;
+    }
+
+    const response = await pgClient.query(
+      "UPDATE users SET username = $1 WHERE id = $2 AND password = $3 RETURNING *",
+      [req.body.username, req.cookies.me.id, req.cookies.me.password]
+    );
+
+    res.json({ user: response.rows[0] });
+  } catch (e) {
+    res.status(500).json({
+      errors: [{ field: "server", reason: "Username already in use" }],
+    });
   }
 });
 
