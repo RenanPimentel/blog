@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.resolve("../client/build")));
 }
 
-app.listen(4000, async () => {
+app.listen(process.env.PORT, async () => {
   await pgClient.connect();
   console.log("ready at port 4000");
 });
