@@ -25,6 +25,11 @@ function MyContextProvider({ children }: Props) {
     dispatch({ type: "SET_ME", payload: me });
   };
 
+  const setMyPosts = async (id?: string) => {
+    const response = await api.get(`/posts/${id}`);
+    dispatch({ type: "SET_MY_POSTS", payload: response.data.posts });
+  };
+
   const defaultAvatar: string =
     "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ficon-library.com%2Fimages%2Fdefault-profile-icon%2Fdefault-profile-icon-16.jpg&f=1&nofb=1";
 
@@ -36,6 +41,7 @@ function MyContextProvider({ children }: Props) {
     defaultBanner,
     logout,
     setMe,
+    setMyPosts,
     ...state,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
