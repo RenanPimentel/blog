@@ -7,7 +7,7 @@ const router = Router();
 
 router.route("/").get(async (_, res) => {
   res.clearCookie("me");
-  res.json({ status: "success" });
+  res.status(201).json({});
 });
 
 export default router;

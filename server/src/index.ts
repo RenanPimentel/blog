@@ -1,4 +1,5 @@
 import cookieParser from "cookie-parser";
+import path from "path";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
@@ -22,10 +23,20 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-app.use("/me", meRouter);
-app.use("/register", registerRouter);
-app.use("/login", loginRouter);
-app.use("/logout", logoutRouter);
+app.use("/api/v1/me", meRouter);
+app.use("/api/v1/register", registerRouter);
+app.use("/api/v1/login", loginRouter);
+app.use("/api/v1/logout", logoutRouter);
+
+if (process.env.NODE_ENV === "production") {
+  app.get("/", (_, res) => {
+    res.sendFile(
+      path.join(__dirname, "..", "..", "client", "build", "index.html")
+    );
+  });
+
+  app.use(express.static(path.resolve("../client/build")));
+}
 
 app.listen(4000, async () => {
   await pgClient.connect();
