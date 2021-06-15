@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/RenanPimentel/blog#readme",
   "dependencies": {
-    "sequelize": "^6.6.2"
+    "sequelize": "^6.6.2",
+    "sequelize-cli": "^6.2.0"
   }
 }
