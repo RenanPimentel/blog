@@ -31,13 +31,25 @@ function MyContextProvider({ children }: Props) {
     }
   }, []);
 
-  const setMe = (me: IMe) => {
+  const setMe: MainContext["setMe"] = me => {
     dispatch({ type: "SET_ME", payload: me });
   };
 
-  const setMyPosts = async (id?: string) => {
+  const setMyPosts: MainContext["setMyPosts"] = async id => {
     const response = await api.get(`/posts/users/${id}`);
     dispatch({ type: "SET_MY_POSTS", payload: response.data.data.posts });
+  };
+
+  const removeMyPost: MainContext["removeMyPost"] = id => {
+    dispatch({ type: "REMOVE_MY_POST", payload: id });
+  };
+
+  const updateMyPost: MainContext["updateMyPost"] = (id, post) => {
+    dispatch({ type: "UPDATE_MY_POST", payload: { id, post } });
+  };
+
+  const addMyPost: MainContext["addMyPost"] = post => {
+    dispatch({ type: "ADD_MY_POST", payload: post });
   };
 
   const defaultAvatar: string =
@@ -53,6 +65,9 @@ function MyContextProvider({ children }: Props) {
     getMe,
     setMyPosts,
     setMe,
+    removeMyPost,
+    addMyPost,
+    updateMyPost,
     ...state,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import PostForm from "../components/PostForm";
+import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function MePostsUpdatePage() {
@@ -11,6 +12,7 @@ function MePostsUpdatePage() {
   const [singlePost, setSinglePost] = useState<IPost>({});
   const { post_id } = useParams() as { post_id: string };
   const history = useHistory();
+  const { updateMyPost } = useContext(MainContext);
 
   useEffect(() => {
     api.get(`/posts/${post_id}`).then(res => setSinglePost(res.data.data.post));
@@ -30,7 +32,9 @@ function MePostsUpdatePage() {
         content,
         topic,
       });
+
       history.push("/me/posts");
+      updateMyPost(post_id, { title, content, topic });
     } catch (err) {
       if (err.response.data?.errors) {
         setError(err.response.data.errors.join(", "));

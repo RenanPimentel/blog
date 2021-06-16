@@ -32,7 +32,10 @@ interface MainContext {
   logout(): void;
   getMe(): void;
   setMe(me: IMe): void;
+  removeMyPost(id?: string): void;
   setMyPosts(id?: string): void;
+  updateMyPost(id?: string, post: { title; content; topic }): void;
+  addMyPost(post: IPost): void;
 }
 
 type FieldError = { field: string; reason: string };

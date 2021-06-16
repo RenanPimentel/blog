@@ -6,20 +6,22 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function MePostsCreate() {
-  const context = useContext(MainContext);
+  const { me, addMyPost } = useContext(MainContext);
   const history = useHistory();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [topic, setTopic] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    api.post("/posts", {
-      user_id: context.me.id,
-      user_password: context.me.password,
+    const response = await api.post("/posts", {
+      user_id: me.id,
+      user_password: me.password,
       post: { title, content, topic },
     });
+
+    addMyPost(response.data.data.post);
     history.push("/me/posts");
   };
 

@@ -2,8 +2,8 @@
 
 :root {
   --main-color: rgb(100, 0, 255);
-  --main-bg: rgb(15, 20, 25);
-  --main-fcolor: whitesmoke;
+  --main-fcolor: rgb(15, 20, 25);
+  --main-bg: whitesmoke;
   --pure-bg: black;
   --pure-fcolor: white;
   --padding: 0.5rem 2rem;
@@ -11,20 +11,20 @@
 
 #root {
   min-height: 100vh;
-  background: var(--main-fcolor);
-  color: var(--main-bg);
+  background: var(--main-bg);
+  color: var(--main-fcolor);
 }
 
 .dark {
-  --main-fcolor: rgb(15, 20, 25);
-  --main-bg: whitesmoke;
+  --main-bg: rgb(15, 20, 25);
+  --main-fcolor: whitesmoke;
   --pure-bg: white;
   --pure-fcolor: black;
   transition: all 0.3s ease-out;
 }
 
 * {
-  color: var(--main-bg);
+  color: var(--main-fcolor);
 }
 
 body {
@@ -91,7 +91,7 @@ body {
 }
 
 textarea {
-  background: var(--main-fcolor);
+  background: var(--main-bg);
 }
 
 .nav {
@@ -107,10 +107,11 @@ textarea {
 
 .link {
   display: block;
-  color: var(--main-bg);
+  color: var(--main-fcolor);
   text-decoration: none;
   font-weight: bolder;
   background: none;
+  border: none;
   cursor: pointer;
   transition: color 0.3s ease;
 }
@@ -136,7 +137,7 @@ textarea {
   height: 60px;
   top: calc(95vh - 60px);
   left: calc(95vw - 60px);
-  background: var(--main-bg);
+  background: var(--main-fcolor);
   border-radius: 20px;
   cursor: pointer;
   z-index: 10;
@@ -155,7 +156,7 @@ textarea {
 }
 
 .toggle-dark button svg {
-  fill: var(--main-fcolor);
+  fill: var(--main-bg);
   width: 35px;
   height: 35px;
   transition: fill 0.3s ease;
@@ -175,7 +176,7 @@ textarea {
 a.no-bg {
   background: none;
   padding: 0 !important;
-  color: var(--main-bg);
+  color: var(--main-fcolor);
   margin-top: 1rem;
 }
 
@@ -244,7 +245,7 @@ input.border-red {
 
 .profile-container .profile-settings {
   list-style: none;
-  background: var(--main-fcolor);
+  background: var(--main-bg);
   box-shadow: 0 0 14px -7px black;
   border-radius: 20px;
   padding: 1rem 2rem;
@@ -298,6 +299,58 @@ input.border-red {
   width: 100%;
   max-width: 20%;
   transition: all 0.3s ease;
+}
+
+table,
+tr {
+  border: 1px solid var(--main-fcolor);
+  border-collapse: collapse;
+}
+
+.posts-table {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  border-collapse: collapse;
+}
+
+.posts-table tr {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  place-items: flex-start;
+  align-items: center;
+  height: 2rem;
+}
+
+.edit-delete {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 3vw;
+}
+
+.color {
+  color: var(--main-color);
+}
+
+.color:hover {
+  color: var(--main-fcolor);
+}
+
+.overflow p {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 30vw;
+  margin: 0;
+}
+
+.posts-table thead tr {
+  background: var(--pure-fcolor);
+}
+
+.posts-table tr:nth-child(even) {
+  background: var(--pure-fcolor);
 }
 
 @media (max-width: 350px) {

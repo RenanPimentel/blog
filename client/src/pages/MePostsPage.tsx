@@ -9,9 +9,11 @@ function MePostsPage() {
 
   useEffect(() => {
     if (context.me.id) {
-      context.setMyPosts(context.me.id);
+      if (!context.me.myPosts) {
+        context.setMyPosts(context.me.id);
+      }
     }
-  }, [context.me.id]);
+  }, [context]);
 
   if (!context.me.myPosts) {
     return <div>Loading...</div>;
@@ -19,7 +21,7 @@ function MePostsPage() {
 
   return (
     <main className="wrapper">
-      <Link className="link large" to="/me/posts/create">
+      <Link className="link large color" to="/me/posts/create">
         Upload Post
       </Link>
       <h1>Your posts</h1>

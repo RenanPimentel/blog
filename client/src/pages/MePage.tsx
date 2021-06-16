@@ -5,7 +5,7 @@ import { MainContext } from "../context/context";
 function MePage() {
   const { me } = useContext(MainContext) as MainContext;
 
-  if (!me) {
+  if (!me.id) {
     return (
       <main className="wrapper">
         <h1>You are not logged in!</h1>

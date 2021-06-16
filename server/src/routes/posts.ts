@@ -78,6 +78,33 @@ router.get("/:post_id", async (req, res) => {
   }
 });
 
+router.delete("/:post_id", async (req, res) => {
+  const { post_id } = req.params;
+  const { id, password } = req.cookies.me;
+
+  try {
+    const passwordResponse = await db.query(
+      "SELECT password FROM users WHERE id = $1",
+      [id]
+    );
+
+    const userActualPassword = passwordResponse.rows[0].password;
+
+    if (password !== userActualPassword) {
+      res.status(400).json({
+        data: null,
+        errors: [{ field: "password", reason: "incorrect password" }],
+      } as MyResponse);
+    }
+
+    await db.query("DELETE FROM posts WHERE id = $1", [post_id]);
+
+    res.status(204).send({});
+  } catch (err) {
+    handleErr(res, err);
+  }
+});
+
 router.put("/:post_id", async (req, res) => {
   const { post_id } = req.params;
   const { title, content, topic } = req.body;
