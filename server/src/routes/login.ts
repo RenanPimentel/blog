@@ -1,9 +1,9 @@
 import argon2 from "argon2";
 import { Router } from "express";
-import { errCodes } from "../constants";
 import { db } from "../index";
 import { setCookie } from "../utils/setCookie";
 import { isEmail } from "../utils/isEmail";
+import { handleErr } from "../utils/handleErr";
 
 const router = Router();
 
@@ -59,14 +59,7 @@ router.post("/", async (req, res) => {
 
     res.status(200).json({ data: { user }, errors: null } as MyResponse);
   } catch (err) {
-    if (err.code in errCodes) {
-      errCodes[err.code](res, err);
-    } else {
-      console.log(err);
-      res.status(500).json({
-        errors: [{ reason: `Unknown error ${err.code}` }],
-      } as MyResponse);
-    }
+    handleErr(res, err);
   }
 });
 

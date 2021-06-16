@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { errCodes } from "../constants";
+import { handleErr } from "../utils/handleErr";
 import { db } from "../index";
 import { getReadTime } from "../utils/getReadTime";
 
@@ -56,15 +56,40 @@ router.post("/", async (req, res) => {
       .status(201)
       .json({ data: { post: response.rows[0] }, errors: null } as MyResponse);
   } catch (err) {
-    if (err.code in errCodes) {
-      errCodes[err.code](res, err);
-      return;
-    }
-    console.log(err);
-    res.status(400).json({
-      errors: [{ reason: `Unknown error ${err.code}` }],
-      data: null,
-    } as MyResponse);
+    handleErr(res, err);
+  }
+});
+
+router.get("/:post_id", async (req, res) => {
+  const { post_id } = req.params;
+
+  try {
+    const response = await db.query("SELECT * FROM posts WHERE id = $1", [
+      post_id,
+    ]);
+    await db.query(
+      "UPDATE posts SET view_count = view_count + 1 WHERE id = $1",
+      [post_id]
+    );
+    const post = response.rows[0];
+    res.json({ errors: null, data: { post } } as MyResponse);
+  } catch (err) {
+    handleErr(res, err);
+  }
+});
+
+router.put("/:post_id", async (req, res) => {
+  const { post_id } = req.params;
+  const { title, content, topic } = req.body;
+
+  try {
+    await db.query(
+      "UPDATE posts SET updated_at = NOW() title = $1 content = $2, topic = $3 WHERE id = $4",
+      [title, content, topic, post_id]
+    );
+    res.status(204).send({});
+  } catch (err) {
+    handleErr(res, err);
   }
 });
 
@@ -78,15 +103,7 @@ router.get("/users/:user_id", async (req, res) => {
 
     res.json({ data: { posts: response.rows }, errors: null } as MyResponse);
   } catch (err) {
-    if (err.code in errCodes) {
-      errCodes[err.code](res, err);
-      return;
-    }
-    console.log(err);
-    res.status(400).json({
-      errors: [{ reason: `Unknown error ${err.code}` }],
-      data: null,
-    } as MyResponse);
+    handleErr(res, err);
   }
 });
 

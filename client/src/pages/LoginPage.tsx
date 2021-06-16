@@ -16,7 +16,7 @@ function LoginPage() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    if (me) {
+    if (me.id) {
       history.push("/me");
     }
   }, [history, me]);

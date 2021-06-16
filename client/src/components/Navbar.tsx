@@ -12,7 +12,7 @@ function Navbar() {
 
   useEffect(() => {
     api.get("/me").then(response => {
-      setMe(response.data.user);
+      setMe(response.data.data.user);
     });
   }, []);
 

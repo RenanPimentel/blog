@@ -26,8 +26,9 @@ function MyContextProvider({ children }: Props) {
   };
 
   const setMyPosts = async (id?: string) => {
-    const response = await api.get(`/posts/${id}`);
-    dispatch({ type: "SET_MY_POSTS", payload: response.data.posts });
+    const response = await api.get(`/posts/users/${id}`);
+    console.log(response.data);
+    dispatch({ type: "SET_MY_POSTS", payload: response.data.data.posts });
   };
 
   const defaultAvatar: string =

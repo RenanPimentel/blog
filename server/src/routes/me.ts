@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validateName } from "../utils/validateName";
-import { errCodes } from "../constants";
 import { db } from "../index";
+import { handleErr } from "../utils/handleErr";
 
 const router = Router();
 
@@ -27,15 +27,7 @@ router.get("/", async (req, res) => {
 
     res.json({ data: { user }, errors: null } as MyResponse);
   } catch (err) {
-    if (err.code in errCodes) {
-      errCodes[err.code](res, err);
-      return;
-    }
-    console.log(err);
-    res.status(400).json({
-      errors: [{ reason: `Unknown error ${err.code}` }],
-      data: null,
-    } as MyResponse);
+    handleErr(res, err);
   }
 });
 
@@ -49,15 +41,7 @@ router.post("/avatar", async (req, res) => {
 
     res.json({ data: { user: response.rows[0] }, errors: null } as MyResponse);
   } catch (err) {
-    if (err.code in errCodes) {
-      errCodes[err.code](res, err);
-      return;
-    }
-    console.log(err);
-    res.status(400).json({
-      errors: [{ reason: `Unknown error ${err.code}` }],
-      data: null,
-    } as MyResponse);
+    handleErr(res, err);
   }
 });
 
@@ -70,15 +54,7 @@ router.post("/banner", async (req, res) => {
 
     res.json({ data: { user: response.rows[0] }, errors: null } as MyResponse);
   } catch (err) {
-    if (err.code in errCodes) {
-      errCodes[err.code](res, err);
-      return;
-    }
-    console.log(err);
-    res.status(400).json({
-      errors: [{ reason: `Unknown error ${err.code}` }],
-      data: null,
-    } as MyResponse);
+    handleErr(res, err);
   }
 });
 
@@ -99,15 +75,7 @@ router.post("/username", async (req, res) => {
 
     res.json({ data: { user: response.rows[0] }, errors: null } as MyResponse);
   } catch (err) {
-    if (err.code in errCodes) {
-      errCodes[err.code](res, err);
-      return;
-    }
-    console.log(err);
-    res.status(400).json({
-      errors: [{ reason: `Unknown error ${err.code}` }],
-      data: null,
-    } as MyResponse);
+    handleErr(res, err);
   }
 });
 
