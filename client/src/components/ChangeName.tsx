@@ -16,8 +16,7 @@ function ChangeName() {
       const response = await api.post("/me/username", {
         username: changingName,
       });
-      console.log(response.data);
-      context.setMe(response.data.user);
+      context.setMe(response.data.data.user);
     } catch (err) {
       setError(
         err.response.data.errors.map((e: FieldError) => e.reason).join(", ")

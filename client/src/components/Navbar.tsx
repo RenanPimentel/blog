@@ -3,18 +3,15 @@ import React, { useEffect } from "react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
-import { api } from "../util/api";
 import NavUser from "./NavUser";
 import ToggleDark from "./ToggleDark";
 
 function Navbar() {
-  const { setMe, me } = useContext(MainContext) as MainContext;
+  const { getMe, me } = useContext(MainContext) as MainContext;
 
   useEffect(() => {
-    api.get("/me").then(response => {
-      setMe(response.data.data.user);
-    });
-  }, []);
+    getMe();
+  }, [getMe]);
 
   return (
     <nav className="nav">

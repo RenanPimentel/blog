@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import PostForm from "../components/PostForm";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
@@ -17,47 +18,26 @@ function MePostsCreate() {
     api.post("/posts", {
       user_id: context.me.id,
       user_password: context.me.password,
-      post: { title, content },
+      post: { title, content, topic },
     });
     history.push("/me/posts");
+  };
+
+  const formProps = {
+    handleSubmit,
+    title,
+    content,
+    topic,
+    setTitle,
+    setContent,
+    setTopic,
+    error: "",
   };
 
   return (
     <main className="wrapper">
       <h2>Create new post</h2>
-      <div className="form-container">
-        <form onSubmit={handleSubmit}>
-          <div className="form-control">
-            <label htmlFor="title">Title</label>
-            <input
-              onChange={e => setTitle(e.target.value)}
-              value={title}
-              type="text"
-              id="title"
-            />
-          </div>
-          <div className="form-control">
-            <label htmlFor="topic">Topic</label>
-            <input
-              onChange={e => setTopic(e.target.value)}
-              value={topic}
-              type="text"
-              id="title"
-            />
-          </div>
-          <div className="form-control">
-            <label htmlFor="content">Content</label>
-            <textarea
-              id="content"
-              value={content}
-              onChange={e => setContent(e.target.value)}
-            />
-          </div>
-          <button type="submit" className="btn btn-large">
-            Send
-          </button>
-        </form>
-      </div>
+      <PostForm {...formProps} />
     </main>
   );
 }

@@ -12,8 +12,7 @@ function ChangeBanner() {
 
   const setProfileBanner = async () => {
     const response = await api.post("/me/banner", { banner });
-    console.log(response.data);
-    context.setMe(response.data.user);
+    context.setMe(response.data.data.user);
   };
 
   useEffect(() => {
@@ -51,11 +50,11 @@ function ChangeBanner() {
         </div>
         <div className="settings">
           <h4>
-            <label htmlFor="url">Paste an url here</label>
+            <label htmlFor="banner">Paste an url here</label>
           </h4>
           <input
             type="text"
-            id="url"
+            id="banner"
             placeholder="https://images.unsplash.com/photo-1622988869811-a4f3d3fe5441?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
             onChange={e => setPreview(e.target.value)}
             value={preview}

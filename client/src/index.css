@@ -90,6 +90,10 @@ body {
   border: none;
 }
 
+textarea {
+  background: var(--main-fcolor);
+}
+
 .nav {
   padding: var(--padding);
   display: flex;

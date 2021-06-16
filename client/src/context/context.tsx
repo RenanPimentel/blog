@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import React, { createContext, useReducer, ReactElement } from "react";
+import { useCallback } from "react";
 import { api } from "../util/api";
 import { reducer } from "./reducer";
 
@@ -21,13 +22,21 @@ function MyContextProvider({ children }: Props) {
     location.assign("/me");
   };
 
+  const getMe = useCallback(async () => {
+    try {
+      const response = await api.get("/me");
+      dispatch({ type: "SET_ME", payload: response.data.data.user });
+    } catch (err) {
+      console.dir(err);
+    }
+  }, []);
+
   const setMe = (me: IMe) => {
     dispatch({ type: "SET_ME", payload: me });
   };
 
   const setMyPosts = async (id?: string) => {
     const response = await api.get(`/posts/users/${id}`);
-    console.log(response.data);
     dispatch({ type: "SET_MY_POSTS", payload: response.data.data.posts });
   };
 
@@ -41,8 +50,9 @@ function MyContextProvider({ children }: Props) {
     defaultAvatar,
     defaultBanner,
     logout,
-    setMe,
+    getMe,
     setMyPosts,
+    setMe,
     ...state,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;

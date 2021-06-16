@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "watch": "npm run watch --prefix server ",
+    "server": "npm run dev --prefix server",
+    "client": "npm start --prefix client"
+  }
+}

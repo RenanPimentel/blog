@@ -81,10 +81,37 @@ router.get("/:post_id", async (req, res) => {
 router.put("/:post_id", async (req, res) => {
   const { post_id } = req.params;
   const { title, content, topic } = req.body;
+  let { user_id, user_password } = req.body;
+
+  if (!user_id) user_id = req.cookies.me.id;
+  if (!user_password) user_password = req.cookies.me.password;
+
+  if (!user_id || !user_password) {
+    res.status(400).json({
+      errors: [{ reason: "Missing user information" }],
+      data: null,
+    } as MyResponse);
+    return;
+  }
+
+  const passwordResponse = await db.query(
+    "SELECT password FROM users WHERE id = $1",
+    [user_id]
+  );
+
+  const userActualPassword = passwordResponse.rows[0].password;
+
+  if (userActualPassword !== user_password) {
+    res.status(400).json({
+      errors: [{ reason: "User failed authentication" }],
+      data: null,
+    } as MyResponse);
+    return;
+  }
 
   try {
     await db.query(
-      "UPDATE posts SET updated_at = NOW() title = $1 content = $2, topic = $3 WHERE id = $4",
+      "UPDATE posts SET updated_at = NOW(), title = $1, content = $2, topic = $3 WHERE id = $4",
       [title, content, topic, post_id]
     );
     res.status(204).send({});

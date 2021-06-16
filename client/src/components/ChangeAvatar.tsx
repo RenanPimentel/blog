@@ -12,7 +12,7 @@ function ChangeAvatar() {
 
   const setProfilePicture = async () => {
     const response = await api.post("/me/avatar", { avatar });
-    context.setMe(response.data.user);
+    context.setMe(response.data.data.user);
   };
 
   useEffect(() => {
