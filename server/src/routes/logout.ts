@@ -1,13 +1,10 @@
 import { Router } from "express";
 
-/*
-  url: /logout
-*/
 const router = Router();
 
-router.route("/").get(async (_, res) => {
+router.use("/", async (_, res) => {
   res.clearCookie("me");
-  res.status(201).json({});
+  res.status(204).send();
 });
 
 export default router;

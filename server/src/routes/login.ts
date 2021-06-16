@@ -1,26 +1,21 @@
 import argon2 from "argon2";
 import { Router } from "express";
 import { errCodes } from "../constants";
-import { pgClient } from "../index";
+import { db } from "../index";
 import { setCookie } from "../utils/setCookie";
-import { validateEmail } from "../utils/validateEmail";
+import { isEmail } from "../utils/isEmail";
 
-/*
-  url: /login
-  response: { errors?: FieldError[], user?: Object }
-*/
 const router = Router();
-type LoginBody = { login?: string; password?: string };
-type FieldError = { field: "login" | "password"; reason: string };
 
-router.route("/").post(async (req, res) => {
-  const { login: usernameOrEmail, password }: LoginBody = req.body;
+router.post("/", async (req, res) => {
+  const { login, password }: LoginBody = req.body;
   const errors: FieldError[] = [];
-  const field = validateEmail(usernameOrEmail) ? "email" : "username";
+  const emailOrUsername = isEmail(login) ? "email" : "username";
 
-  if (!usernameOrEmail) {
+  if (!login) {
     errors.push({ field: "login", reason: "Missing login" });
   }
+
   if (!password || password.length < 5) {
     errors.push({
       field: "password",
@@ -29,41 +24,48 @@ router.route("/").post(async (req, res) => {
   }
 
   if (errors.length > 0) {
-    res.status(400).json({ errors });
+    res.status(400).json({ errors } as MyResponse);
     return;
   }
 
   try {
-    const response = await pgClient.query(
-      `SELECT id, password FROM users WHERE (${field} = $1)`,
-      [usernameOrEmail]
+    const response = await db.query<{ id: string; password: string }>(
+      `SELECT id, password FROM users WHERE ${emailOrUsername} = $1`,
+      [login]
     );
     const user = response.rows[0];
 
     if (!user) {
-      res
-        .status(400)
-        .json({ errors: [{ field: "login", reason: "Login not valid" }] });
+      res.status(400).json({
+        errors: [{ field: "login", reason: `User '${login}' not found` }],
+      } as MyResponse);
       return;
     }
 
-    const rightPassword = await argon2.verify(user.password, password || "");
-    if (rightPassword) {
-      setCookie(res, "me", user);
-      res.status(200).json({ user });
-    } else {
+    const isRightPassword = await argon2.verify(user.password, password || "");
+
+    if (!isRightPassword) {
       res.status(400).json({
         errors: [{ field: "password", reason: "Incorrect password" }],
-      });
+      } as MyResponse);
+      return;
     }
+
+    setCookie(res, "me", user);
+
+    await db.query("UPDATE users SET last_login = NOW() WHERE id= $1", [
+      user.id,
+    ]);
+
+    res.status(200).json({ data: { user }, errors: null } as MyResponse);
   } catch (err) {
     if (err.code in errCodes) {
       errCodes[err.code](res, err);
     } else {
       console.log(err);
-      res
-        .status(500)
-        .json({ errors: [{ field: "server", reason: "Internal error" }] });
+      res.status(500).json({
+        errors: [{ reason: `Unknown error ${err.code}` }],
+      } as MyResponse);
     }
   }
 });

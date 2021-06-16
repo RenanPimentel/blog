@@ -1,20 +1,19 @@
-type FieldError = { field: "username"; reason: string };
-
-export function validateName(username?: string): FieldError | void {
-  if (!username || username.length < 5) {
+export function validateName(name?: string): FieldError | null {
+  if (!name || name.length < 5) {
     return {
       field: "username",
-      reason: "Too short username",
+      reason: "Username length must be greater than 5",
     };
   }
+
   if (
-    !username
-      ?.split("")
-      .every(letter => /[a-z]|[A-Z]|[0-9]|_|\!|\?/.test(letter))
+    !name?.split("").every(letter => /[a-z]|[A-Z]|[0-9]|_|\!|\?/.test(letter))
   ) {
     return {
       field: "username",
       reason: "Invalid characters in username",
     };
   }
+
+  return null;
 }
