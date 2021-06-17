@@ -19,39 +19,36 @@ function Posts({ posts }: Props) {
   };
 
   return (
-    <table className="posts-table">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Content</th>
-          <th>Edit/Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {posts.map(post => (
-          <tr key={post.id}>
-            <td className="overflow" title={post.title}>
-              <p>{post.title}</p>
-            </td>
-            <td className="overflow" title={post.content}>
-              <p>{post.content}</p>
-            </td>
-            <td className="edit-delete">
+    <div className="posts-container">
+      {posts.map(post => (
+        <div className="card" key={post.id}>
+          <div className="same-line">
+            <h2
+              className="title overflow"
+              style={{ maxWidth: "14rem", width: "100%" }}
+            >
+              {post.title}
+            </h2>
+            <div className="btn-container">
               <Link className="link" to={`/me/posts/update/${post.id}`}>
-                <FaRegEdit />
+                <FaRegEdit style={{ fill: "rgb(50, 200, 100)" }} />
               </Link>
               <button
                 onClick={() => deletePost(post.id)}
                 className="link"
                 title={`delete #${post.id}`}
               >
-                <FaRegTrashAlt />
+                <FaRegTrashAlt style={{ fill: "rgb(200, 50, 50)" }} />
               </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+            </div>
+          </div>
+          <div className="content-container">
+            <p title={post.content}>{post.content}</p>
+          </div>
+          <div className="topic">{post.topic}</div>
+        </div>
+      ))}
+    </div>
   );
 }
 

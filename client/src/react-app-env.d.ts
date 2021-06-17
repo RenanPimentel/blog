@@ -25,6 +25,11 @@ interface IState {
   me: IMe;
 }
 
+interface Action {
+  type: string;
+  payload: any;
+}
+
 interface MainContext {
   defaultAvatar: string;
   defaultBanner: string;

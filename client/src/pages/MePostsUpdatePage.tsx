@@ -36,8 +36,12 @@ function MePostsUpdatePage() {
       history.push("/me/posts");
       updateMyPost(post_id, { title, content, topic });
     } catch (err) {
-      if (err.response.data?.errors) {
-        setError(err.response.data.errors.join(", "));
+      if (err.response?.data?.errors) {
+        setError(
+          err.response.data.errors
+            .map((e: { reason: string }) => e.reason)
+            .join(", ")
+        );
         setTimeout(() => setError(""), 3000);
       }
     }

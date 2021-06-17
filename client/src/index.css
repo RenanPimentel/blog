@@ -260,6 +260,7 @@ input.border-red {
   opacity: 0;
   transition: all 0.3s ease;
   overflow: hidden;
+  z-index: 100;
 }
 
 .profile-container:hover .container-wrapper {
@@ -307,26 +308,67 @@ tr {
   border-collapse: collapse;
 }
 
-.posts-table {
+.posts-container {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  border-collapse: collapse;
+  width: 100%;
+  grid-template-columns: repeat(auto-fill, 20rem);
+  gap: 2rem;
 }
 
-.posts-table tr {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  place-items: flex-start;
-  align-items: center;
-  height: 2rem;
+.content-container {
+  height: 10rem;
 }
 
-.edit-delete {
+.content-container p {
+  margin: 0;
+  overflow: hidden;
+  line-height: 23px;
+  height: 100%;
+  text-overflow: clip;
+}
+
+.btn-container {
   display: flex;
   flex-wrap: nowrap;
+}
+
+.topic {
+  margin-top: 1rem;
+  background: rgba(0, 0, 255, 0.1);
+  width: max-content;
+  padding: 0.5rem;
+  color: blue;
+  border-radius: 10px;
+}
+
+.topic::before {
+  content: "# ";
+}
+
+.same-line {
+  display: flex;
+  justify-content: space-around;
   align-items: center;
-  justify-content: center;
-  gap: 3vw;
+}
+
+.card {
+  box-shadow: 0 0 10px -5px var(--main-fcolor);
+  transition: box-shadow 0.3s ease;
+  border-radius: 20px;
+  padding: 1rem;
+}
+
+.card:hover {
+  box-shadow: 0 0 10px -2px var(--main-fcolor);
+}
+
+.title {
+  transition: color 0.3s ease;
+  line-height: 3rem;
+}
+
+.card:hover .title {
+  color: var(--main-color);
 }
 
 .color {
@@ -337,20 +379,12 @@ tr {
   color: var(--main-fcolor);
 }
 
-.overflow p {
+.overflow {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   width: 30vw;
   margin: 0;
-}
-
-.posts-table thead tr {
-  background: var(--pure-fcolor);
-}
-
-.posts-table tr:nth-child(even) {
-  background: var(--pure-fcolor);
 }
 
 @media (max-width: 350px) {

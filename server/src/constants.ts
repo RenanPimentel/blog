@@ -5,7 +5,7 @@ import { NODE_ENV } from "./config";
 export const production = NODE_ENV === "production";
 
 export const errCodes = {
-  23505: (res: Response, err: { [key: string]: any }) => {
+  23505: (res, err) => {
     const detail = String(err.detail) || "";
     const startIndex = detail.split("").findIndex(c => c === "(");
     const lastIndex = detail.split("").findIndex(c => c === ")");
@@ -16,6 +16,11 @@ export const errCodes = {
     ];
 
     res.status(400).json({ errors, data: null } as MyResponse);
+  },
+  22001: res => {
+    res
+      .status(400)
+      .json({ errors: [{ reason: "Value too long" }] } as MyResponse);
   },
 } as { [key: string]: (res: Response, err: { [key: string]: any }) => void };
 

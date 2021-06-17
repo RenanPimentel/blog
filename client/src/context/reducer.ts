@@ -1,8 +1,3 @@
-interface Action {
-  type: string;
-  payload: any;
-}
-
 export function reducer(state: IState, action: Action): IState {
   if (action.type === "SET_ME") {
     return { ...state, me: action.payload };
