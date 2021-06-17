@@ -7,6 +7,9 @@
   --pure-bg: black;
   --pure-fcolor: white;
   --padding: 0.5rem 2rem;
+  --blue: blue;
+  --blue-bg: rgba(0, 0, 255, 0.1);
+  --transition: all 0.3s ease-out;
 }
 
 #root {
@@ -20,7 +23,9 @@
   --main-fcolor: whitesmoke;
   --pure-bg: white;
   --pure-fcolor: black;
-  transition: all 0.3s ease-out;
+  --blue-bg: rgba(0, 0, 255, 0.2);
+  --blue: rgb(150, 150, 255);
+  transition: var(--transition);
 }
 
 * {
@@ -164,6 +169,7 @@ textarea {
 
 .wrapper {
   padding: var(--padding);
+  position: relative;
 }
 
 .error {
@@ -258,7 +264,7 @@ input.border-red {
   width: 0;
   height: 0;
   opacity: 0;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   overflow: hidden;
   z-index: 100;
 }
@@ -299,7 +305,7 @@ input.border-red {
   margin-bottom: 1rem;
   width: 100%;
   max-width: 20%;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 table,
@@ -319,12 +325,15 @@ tr {
   height: 10rem;
 }
 
-.content-container p {
-  margin: 0;
+p {
   overflow: hidden;
   line-height: 23px;
   height: 100%;
   text-overflow: clip;
+}
+
+.content-container p {
+  margin: 0;
 }
 
 .btn-container {
@@ -334,10 +343,10 @@ tr {
 
 .topic {
   margin-top: 1rem;
-  background: rgba(0, 0, 255, 0.1);
+  background: var(--blue-bg);
   width: max-content;
   padding: 0.5rem;
-  color: blue;
+  color: var(--blue);
   border-radius: 10px;
 }
 
@@ -349,6 +358,46 @@ tr {
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+
+.same-line * {
+  text-align: center;
+}
+
+.link-no-underline {
+  text-decoration: none;
+}
+
+.post-container {
+  width: 100%;
+  max-width: 50rem;
+  position: relative;
+  margin: auto;
+}
+
+.details {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.line-v {
+  width: 1px;
+  height: 100%;
+  border: 1px solid var(--main-color);
+  background: var(--main-color);
+  position: absolute;
+  left: -20px;
+}
+
+.details span {
+  color: gray;
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-style: italic;
+  white-space: nowrap;
 }
 
 .card {

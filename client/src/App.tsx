@@ -8,6 +8,7 @@ import MePage from "./pages/MePage";
 import MePostsCreatePage from "./pages/MePostsCreatePage";
 import MePostsPage from "./pages/MePostsPage";
 import MePostsUpdatePage from "./pages/MePostsUpdatePage";
+import PostPage from "./pages/PostPage";
 import RegisterPage from "./pages/RegisterPage";
 import SettingsPage from "./pages/SettingsPage";
 import UserPage from "./pages/UserPage";
@@ -25,6 +26,9 @@ function App() {
         </Route>
         <Route exact path="/register">
           <RegisterPage />
+        </Route>
+        <Route exact path="/posts/:post_id">
+          <PostPage />
         </Route>
         <Route exact path="/me">
           <MePage />

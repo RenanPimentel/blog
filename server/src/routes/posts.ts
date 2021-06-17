@@ -60,6 +60,20 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const response = await db.query(
+      "SELECT * FROM posts WHERE author_id != $1 ORDER BY id LIMIT 10",
+      [req.cookies.me?.id]
+    );
+
+    const posts = response.rows;
+    res.json({ errors: null, data: { posts } } as MyResponse);
+  } catch (err) {
+    handleErr(res, err);
+  }
+});
+
 router.get("/:post_id", async (req, res) => {
   const { post_id } = req.params;
 
@@ -67,10 +81,7 @@ router.get("/:post_id", async (req, res) => {
     const response = await db.query("SELECT * FROM posts WHERE id = $1", [
       post_id,
     ]);
-    // await db.query(
-    //   "UPDATE posts SET view_count = view_count + 1 WHERE id = $1",
-    //   [post_id]
-    // );
+
     const post = response.rows[0];
     res.json({ errors: null, data: { post } } as MyResponse);
   } catch (err) {
@@ -140,8 +151,8 @@ router.put("/:post_id", async (req, res) => {
 
   try {
     await db.query(
-      "UPDATE posts SET title = $1, content = $2, topic = $3 WHERE id = $4",
-      [title, content, topic, post_id]
+      "UPDATE posts SET title = $1, content = $2, topic = $3 read_time = $4 WHERE id = $5",
+      [title, content, topic, getReadTime(content), post_id]
     );
     res.status(204).send({});
   } catch (err) {
