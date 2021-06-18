@@ -10,7 +10,7 @@ function ErrorPage() {
   return (
     <div className="wrapper">
       <h1>Page not found</h1>
-      <button className="btn" onClick={sendBack}>
+      <button className="btn btn-large" onClick={sendBack}>
         Go Back
       </button>
     </div>

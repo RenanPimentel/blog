@@ -9,6 +9,7 @@ import logoutRouter from "./routes/logout";
 import meRouter from "./routes/me";
 import postsRouter from "./routes/posts";
 import registerRouter from "./routes/register";
+import usersRouter from "./routes/users";
 
 const db = new Client();
 const app = express();
@@ -20,6 +21,7 @@ app.use(cors(corsOptions));
 app.use("/api/v1/me", meRouter);
 app.use("/api/v1/register", registerRouter);
 app.use("/api/v1/posts", postsRouter);
+app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/login", loginRouter);
 app.use("/api/v1/logout", logoutRouter);
 

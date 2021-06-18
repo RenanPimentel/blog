@@ -3,6 +3,7 @@ import React, { MutableRefObject, useRef, useState } from "react";
 import { useContext } from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import Input from "../components/Input";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
@@ -14,6 +15,8 @@ function LoginPage() {
   const history = useHistory();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   useEffect(() => {
     if (me?.id) {
@@ -31,21 +34,17 @@ function LoginPage() {
       const errors: DataError[] = e.response.data.errors;
 
       errors.forEach(err => {
-        const input = formEl.current?.querySelector(
-          `#${err.field}`
-        ) as HTMLInputElement;
-
-        const div = document.createElement("div");
-        div.classList.add("error");
-        div.textContent = err.reason;
-        input.parentElement?.appendChild(div);
-        input.classList.add("border-red");
-
-        setTimeout(() => {
-          input.parentElement?.removeChild(div);
-          input.classList.remove("border-red");
-        }, 2500);
+        if (err.field === "login") {
+          setLoginError(err.reason);
+        } else if (err.field === "password") {
+          setPasswordError(err.reason);
+        }
       });
+
+      setTimeout(() => {
+        setLoginError("");
+        setPasswordError("");
+      }, 2500);
     }
   };
 
@@ -53,28 +52,26 @@ function LoginPage() {
     <main className="wrapper">
       <div className="form-container">
         <form onSubmit={handleSubmit} ref={formEl}>
-          <div className="form-control">
-            <label htmlFor="login">Login</label>
-            <input
-              onChange={e => setLogin(e.target.value)}
-              value={login}
-              className="input"
-              type="text"
-              id="login"
-              placeholder="AwesomeName"
-            />
-          </div>
-          <div className="form-control">
-            <label htmlFor="password">Password</label>
-            <input
-              onChange={e => setPassword(e.target.value)}
-              value={password}
-              className="input"
-              type="password"
-              id="password"
-              placeholder="my safe password"
-            />
-          </div>
+          <Input
+            label="Login"
+            onChange={e => setLogin(e.target.value)}
+            value={login}
+            className="input"
+            type="text"
+            id="login"
+            placeholder="AwesomeName"
+            error={loginError}
+          />
+          <Input
+            label="Password"
+            onChange={e => setPassword(e.target.value)}
+            value={password}
+            className="input"
+            type="password"
+            id="password"
+            placeholder="my safe password"
+            error={passwordError}
+          />
           <div className="form-control">
             <button type="submit" className="btn btn-large">
               Submit

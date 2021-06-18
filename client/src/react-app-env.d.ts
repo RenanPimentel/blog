@@ -7,7 +7,7 @@ interface IMe {
   avatar?: string;
   banner?: string;
   last_login?: string;
-  myPosts: IPost[];
+  posts: IPost[];
 }
 
 interface IPost {
@@ -18,11 +18,30 @@ interface IPost {
   topic?: string;
   updated_at?: string;
   created_at?: string;
-  user_id?: string;
+  author_id?: string;
+}
+
+interface IUser {
+  id?: string;
+  password?: string;
+  username?: string;
+  email?: string;
+  avatar?: string;
+  banner?: string;
+  last_login?: string;
 }
 
 interface IState {
   me: IMe;
+}
+
+interface IComment {
+  id: string;
+  author_id: string;
+  craeted_at: string;
+  updated_at: string;
+  content: string;
+  post_id: string;
 }
 
 interface Action {

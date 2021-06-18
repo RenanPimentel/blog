@@ -13,7 +13,7 @@ function HomePage() {
         const response = await api.get("/posts");
         setPosts(response.data.data.posts);
       } catch (err) {
-        console.log(err);
+        console.dir(err);
       }
     })();
   }, []);

@@ -9,23 +9,25 @@ function MePostsPage() {
 
   useEffect(() => {
     if (context.me.id) {
-      if (!context.me.myPosts) {
+      if (!context.me.posts) {
         context.setMyPosts(context.me.id);
       }
     }
   }, [context]);
 
-  if (!context.me.myPosts) {
+  if (!context.me.posts) {
     return <div>Loading...</div>;
   }
 
   return (
     <main className="wrapper">
-      <Link className="link large color" to="/me/posts/create">
-        Upload Post
-      </Link>
+      <h2>
+        <Link className="link color" to="/me/posts/create">
+          Upload Post
+        </Link>
+      </h2>
       <h1>Your posts</h1>
-      <Posts posts={context.me.myPosts} />
+      <Posts posts={context.me.posts} />
     </main>
   );
 }

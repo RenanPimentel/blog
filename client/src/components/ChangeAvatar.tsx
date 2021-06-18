@@ -46,7 +46,7 @@ function ChangeAvatar() {
       <div className="border-left">
         <h3>Preview</h3>
         <div className="profile-picture pic-large">
-          <img src={avatar} alt="your profile" />
+          <img src={avatar} alt="your avatar" />
         </div>
         <div className="settings">
           <h4>
