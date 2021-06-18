@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
+import ProfileHeader from "./ProfileHeader";
 
 interface Props {
   title?: string;
@@ -49,16 +50,11 @@ function Post({
 
   return (
     <section className="post-container">
-      <div className="line-v"></div>
-      <div className="profile-banner">
-        <img src={author.banner} alt="your banner" />
-      </div>
-      <div className="same-line right">
-        <div className="profile-picture">
-          <img src={author.avatar} alt="your avatar" />
-        </div>
-        <h3>{author.username}</h3>
-      </div>
+      <ProfileHeader
+        banner={author.banner}
+        avatar={author.avatar}
+        username={author.username}
+      />
       <h1>{title}</h1>
       <div className="details">
         <span>

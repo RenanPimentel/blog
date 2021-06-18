@@ -103,8 +103,57 @@ router.get("/:post_id/comments", async (req, res) => {
 
   try {
     const response = await db.query(
-      "SELECT * FROM comments WHERE post_id = $1",
+      "SELECT * FROM comments WHERE post_id = $1 ORDER BY id",
       [post_id]
+    );
+
+    res.json({ errors: null, data: { comments: response.rows } } as MyResponse);
+  } catch (err) {
+    handleErr(res, err);
+  }
+});
+
+router.post("/:post_id/comments", async (req, res) => {
+  const { post_id } = req.params;
+  const { comment } = req.body;
+  const { me } = req.cookies;
+
+  if (!me) {
+    res.status(400).json({
+      data: null,
+      errors: [{ reason: "You need to be logged in order to comment" }],
+    } as MyResponse);
+    return;
+  }
+
+  const passwordResponse = await db.query(
+    "SELECT password FROM users WHERE id = $1",
+    [me.id]
+  );
+  const userActualPassword = passwordResponse.rows[0].password;
+
+  if (userActualPassword !== me.password) {
+    res
+      .status(400)
+      .json({
+        data: null,
+        errors: [{ reason: "Wrong password" }],
+      } as MyResponse);
+    return;
+  }
+
+  if (comment.length <= 0) {
+    res.status(400).json({
+      data: null,
+      errors: [{ reason: "missing comment" }],
+    } as MyResponse);
+    return;
+  }
+
+  try {
+    const response = await db.query(
+      "INSERT INTO comments (post_id, content, author_id) VALUES ($1, $2, $3)",
+      [post_id, comment, me.id]
     );
 
     res.json({ errors: null, data: { comments: response.rows } } as MyResponse);
@@ -189,7 +238,7 @@ router.get("/users/:user_id", async (req, res) => {
 
   try {
     const response = await db.query(
-      "SELECT * FROM posts WHERE author_id = $1",
+      "SELECT * FROM posts WHERE author_id = $1 ORDER BY id",
       [user_id]
     );
 
