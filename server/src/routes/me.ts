@@ -6,23 +6,10 @@ import { handleErr } from "../utils/handleErr";
 const router = Router();
 
 router.get("/", async (req, res) => {
-  if (!req.cookies.me) {
-    res.status(404).json({
-      errors: [
-        { reason: "Couldn't find your cookies, you may have to able them" },
-      ],
-      data: null,
-    } as MyResponse);
-    return;
-  }
-
-  const { id, password }: StrObj = req.cookies.me;
+  const { id }: StrObj = req.cookies.me;
 
   try {
-    const response = await db.query(
-      "SELECT * FROM users WHERE id = $1 AND password = $2",
-      [id, password]
-    );
+    const response = await db.query("SELECT * FROM users WHERE id = $1", [id]);
     const user = response.rows[0];
 
     res.json({ data: { user }, errors: null } as MyResponse);
@@ -35,8 +22,8 @@ router.post("/avatar", async (req, res) => {
   const { avatar } = req.body;
   try {
     const response = await db.query(
-      "UPDATE users SET avatar = $1 WHERE id = $2 AND password = $3 RETURNING *",
-      [avatar, req.cookies.me.id, req.cookies.me.password]
+      "UPDATE users SET avatar = $1 WHERE id = $2 RETURNING *",
+      [avatar, req.cookies.me.id]
     );
 
     res.json({ data: { user: response.rows[0] }, errors: null } as MyResponse);
@@ -48,8 +35,8 @@ router.post("/avatar", async (req, res) => {
 router.post("/banner", async (req, res) => {
   try {
     const response = await db.query(
-      "UPDATE users SET banner = $1 WHERE id = $2 AND password = $3 RETURNING *",
-      [req.body.banner, req.cookies.me.id, req.cookies.me.password]
+      "UPDATE users SET banner = $1 WHERE id = $2 RETURNING *",
+      [req.body.banner, req.cookies.me.id]
     );
 
     res.json({ data: { user: response.rows[0] }, errors: null } as MyResponse);
@@ -69,8 +56,8 @@ router.post("/username", async (req, res) => {
     }
 
     const response = await db.query(
-      "UPDATE users SET username = $1 WHERE id = $2 AND password = $3 RETURNING *",
-      [username, req.cookies.me.id, req.cookies.me.password]
+      "UPDATE users SET username = $1 WHERE id = $2 RETURNING *",
+      [username, req.cookies.me.id]
     );
 
     res.json({ data: { user: response.rows[0] }, errors: null } as MyResponse);

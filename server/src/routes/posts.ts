@@ -118,30 +118,6 @@ router.post("/:post_id/comments", async (req, res) => {
   const { comment } = req.body;
   const { me } = req.cookies;
 
-  if (!me) {
-    res.status(400).json({
-      data: null,
-      errors: [{ reason: "You need to be logged in order to comment" }],
-    } as MyResponse);
-    return;
-  }
-
-  const passwordResponse = await db.query(
-    "SELECT password FROM users WHERE id = $1",
-    [me.id]
-  );
-  const userActualPassword = passwordResponse.rows[0].password;
-
-  if (userActualPassword !== me.password) {
-    res
-      .status(400)
-      .json({
-        data: null,
-        errors: [{ reason: "Wrong password" }],
-      } as MyResponse);
-    return;
-  }
-
   if (comment.length <= 0) {
     res.status(400).json({
       data: null,
@@ -152,11 +128,14 @@ router.post("/:post_id/comments", async (req, res) => {
 
   try {
     const response = await db.query(
-      "INSERT INTO comments (post_id, content, author_id) VALUES ($1, $2, $3)",
+      "INSERT INTO comments (post_id, content, author_id) VALUES ($1, $2, $3) RETURNING *",
       [post_id, comment, me.id]
     );
 
-    res.json({ errors: null, data: { comments: response.rows } } as MyResponse);
+    res.json({
+      errors: null,
+      data: { comment: response.rows[0] },
+    } as MyResponse);
   } catch (err) {
     handleErr(res, err);
   }
@@ -164,26 +143,15 @@ router.post("/:post_id/comments", async (req, res) => {
 
 router.delete("/:post_id", async (req, res) => {
   const { post_id } = req.params;
-  const { id, password } = req.cookies.me;
+  const { id } = req.cookies.me;
 
   try {
-    const passwordResponse = await db.query(
-      "SELECT password FROM users WHERE id = $1",
-      [id]
-    );
+    await db.query("DELETE FROM posts WHERE id = $1 AND author_id = $2", [
+      post_id,
+      id,
+    ]);
 
-    const userActualPassword = passwordResponse.rows[0].password;
-
-    if (password !== userActualPassword) {
-      res.status(400).json({
-        data: null,
-        errors: [{ field: "password", reason: "incorrect password" }],
-      } as MyResponse);
-    }
-
-    await db.query("DELETE FROM posts WHERE id = $1", [post_id]);
-
-    res.status(204).send({});
+    res.status(204).send();
   } catch (err) {
     handleErr(res, err);
   }
@@ -192,9 +160,9 @@ router.delete("/:post_id", async (req, res) => {
 router.put("/:post_id", async (req, res) => {
   const { post_id } = req.params;
   const { title, content, topic } = req.body;
-  const { id: user_id, password: user_password } = req.cookies.me;
+  const { id, password } = req.cookies.me;
 
-  if (!user_id || !user_password) {
+  if (!id || !password) {
     res.status(400).json({
       errors: [{ reason: "Missing user information" }],
       data: null,
@@ -214,7 +182,7 @@ router.put("/:post_id", async (req, res) => {
 
   const userActualPassword = passwordResponse.rows[0].password;
 
-  if (userActualPassword !== user_password) {
+  if (userActualPassword !== password) {
     res.status(400).json({
       errors: [{ reason: "You can't do this" }],
       data: null,
@@ -227,7 +195,7 @@ router.put("/:post_id", async (req, res) => {
       "UPDATE posts SET title = $1, content = $2, topic = $3, read_time = $4 WHERE id = $5",
       [title, content, topic, getReadTime(content), post_id]
     );
-    res.status(204).send({});
+    res.status(204).send();
   } catch (err) {
     handleErr(res, err);
   }

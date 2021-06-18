@@ -1,26 +1,24 @@
-/* eslint-disable no-restricted-globals */
-import React, { MutableRefObject, useRef, useState } from "react";
-import { useCookies } from "react-cookie";
+import React, { MutableRefObject, useContext, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 type DataError = { field: string; reason: string };
 
 function RegisterPage() {
+  const { getMe } = useContext(MainContext);
   const formEl: MutableRefObject<null | HTMLFormElement> = useRef(null);
   const history = useHistory();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [, setCookie] = useCookies(["me"]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const post = await api.post("/register", { username, email, password });
+      await api.post("/register", { username, email, password });
       history.push("/me");
-      location.reload();
-      setCookie("me", post.data.user);
+      getMe();
     } catch (e) {
       const errors: DataError[] = e.response.data.errors;
 

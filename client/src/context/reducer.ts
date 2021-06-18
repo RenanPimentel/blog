@@ -26,6 +26,11 @@ export function reducer(state: IState, action: Action): IState {
   } else if (action.type === "ADD_MY_POST") {
     state.me.posts.push(action.payload);
     return { ...state };
+  } else if (action.type === "ADD_COMMENT") {
+    state.comments.push(action.payload);
+    return { ...state };
+  } else if (action.type === "SET_COMMENTS") {
+    return { ...state, comments: action.payload };
   }
 
   throw new Error("reducer couldn't find it");
