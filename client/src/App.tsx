@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ErrorPage from "./pages/ErrorPage";
+import ForgotPage from "./pages/ForgotPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import MePage from "./pages/MePage";
@@ -26,6 +27,9 @@ function App() {
         </Route>
         <Route exact path="/register">
           <RegisterPage />
+        </Route>
+        <Route exact path="/login/forgot">
+          <ForgotPage />
         </Route>
         <Route exact path="/posts/:post_id">
           <PostPage />

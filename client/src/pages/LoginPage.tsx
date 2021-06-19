@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Input from "../components/Input";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
@@ -81,6 +81,7 @@ function LoginPage() {
               Submit
             </button>
           </div>
+          <Link to="/login/forgot">forget password</Link>
         </form>
       </div>
     </main>
