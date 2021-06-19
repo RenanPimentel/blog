@@ -1,5 +1,6 @@
 import argon2 from "argon2";
 import { Router } from "express";
+import { sendEmail } from "../utils/sendEmail";
 import { db } from "../index";
 import { handleErr } from "../utils/handleErr";
 import { isEmail } from "../utils/isEmail";
@@ -114,6 +115,35 @@ router.post("/login", async (req, res) => {
 router.all("/logout", async (_, res) => {
   res.clearCookie("me");
   res.status(204).send();
+});
+
+router.post("/forgot", async (req, res) => {
+  res.clearCookie("me");
+
+  const newPassword = "12345";
+  const newHashedPassword = await argon2.hash(newPassword);
+
+  const response = await db.query(
+    "UPDATE users SET password = $1 WHERE email = $2 RETURNING *",
+    [newHashedPassword, req.body.email]
+  );
+  const user = response.rows[0];
+
+  if (!user) {
+    res.status(400).json({
+      errors: [{ reason: "Email not registered", field: "email" }],
+      data: null,
+    } as MyResponse);
+    return;
+  }
+
+  const emailRes = await sendEmail(
+    req.body.email,
+    "password",
+    `Your new password is ${newPassword}`
+  );
+
+  res.send({ data: { emailRes }, errors: null } as MyResponse);
 });
 
 export default router;
