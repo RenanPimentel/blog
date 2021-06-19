@@ -6,23 +6,45 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function MePostsCreate() {
-  const { me, addMyPost } = useContext(MainContext);
+  const { addMyPost } = useContext(MainContext);
   const history = useHistory();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [topic, setTopic] = useState("");
+  const [titleError, setTitleError] = useState("");
+  const [topicError, setTopicError] = useState("");
+  const [contentError, setContentError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const response = await api.post("/posts", {
-      user_id: me.id,
-      user_password: me.password,
-      post: { title, content, topic },
-    });
+    try {
+      const response = await api.post("/posts", {
+        post: { title, content, topic },
+      });
+      addMyPost(response.data.data.post);
+      history.push("/me/posts");
+    } catch (err) {
+      err.response.data.errors.forEach(
+        (e: { reason: string; field?: string }) => {
+          if (e.field === "title") {
+            setTitleError(e.reason);
+          } else if (e.field === "topic") {
+            setTopicError(e.reason);
+          } else if (e.field === "content") {
+            setContentError(e.reason);
+          } else {
+            console.dir(e);
+          }
+        }
+      );
 
-    addMyPost(response.data.data.post);
-    history.push("/me/posts");
+      setTimeout(() => {
+        setTitleError("");
+        setTopicError("");
+        setContentError("");
+      }, 3000);
+    }
   };
 
   const formProps = {
@@ -33,7 +55,9 @@ function MePostsCreate() {
     setTitle,
     setContent,
     setTopic,
-    error: "",
+    titleError,
+    topicError,
+    contentError,
   };
 
   return (

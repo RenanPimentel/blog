@@ -30,8 +30,6 @@ interface RegisterBody {
 }
 
 interface PostsBody {
-  user_id?: string;
-  user_password?: string;
   post?: Post;
 }
 

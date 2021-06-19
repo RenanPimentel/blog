@@ -6,19 +6,11 @@ import { getReadTime } from "../utils/getReadTime";
 const router = Router();
 
 router.post("/", async (req, res) => {
-  const { user_id, user_password, post }: PostsBody = req.body;
+  const { post }: PostsBody = req.body;
+  const { id: user_id } = req.cookies.me;
 
   try {
     const errors: FieldError[] = [];
-    const passwordResponse = await db.query(
-      "SELECT password FROM users WHERE id = $1",
-      [user_id]
-    );
-    const userActualPassword = passwordResponse.rows[0].password;
-
-    if (user_password !== userActualPassword) {
-      errors.push({ field: "password", reason: "incorrect password" });
-    }
 
     if (!post) {
       res.status(400).json({
@@ -61,23 +53,14 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+  const { id } = req.cookies.me;
   try {
-    if (req.cookies.me) {
-      const response = await db.query(
-        "SELECT * FROM posts WHERE author_id != $1 ORDER BY id LIMIT 10",
-        [req.cookies.me?.id]
-      );
-
-      const posts = response.rows;
-      res.json({ errors: null, data: { posts } } as MyResponse);
-    } else {
-      const response = await db.query(
-        "SELECT * FROM posts ORDER BY id LIMIT 10"
-      );
-
-      const posts = response.rows;
-      res.json({ errors: null, data: { posts } } as MyResponse);
-    }
+    const response = await db.query(
+      "SELECT * FROM posts WHERE author_id != $1 ORDER BY id LIMIT 10",
+      [id]
+    );
+    const posts = response.rows;
+    res.json({ errors: null, data: { posts } } as MyResponse);
   } catch (err) {
     handleErr(res, err);
   }
@@ -201,13 +184,13 @@ router.put("/:post_id", async (req, res) => {
   }
 });
 
-router.get("/users/:user_id", async (req, res) => {
-  const { user_id } = req.params;
+router.get("/author/:author_id", async (req, res) => {
+  const { author_id } = req.params;
 
   try {
     const response = await db.query(
       "SELECT * FROM posts WHERE author_id = $1 ORDER BY id",
-      [user_id]
+      [author_id]
     );
 
     res.json({ data: { posts: response.rows }, errors: null } as MyResponse);

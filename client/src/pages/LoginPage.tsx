@@ -30,7 +30,7 @@ function LoginPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await api.post("/login", { login, password });
+      await api.post("/account/login", { login, password });
       history.push("/me");
       getMe();
     } catch (err) {

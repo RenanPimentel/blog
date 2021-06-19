@@ -23,7 +23,7 @@ function MyContextProvider({ children }: Props) {
   const [state, dispatch] = useReducer(reducer, defaultState);
 
   const logout = async () => {
-    await api.get("/logout");
+    await api.get("/account/logout");
     location.assign("/me");
   };
 
@@ -41,7 +41,7 @@ function MyContextProvider({ children }: Props) {
   };
 
   const setMyPosts: MainContext["setMyPosts"] = async id => {
-    const response = await api.get(`/posts/users/${id}`);
+    const response = await api.get(`/posts/author/${id}`);
     dispatch({ type: "SET_MY_POSTS", payload: response.data.data.posts });
   };
 

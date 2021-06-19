@@ -1,4 +1,6 @@
 import React from "react";
+import Input from "./Input";
+import Textarea from "./Textarea";
 
 interface Props {
   handleSubmit(e: React.FormEvent<HTMLFormElement>): void;
@@ -8,7 +10,9 @@ interface Props {
   setTopic: CallableFunction;
   content: string;
   setContent: CallableFunction;
-  error: string;
+  titleError: string;
+  topicError: string;
+  contentError: string;
 }
 
 function PostForm({
@@ -19,14 +23,17 @@ function PostForm({
   setTopic,
   title,
   topic,
-  error,
+  titleError,
+  topicError,
+  contentError,
 }: Props) {
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
         <div className="form-control">
-          <label htmlFor="title">Title</label>
-          <input
+          <Input
+            error={titleError}
+            label="Title"
             onChange={e => setTitle(e.target.value)}
             value={title}
             type="text"
@@ -34,8 +41,9 @@ function PostForm({
           />
         </div>
         <div className="form-control">
-          <label htmlFor="topic">Topic</label>
-          <input
+          <Input
+            error={topicError}
+            label="Topic"
             onChange={e => setTopic(e.target.value)}
             value={topic}
             type="text"
@@ -43,8 +51,9 @@ function PostForm({
           />
         </div>
         <div className="form-control">
-          <label htmlFor="content">Content</label>
-          <textarea
+          <Textarea
+            error={contentError}
+            label="Content"
             id="content"
             value={content}
             onChange={e => setContent(e.target.value)}
@@ -54,7 +63,6 @@ function PostForm({
           Send
         </button>
       </form>
-      {error ? <p className="error">{error}</p> : <p></p>}
     </div>
   );
 }

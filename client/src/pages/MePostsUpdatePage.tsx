@@ -8,7 +8,7 @@ function MePostsUpdatePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [topic, setTopic] = useState("");
-  const [error, setError] = useState("");
+  const [titleError, setError] = useState("");
   const [singlePost, setSinglePost] = useState<IPost>({});
   const { post_id } = useParams() as { post_id: string };
   const history = useHistory();
@@ -55,8 +55,9 @@ function MePostsUpdatePage() {
     setTitle,
     setContent,
     setTopic,
-    error,
-    setError,
+    titleError,
+    topicError: "",
+    contentError: "",
   };
 
   return (
