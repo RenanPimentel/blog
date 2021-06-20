@@ -12,9 +12,8 @@ function ForgotPage() {
     try {
       const response = await api.post("/account/forgot", { email });
       setEmail("");
-      console.log(response);
       setDetails(
-        `An email was sent to you by '${response.data.data.emailRes.name}' with your new password`
+        `An email was sent to you by '${response.data.data.emailRes.name}' with your new password it may be in the span folder`
       );
     } catch (err) {
       console.dir(err);

@@ -11,6 +11,7 @@ import MePostsPage from "./pages/MePostsPage";
 import MePostsUpdatePage from "./pages/MePostsUpdatePage";
 import PostPage from "./pages/PostPage";
 import RegisterPage from "./pages/RegisterPage";
+import ResetpassPage from "./pages/ResetpassPage";
 import SettingsPage from "./pages/SettingsPage";
 import UserPage from "./pages/UserPage";
 
@@ -28,14 +29,17 @@ function App() {
         <Route exact path="/register">
           <RegisterPage />
         </Route>
+        <Route exact path="/resetpass">
+          <ResetpassPage />
+        </Route>
         <Route exact path="/login/forgot">
           <ForgotPage />
         </Route>
-        <Route exact path="/posts/:post_id">
-          <PostPage />
-        </Route>
         <Route exact path="/me">
           <MePage />
+        </Route>
+        <Route exact path="/posts/:post_id">
+          <PostPage />
         </Route>
         <Route exact path="/me/posts">
           <MePostsPage />

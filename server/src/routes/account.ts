@@ -1,9 +1,10 @@
 import argon2 from "argon2";
 import { Router } from "express";
-import { sendEmail } from "../utils/sendEmail";
+import { CLIENT_URL } from "../config";
 import { db } from "../index";
 import { handleErr } from "../utils/handleErr";
 import { isEmail } from "../utils/isEmail";
+import { sendEmail } from "../utils/sendEmail";
 import { setCookie } from "../utils/setCookie";
 import { validateName } from "../utils/validateName";
 
@@ -120,12 +121,9 @@ router.all("/logout", async (_, res) => {
 router.post("/forgot", async (req, res) => {
   res.clearCookie("me");
 
-  const newPassword = "12345";
-  const newHashedPassword = await argon2.hash(newPassword);
-
   const response = await db.query(
-    "UPDATE users SET password = $1 WHERE email = $2 RETURNING *",
-    [newHashedPassword, req.body.email]
+    "SELECT id, password FROM users WHERE email = $1",
+    [req.body.email]
   );
   const user = response.rows[0];
 
@@ -136,14 +134,71 @@ router.post("/forgot", async (req, res) => {
     } as MyResponse);
     return;
   }
+  const href =
+    `${CLIENT_URL}/resetpass` +
+    `?user_id=${encodeURI(user.id)}&user_pass=${encodeURI(user.password)}`;
 
   const emailRes = await sendEmail(
     req.body.email,
     "password",
-    `Your new password is ${newPassword}`
+    `<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
+      <body>
+        <a href="${href}" class="link">
+          Click here to reset your password
+        </a>
+      </body>
+    </html>
+    `
   );
 
   res.send({ data: { emailRes }, errors: null } as MyResponse);
+});
+
+router.post("/password", async (req, res) => {
+  const { password } = req.body;
+  if (password?.length < 5) {
+    res.status(400).json({
+      errors: [
+        {
+          reason: "Password must contain at least 5 letters",
+          field: "password",
+        },
+      ],
+      data: null,
+    } as MyResponse);
+  }
+
+  const newHashedPassword = await argon2.hash(password);
+  const { user_id, user_pass } = req.query;
+
+  try {
+    const response = await db.query(
+      "UPDATE users SET password = $1 WHERE id = $2 AND password = $3 RETURNING *",
+      [
+        newHashedPassword,
+        decodeURI(String(user_id)),
+        decodeURI(String(user_pass)),
+      ]
+    );
+    const user = response.rows[0];
+
+    if (!user) {
+      res
+        .status(400)
+        .json({ data: null, errors: [{ reason: "Wrong url" }] } as MyResponse);
+      return;
+    }
+
+    res.json({ data: { user }, errors: null } as MyResponse);
+  } catch (err) {
+    handleErr(res, err);
+  }
 });
 
 export default router;

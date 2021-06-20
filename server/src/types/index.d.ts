@@ -6,6 +6,9 @@ interface ENV {
   PGPORT: string;
   NODE_ENV: string;
   PORT: string;
+  CLIENT_URL: "http://localhost:3000";
+  GMAILPASS: string;
+  GMAILUSER: string;
 }
 
 interface FieldError {
