@@ -25,7 +25,7 @@ function Card({ content, id, title, topic, isOwner }: Props) {
   };
 
   return (
-    <div className="card">
+    <Link className="card no-dec" to={`/posts/${id}`}>
       <div className="same-line">
         <h2
           className="title overflow"
@@ -52,7 +52,7 @@ function Card({ content, id, title, topic, isOwner }: Props) {
         <p title={content}>{content}</p>
       </div>
       <div className="topic">{topic}</div>
-    </div>
+    </Link>
   );
 }
 

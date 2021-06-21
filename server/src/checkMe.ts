@@ -1,11 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { db } from "./index";
 
-export async function checkUser(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function checkMe(req: Request, res: Response, next: NextFunction) {
   const { me } = req.cookies;
 
   if (!me) {

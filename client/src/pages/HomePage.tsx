@@ -41,13 +41,7 @@ function HomePage() {
     <main className="wrapper">
       <div className="posts-container">
         {posts.map(post => (
-          <Link
-            to={`posts/${post.id}`}
-            className="link-no-underline"
-            key={post.id}
-          >
-            <Card {...post} isOwner={false} />
-          </Link>
+          <Card {...post} isOwner={false} key={post.id} />
         ))}
       </div>
     </main>

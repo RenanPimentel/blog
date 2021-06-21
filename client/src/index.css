@@ -365,6 +365,12 @@ input.border-red {
   width: 100%;
 }
 
+.comment-btns {
+  justify-content: flex-end;
+  width: 100%;
+  gap: 1rem;
+}
+
 .comment-content * {
   justify-content: right !important;
   text-align: start !important;
@@ -379,7 +385,7 @@ input.border-red {
   background: var(--pure-bg);
   padding: 1rem;
   border-radius: 20px;
-  box-shadow: 0 0 10px -5px var(--pure-fcolor);
+  box-shadow: 0 0 10px -5px black;
   transition: all 0.2s ease;
   width: fit-content;
 }

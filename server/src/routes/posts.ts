@@ -83,10 +83,17 @@ router.get("/:post_id", async (req, res) => {
       return;
     }
 
-    await db.query(
-      "INSERT INTO post_views (user_id, post_id) VALUES ($1, $2)",
+    const userResponse = await db.query(
+      "SELECT user_id FROM post_views WHERE user_id = $1 AND post_id = $2",
       [req.cookies.me.id, post_id]
     );
+
+    if (userResponse.rowCount === 0) {
+      await db.query(
+        "INSERT INTO post_views (user_id, post_id) VALUES ($1, $2)",
+        [req.cookies.me.id, post_id]
+      );
+    }
 
     const post = response.rows[0];
     res.json({ errors: null, data: { post } } as MyResponse);
