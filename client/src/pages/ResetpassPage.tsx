@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Input from "../components/Input";
 import { MainContext } from "../context/context";
@@ -15,6 +16,7 @@ function ResetpassPage() {
   const [repeatedPassword, setRepeatedPassword] = useState("");
   const [repeatedPasswordError, setRepeatedPasswordError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [found, setFound] = useState(false);
   const reactLocation = useLocation();
 
   const arr = reactLocation.search.split(/\?|&/g).filter(Boolean);
@@ -25,7 +27,13 @@ function ResetpassPage() {
     query[key] = value.join("=");
   }
 
-  if (!query.user_id || !query.user_pass) {
+  useEffect(() => {
+    api.get(`/users/${query.user_id}?user_pass=${query.user_pass}`).then(() => {
+      setFound(true);
+    });
+  }, [query.user_id, query.user_pass]);
+
+  if (!found) {
     return <ErrorPage />;
   }
 
@@ -39,8 +47,8 @@ function ResetpassPage() {
     try {
       const response = await api.post(
         "/account/password" +
-          `?user_id=${encodeURIComponent(query.user_id)}` +
-          `&user_pass=${encodeURIComponent(query.user_pass)}`,
+          `?user_id=${encodeURI(query.user_id)}` +
+          `&user_pass=${encodeURI(query.user_pass)}`,
         { password }
       );
 
@@ -50,7 +58,7 @@ function ResetpassPage() {
     } catch (err) {
       console.dir(err);
       setPasswordError(
-        err.response.data.errors.map((e: FieldError) => e.reason).join(", ")
+        err.response?.data.errors.map((e: FieldError) => e.reason).join(", ")
       );
     }
   };

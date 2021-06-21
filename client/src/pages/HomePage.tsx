@@ -6,6 +6,7 @@ import { api } from "../util/api";
 
 function HomePage() {
   const [posts, setPosts] = useState<IPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -14,14 +15,24 @@ function HomePage() {
         setPosts(response.data.data.posts);
       } catch (err) {
         console.dir(err);
+      } finally {
+        setLoading(false);
       }
     })();
   }, []);
 
-  if (!posts.length) {
+  if (loading) {
     return (
       <main className="wrapper">
         <h2>Loading...</h2>
+      </main>
+    );
+  }
+
+  if (!posts.length) {
+    return (
+      <main className="wrapper">
+        <h2>Couldn't find any posts... Are you logged in?</h2>
       </main>
     );
   }

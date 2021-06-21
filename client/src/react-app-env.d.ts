@@ -39,7 +39,7 @@ interface IState {
 interface IComment {
   id: string;
   author_id: string;
-  craeted_at: string;
+  created_at: string;
   updated_at: string;
   content: string;
   post_id: string;

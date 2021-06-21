@@ -122,7 +122,7 @@ router.post("/forgot", async (req, res) => {
   res.clearCookie("me");
 
   const response = await db.query(
-    "SELECT id, password FROM users WHERE email = $1",
+    "SELECT id, password, username FROM users WHERE email = $1",
     [req.body.email]
   );
   const user = response.rows[0];
@@ -157,11 +157,15 @@ router.post("/forgot", async (req, res) => {
     `
   );
 
-  res.send({ data: { emailRes }, errors: null } as MyResponse);
+  res.send({
+    data: { emailRes, username: user.username },
+    errors: null,
+  } as MyResponse);
 });
 
 router.post("/password", async (req, res) => {
   const { password } = req.body;
+
   if (password?.length < 5) {
     res.status(400).json({
       errors: [
@@ -172,19 +176,16 @@ router.post("/password", async (req, res) => {
       ],
       data: null,
     } as MyResponse);
+    return;
   }
 
-  const newHashedPassword = await argon2.hash(password);
+  const hPassword = await argon2.hash(password);
   const { user_id, user_pass } = req.query;
 
   try {
     const response = await db.query(
       "UPDATE users SET password = $1 WHERE id = $2 AND password = $3 RETURNING *",
-      [
-        newHashedPassword,
-        decodeURI(String(user_id)),
-        decodeURI(String(user_pass)),
-      ]
+      [hPassword, decodeURI(String(user_id)), decodeURI(String(user_pass))]
     );
     const user = response.rows[0];
 

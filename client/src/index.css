@@ -305,10 +305,16 @@ input.border-red {
   position: relative;
   width: 50px;
   height: 50px;
+  min-width: none;
+  min-height: none;
+  max-width: none;
+  max-height: none;
   border-radius: 50%;
   overflow: hidden;
   display: grid;
   place-items: center;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 .pic-large {
@@ -348,6 +354,16 @@ input.border-red {
 .right {
   justify-content: flex-start !important;
   gap: 1rem;
+  width: 100%;
+}
+
+.alt-right * {
+  justify-content: right !important;
+  text-align: start !important;
+}
+
+.comment-container {
+  border-bottom: 1px solid var(--pure-bg);
 }
 
 .container input {

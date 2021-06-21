@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
+import Comment from "./Comment";
 import SendComment from "./SendComment";
 
 interface Props {
@@ -30,13 +31,9 @@ function CommentSection({ post_id }: Props) {
         </>
       ) : (
         <>
-          {comments.map(
-            ({ author_id, content, craeted_at, id, post_id, updated_at }) => (
-              <div className="comment" key={id}>
-                {content}
-              </div>
-            )
-          )}
+          {comments.map(comment => (
+            <Comment {...comment} key={comment.id} />
+          ))}
         </>
       )}
     </section>

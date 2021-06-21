@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
+import PostFooter from "./PostFooter";
 import ProfileHeader from "./ProfileHeader";
 
 interface Props {
@@ -67,6 +68,7 @@ function Post({
         )}
       </div>
       <p>{content}</p>
+      <PostFooter />
     </section>
   );
 }

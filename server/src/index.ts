@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors(corsOptions));
 
-app.use(["/api/v1/posts", "/api/v1/users", "/api/v1/me"], checkUser);
+app.use(["/api/v1/posts", "/api/v1/me"], checkUser);
 
 app.use("/api/v1/account", accountRouter);
 app.use("/api/v1/me", meRouter);

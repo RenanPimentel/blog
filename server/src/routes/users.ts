@@ -6,12 +6,18 @@ const router = Router();
 
 router.get("/:user_id", async (req, res) => {
   const { user_id } = req.params;
+  const { user_pass } = req.query;
 
   try {
-    const response = await db.query(
-      "SELECT id, created_at, updated_at, last_login, username, email, avatar, banner FROM users WHERE id = $1",
-      [user_id]
-    );
+    const response = user_pass
+      ? await db.query(
+          "SELECT id, created_at, updated_at, last_login, username, email, avatar, banner FROM users WHERE id = $1 AND password = $2",
+          [user_id, decodeURI(String(user_pass))]
+        )
+      : await db.query(
+          "SELECT id, created_at, updated_at, last_login, username, email, avatar, banner FROM users WHERE id = $1",
+          [user_id]
+        );
 
     const user = response.rows[0];
 

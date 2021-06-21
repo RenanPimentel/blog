@@ -31,9 +31,7 @@ function MyContextProvider({ children }: Props) {
     try {
       const response = await api.get("/me");
       dispatch({ type: "SET_ME", payload: response.data.data.user });
-    } catch (err) {
-      console.dir(err);
-    }
+    } catch (err) {}
   }, []);
 
   const setMe: MainContext["setMe"] = me => {

@@ -15,7 +15,10 @@ function Input({ label, error, ...props }: Props) {
     <div className="form-control">
       <label htmlFor={props.id}>{label}</label>
       <div className="container">
-        <input {...props} />
+        <input
+          {...props}
+          className={props.className + (error ? " border-red" : "")}
+        />
         {error && (
           <span className="error">
             <FaExclamationCircle />
