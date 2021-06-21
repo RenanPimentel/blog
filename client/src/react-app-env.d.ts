@@ -32,7 +32,6 @@ interface IUser {
 }
 
 interface IState {
-  comments: IComment[];
   me: IMe;
 }
 
@@ -54,7 +53,6 @@ interface MainContext {
   defaultAvatar: string;
   defaultBanner: string;
   me: IMe;
-  comments: IComment[];
   logout(): void;
   getMe(): void;
   setMe(me: IMe): void;
@@ -62,8 +60,6 @@ interface MainContext {
   setMyPosts(id?: string): void;
   updateMyPost(id?: string, post: { title; content; topic }): void;
   addMyPost(post: IPost): void;
-  addComment(comment: IComment): void;
-  setComments(comments: IComment[]): void;
 }
 
 type FieldError = { field: string; reason: string };

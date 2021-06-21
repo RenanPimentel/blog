@@ -1,10 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
-function SendComment() {
-  const context = useContext(MainContext);
+interface Props {
+  addComment(comment: IComment): void;
+}
+
+function SendComment({ addComment }: Props) {
   const [comment, setComment] = useState("");
   const { post_id } = useParams<{ post_id: string }>();
 
@@ -13,7 +15,7 @@ function SendComment() {
       const response = await api.post(`/posts/${post_id}/comments`, {
         comment,
       });
-      context.addComment(response.data.data.comment);
+      addComment(response.data.data.comment);
     })();
   };
 
@@ -25,6 +27,7 @@ function SendComment() {
 
   return (
     <form className="send-comment">
+      <div className="line-v"></div>
       <div className="form-control comment-div">
         <input
           type="text"

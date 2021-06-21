@@ -32,12 +32,13 @@ function LoginPage() {
     try {
       await api.post("/account/login", { login, password });
       history.push("/me");
+
       getMe();
     } catch (err) {
       console.dir(err);
-      const errors: DataError[] = err.response.data.errors;
+      const errors: DataError[] = err.response?.data.errors;
 
-      errors.forEach(e => {
+      errors?.forEach(e => {
         if (e.field === "login") {
           setLoginError(e.reason);
         } else if (e.field === "password") {

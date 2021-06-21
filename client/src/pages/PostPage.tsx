@@ -27,7 +27,7 @@ function PostPage() {
   return (
     <main className="wrapper">
       <Post {...post} />
-      <CommentSection post_id={post_id} />
+      <CommentSection {...post} />
     </main>
   );
 }

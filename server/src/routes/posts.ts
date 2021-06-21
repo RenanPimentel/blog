@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { handleErr } from "../utils/handleErr";
 import { db } from "../index";
 import { getReadTime } from "../utils/getReadTime";
+import { handleErr } from "../utils/handleErr";
 
 const router = Router();
 
@@ -54,6 +54,7 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   const { id } = req.cookies.me;
+
   try {
     const response = await db.query(
       "SELECT * FROM posts WHERE author_id != $1 ORDER BY id LIMIT 10",
@@ -74,6 +75,19 @@ router.get("/:post_id", async (req, res) => {
       post_id,
     ]);
 
+    if (response.rowCount !== 1) {
+      res.status(404).json({
+        errors: [{ reason: "Post not found" }],
+        data: null,
+      } as MyResponse);
+      return;
+    }
+
+    await db.query(
+      "INSERT INTO post_views (user_id, post_id) VALUES ($1, $2)",
+      [req.cookies.me.id, post_id]
+    );
+
     const post = response.rows[0];
     res.json({ errors: null, data: { post } } as MyResponse);
   } catch (err) {
@@ -87,7 +101,7 @@ router.get("/:post_id/comments", async (req, res) => {
   try {
     const response = await db.query(
       "SELECT * FROM comments WHERE post_id = $1 ORDER BY id",
-      [post_id]
+      [Number(post_id)]
     );
 
     res.json({ errors: null, data: { comments: response.rows } } as MyResponse);
@@ -197,6 +211,97 @@ router.get("/author/:author_id", async (req, res) => {
   } catch (err) {
     handleErr(res, err);
   }
+});
+
+router.get("/likes/:post_id/count", async (req, res) => {
+  const { post_id } = req.params;
+
+  const response = await db.query(
+    "SELECT COUNT(*) FROM post_likes WHERE post_id = $1",
+    [post_id]
+  );
+
+  const count = response.rows[0]?.count;
+
+  if (count) {
+    res.json({ data: { count }, errors: null } as MyResponse);
+    return;
+  }
+});
+
+router.get("/views/:post_id/count", async (req, res) => {
+  const { post_id } = req.params;
+
+  const response = await db.query(
+    "SELECT COUNT(DISTINCT(user_id)) FROM post_views WHERE post_id = $1",
+    [post_id]
+  );
+
+  const count = response.rows[0]?.count;
+
+  if (count) {
+    res.json({ data: { count }, errors: null } as MyResponse);
+    return;
+  }
+});
+
+router.get("/likes/:post_id", async (req, res) => {
+  const { post_id } = req.params;
+
+  const response = await db.query(
+    "SELECT * FROM post_likes WHERE post_id = $1 AND user_id = $2",
+    [post_id, req.cookies.me?.id]
+  );
+
+  const like = response.rowCount === 1;
+
+  res.json({ data: { like }, errors: null } as MyResponse);
+});
+
+router.post("/likes/:post_id", async (req, res) => {
+  const { post_id } = req.params;
+
+  const postResponse = await db.query("SELECT id FROM posts WHERE id = $1", [
+    post_id,
+  ]);
+
+  if (postResponse.rowCount !== 1) {
+    res.status(404).json({
+      errors: [{ reason: "Post not found" }],
+      data: null,
+    } as MyResponse);
+    return;
+  }
+
+  await db.query("INSERT INTO post_likes (user_id, post_id) VALUES ($1, $2)", [
+    req.cookies.me.id,
+    post_id,
+  ]);
+
+  res.status(204).send();
+});
+
+router.delete("/likes/:post_id", async (req, res) => {
+  const { post_id } = req.params;
+
+  const postResponse = await db.query("SELECT id FROM posts WHERE id = $1", [
+    post_id,
+  ]);
+
+  if (postResponse.rowCount !== 1) {
+    res.status(404).json({
+      errors: [{ reason: "Post not found" }],
+      data: null,
+    } as MyResponse);
+    return;
+  }
+
+  await db.query("DELETE FROM post_likes WHERE user_id = $1 AND post_id = $2", [
+    req.cookies.me.id,
+    post_id,
+  ]);
+
+  res.status(204).send();
 });
 
 export default router;

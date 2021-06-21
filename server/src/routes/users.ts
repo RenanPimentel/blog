@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { handleErr } from "../utils/handleErr";
 import { db } from "../index";
+import { handleErr } from "../utils/handleErr";
 
 const router = Router();
 

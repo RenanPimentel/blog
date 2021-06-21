@@ -12,7 +12,6 @@ const MainContext = createContext({} as MainContext);
 
 const defaultState: IState = {
   me: { posts: [] },
-  comments: [],
 };
 
 interface Props {
@@ -55,14 +54,6 @@ function MyContextProvider({ children }: Props) {
     dispatch({ type: "ADD_MY_POST", payload: post });
   };
 
-  const addComment: MainContext["addComment"] = comment => {
-    dispatch({ type: "ADD_COMMENT", payload: comment });
-  };
-
-  const setComments: MainContext["setComments"] = comments => {
-    dispatch({ type: "SET_COMMENTS", payload: comments });
-  };
-
   const defaultAvatar: string =
     "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ficon-library.com%2Fimages%2Fdefault-profile-icon%2Fdefault-profile-icon-16.jpg&f=1&nofb=1";
 
@@ -79,8 +70,6 @@ function MyContextProvider({ children }: Props) {
     removeMyPost,
     addMyPost,
     updateMyPost,
-    addComment,
-    setComments,
     ...state,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
