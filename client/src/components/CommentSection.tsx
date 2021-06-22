@@ -25,6 +25,18 @@ function CommentSection({ id }: Props) {
     setComments([...comments, comment]);
   };
 
+  const removeComment = async (id: string) => {
+    await api.delete(`/comments/${id}`);
+    setComments(comments.filter(comment => comment.id !== id));
+  };
+
+  const changeComment = async (id: string, comment: string) => {
+    await api.put(`/comments/${id}`, { comment });
+    setComments(
+      comments.map(cmt => (cmt.id === id ? { ...cmt, content: comment } : cmt))
+    );
+  };
+
   return (
     <section className="comments-container">
       <div className="rel">
@@ -38,7 +50,12 @@ function CommentSection({ id }: Props) {
       ) : (
         <>
           {comments.map(comment => (
-            <Comment {...comment} key={comment.id} />
+            <Comment
+              {...comment}
+              key={comment.id}
+              removeComment={removeComment}
+              changeComment={changeComment}
+            />
           ))}
         </>
       )}

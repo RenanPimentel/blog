@@ -6,28 +6,47 @@ interface Props
     InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   > {
-  label: string;
+  label?: string;
   error: string;
 }
 
 function Input({ label, error, ...props }: Props) {
-  return (
-    <div className="form-control">
-      <label htmlFor={props.id}>{label}</label>
-      <div className="container">
-        <input
-          {...props}
-          className={props.className + (error ? " border-red" : "")}
-        />
-        {error && (
-          <span className="error">
-            <FaExclamationCircle />
-            <div className="error-data-container">
-              <span className="error-data">{error}</span>
-            </div>
-          </span>
-        )}
+  if (label) {
+    return (
+      <div className="form-control">
+        <label htmlFor={props.id}>{label}</label>
+        <div className="container">
+          <input
+            {...props}
+            className={props.className + (error ? " border-red" : "")}
+          />
+          {error && (
+            <span className="error">
+              <FaExclamationCircle />
+              <div className="error-data-container">
+                <span className="error-data">{error}</span>
+              </div>
+            </span>
+          )}
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="container">
+      <input
+        {...props}
+        className={props.className + (error ? " border-red" : "")}
+      />
+      {error && (
+        <span className="error" style={{ right: "10px", top: "0px" }}>
+          <FaExclamationCircle />
+          <div className="error-data-container">
+            <span className="error-data">{error}</span>
+          </div>
+        </span>
+      )}
     </div>
   );
 }

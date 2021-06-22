@@ -1,10 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
+import BtnContainer from "./BtnContainer";
 
-interface Props extends IComment {}
+interface Props extends IComment {
+  removeComment(id: string): void;
+  changeComment(id: string, content: string): void;
+}
 
 function Comment(props: Props) {
   const context = useContext(MainContext);
@@ -15,6 +18,9 @@ function Comment(props: Props) {
   });
   const [isAuthor, setIsAuthor] = useState(false);
   const [isPostAuthor, setIsPostAuthor] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [content, setContent] = useState(props.content);
+  const contentPRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     (async () => {
@@ -33,9 +39,30 @@ function Comment(props: Props) {
   useEffect(() => {
     (async () => {
       const response = await api.get(`/posts/${props.post_id}`);
-      setIsPostAuthor(response.data.data.author_id === context.me.id);
+      setIsPostAuthor(response.data.data.post.author_id === context.me.id);
     })();
   }, [context.me.id, props.post_id]);
+
+  const sendEdited = async () => {
+    props.changeComment(props.id, content);
+  };
+
+  const handleEditClick = () => {
+    if (editing) {
+      setEditing(false);
+      sendEdited();
+    } else {
+      setEditing(true);
+    }
+  };
+
+  const handleRemoveClick = () => props.removeComment(props.id);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setEditing(false);
+    sendEdited();
+  };
 
   return (
     <div className="comment-container top">
@@ -56,16 +83,30 @@ function Comment(props: Props) {
             </div>
             <h3 className="username">{author.username}</h3>
           </Link>
-          <div className="btn-container comment-btns">
-            {isAuthor && <FaRegEdit style={{ fill: "rgb(50, 200, 100)" }} />}
-            {(isAuthor || isPostAuthor) && (
-              <FaRegTrashAlt style={{ fill: "rgb(200, 50, 50)" }} />
-            )}
+          <BtnContainer
+            showEdit={isAuthor}
+            showRemove={isAuthor || isPostAuthor}
+            handleEditClick={handleEditClick}
+            handleRemoveClick={handleRemoveClick}
+          />
+        </div>
+        {editing ? (
+          <form className="comment-content" onSubmit={handleSubmit}>
+            <textarea
+              autoFocus
+              className="content"
+              value={content}
+              onChange={e => setContent(e.target.value)}
+            />
+            <button className="btn btn-large">Change</button>
+          </form>
+        ) : (
+          <div className="comment-content">
+            <p ref={contentPRef} className="content">
+              {props.content}
+            </p>
           </div>
-        </div>
-        <div className="comment-content">
-          <p className="content">{props.content}</p>
-        </div>
+        )}
       </div>
     </div>
   );

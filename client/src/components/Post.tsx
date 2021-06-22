@@ -67,13 +67,16 @@ function Post({
           {read_time} minute{read_time && read_time <= 1 ? "" : "s"} read
         </span>
         {new Date(updated_at || "") > new Date(created_at || "") ? (
-          <span>updated at {getDate(updated_at)}</span>
+          <span>
+            created at {getDate(created_at)} and updated at{" "}
+            {getDate(updated_at)}
+          </span>
         ) : (
-          <span>created at {getDate(created_at)}</span>
+          <span>updated at {getDate(updated_at)}</span>
         )}
       </div>
-      <p className="topic">{topic}</p>
       <p>{content}</p>
+      <p className="topic">{topic}</p>
       <PostFooter id={id} />
     </section>
   );

@@ -25,14 +25,16 @@ function Card({ content, id, title, topic, isOwner }: Props) {
   };
 
   return (
-    <Link className="card no-dec" to={`/posts/${id}`}>
+    <article className="card no-dec">
       <div className="same-line">
-        <h2
-          className="title overflow"
-          style={{ maxWidth: "14rem", width: "100%" }}
-        >
-          {title}
-        </h2>
+        <Link className="no-dec" to={`/posts/${id}`}>
+          <h2
+            className="title overflow"
+            style={{ maxWidth: "14rem", width: "100%" }}
+          >
+            {title}
+          </h2>
+        </Link>
         {isOwner && (
           <div className="btn-container">
             <Link className="link" to={`/me/posts/update/${id}`}>
@@ -48,11 +50,13 @@ function Card({ content, id, title, topic, isOwner }: Props) {
           </div>
         )}
       </div>
-      <div className="content-container">
-        <p title={content}>{content}</p>
-      </div>
-      <div className="topic">{topic}</div>
-    </Link>
+      <Link className="no-dec" to={`/posts/${id}`}>
+        <div className="content-container">
+          <p title={content}>{content}</p>
+        </div>
+        <div className="topic">{topic}</div>
+      </Link>
+    </article>
   );
 }
 

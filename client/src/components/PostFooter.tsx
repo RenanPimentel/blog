@@ -44,7 +44,9 @@ function PostFooter(props: Props) {
         </button>
         <p className="red">{likeCount}</p>
       </div>
-      <p>Views: {viewCount}</p>
+      <p>
+        {viewCount} view{Number(viewCount) === 1 ? "" : "s"}
+      </p>
     </footer>
   );
 }

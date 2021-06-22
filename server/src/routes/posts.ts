@@ -119,7 +119,7 @@ router.get("/:post_id/comments", async (req, res) => {
 
 router.post("/:post_id/comments", async (req, res) => {
   const { post_id } = req.params;
-  const { comment } = req.body;
+  const { comment, post_author_id } = req.body;
   const { me } = req.cookies;
 
   if (comment.length <= 0) {
@@ -132,8 +132,8 @@ router.post("/:post_id/comments", async (req, res) => {
 
   try {
     const response = await db.query(
-      "INSERT INTO comments (post_id, content, author_id) VALUES ($1, $2, $3) RETURNING *",
-      [post_id, comment, me.id]
+      "INSERT INTO comments (post_id, content, author_id, post_author_id) VALUES ($1, $2, $3, $4) RETURNING *",
+      [post_id, comment, me.id, post_author_id]
     );
 
     res.json({
