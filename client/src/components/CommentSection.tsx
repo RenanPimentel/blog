@@ -30,11 +30,17 @@ function CommentSection({ id }: Props) {
     setComments(comments.filter(comment => comment.id !== id));
   };
 
-  const changeComment = async (id: string, comment: string) => {
-    await api.put(`/comments/${id}`, { comment });
+  const changeComment = async (
+    id: string,
+    comment: string,
+    setComment: CallableFunction
+  ) => {
+    const response = await api.put(`/comments/${id}`, { comment });
     setComments(
       comments.map(cmt => (cmt.id === id ? { ...cmt, content: comment } : cmt))
     );
+
+    setComment(response.data.data.comment.content || "");
   };
 
   return (

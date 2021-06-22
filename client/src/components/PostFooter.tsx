@@ -7,7 +7,6 @@ interface Props extends IPost {}
 function PostFooter(props: Props) {
   const [like, setLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  const [viewCount, setViewCount] = useState(0);
 
   const toggleLike = async () => {
     if (like) {
@@ -29,24 +28,22 @@ function PostFooter(props: Props) {
 
         const boolResponse = await api.get(`/posts/likes/${props.id}`);
         setLike(boolResponse.data.data.like);
-
-        const viewsResponse = await api.get(`/posts/views/${props.id}/count`);
-        setViewCount(viewsResponse.data.data.count);
       }
     })();
   }, [props.id]);
 
   return (
-    <footer>
+    <footer className="post-footer">
       <div className="same-line right">
-        <button onClick={toggleLike} className="link large red center">
+        <button
+          onClick={toggleLike}
+          className="link red center"
+          style={{ padding: 0 }}
+        >
           {like ? <FaHeart /> : <FaRegHeart />}
         </button>
         <p className="red">{likeCount}</p>
       </div>
-      <p>
-        {viewCount} view{Number(viewCount) === 1 ? "" : "s"}
-      </p>
     </footer>
   );
 }

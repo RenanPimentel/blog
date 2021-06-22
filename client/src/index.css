@@ -10,6 +10,7 @@
   --blue: blue;
   --blue-bg: rgba(0, 0, 255, 0.1);
   --transition: all 0.3s ease-out;
+  --max-width: 800px;
 }
 
 #root {
@@ -120,7 +121,6 @@ input:focus {
   outline: none;
   box-shadow: 0 0 10px -5px black;
   transition: var(--transition);
-  width: 200px;
 }
 
 .form-control .container {
@@ -192,12 +192,17 @@ textarea {
 }
 
 .links {
+  /* position: relative; */
   list-style: none;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 1rem;
   margin: 0;
   padding: 0;
+  /* max-width: var(--max-width);
+  width: 100%;
+  margin: auto; */
 }
 
 .toggle-dark {
@@ -313,7 +318,13 @@ input.border-red {
 }
 
 .username {
+  margin: 0;
   margin-top: 10px;
+  width: 100%;
+  text-align: left !important;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .profile .profile-picture img {
@@ -391,6 +402,22 @@ input.border-red {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  position: relative;
+}
+
+.comment-content .close-btn {
+  position: absolute;
+  right: 0;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  background: var(--pure-bg);
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+}
+
+.comment-content .close-btn svg {
+  fill: rgb(200, 50, 50);
 }
 
 .comment-content * {
@@ -437,8 +464,9 @@ p.content {
 }
 
 .center {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .comment-container {
@@ -459,19 +487,20 @@ p.content {
 
 .container-wrapper {
   position: absolute;
-  right: 0;
+  right: -10px;
   width: 0;
   height: 0;
   opacity: 0;
-  transition: var(--transition);
   overflow: hidden;
   z-index: 100;
+  transition: var(--transition);
 }
 
 .profile-container:hover .container-wrapper {
   padding: 20px;
   opacity: 1;
-  right: 0px;
+  right: 0;
+  top: 50px;
   width: auto;
   height: fit-content;
 }
@@ -554,7 +583,20 @@ p {
   content: "# ";
 }
 
+.views {
+  margin-top: 10px;
+  gap: 0.5rem;
+  padding: 0;
+  height: 100%;
+}
+
+.under-profile-banner {
+  height: auto;
+  align-items: baseline !important;
+}
+
 .same-line,
+.under-profile-banner,
 .comment-div {
   display: flex;
   justify-content: space-around;
@@ -626,14 +668,14 @@ svg {
 
 .post-container {
   width: 100%;
-  max-width: 50rem;
+  max-width: var(--max-width);
   position: relative;
   margin: auto;
 }
 
 .comments-container {
   width: 100%;
-  max-width: 50rem;
+  max-width: var(--max-width);
   position: relative;
   margin: auto;
   margin-top: 3rem;
@@ -644,7 +686,19 @@ svg {
   align-items: flex-start;
   flex-direction: column;
   justify-content: center;
-  gap: 1rem;
+}
+
+.details * {
+  margin: 0;
+}
+
+.details span {
+  color: gray;
+  font-size: 0.75rem;
+  line-height: 2rem;
+  font-weight: 400;
+  font-style: italic;
+  white-space: nowrap;
 }
 
 .line-v {
@@ -654,14 +708,6 @@ svg {
   background: var(--main-color);
   position: absolute;
   left: -20px;
-}
-
-.details span {
-  color: gray;
-  font-size: 0.75rem;
-  font-weight: 400;
-  font-style: italic;
-  white-space: nowrap;
 }
 
 .card {
@@ -702,7 +748,11 @@ svg {
   margin: 0;
 }
 
-@media (max-width: 350px) {
+textarea::-webkit-scrollbar {
+  border-radius: 50px;
+}
+
+@media (max-width: 450px) {
   :root {
     --padding: 0.25rem 0.5rem;
   }

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { RiCloseFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
@@ -6,7 +7,11 @@ import BtnContainer from "./BtnContainer";
 
 interface Props extends IComment {
   removeComment(id: string): void;
-  changeComment(id: string, content: string): void;
+  changeComment(
+    id: string,
+    content: string,
+    setContent: CallableFunction
+  ): void;
 }
 
 function Comment(props: Props) {
@@ -20,6 +25,7 @@ function Comment(props: Props) {
   const [isPostAuthor, setIsPostAuthor] = useState(false);
   const [editing, setEditing] = useState(false);
   const [content, setContent] = useState(props.content);
+  const [error, setError] = useState("");
   const contentPRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
@@ -43,14 +49,26 @@ function Comment(props: Props) {
     })();
   }, [context.me.id, props.post_id]);
 
+  useEffect(() => {
+    if (256 < content.length) {
+      setContent(content.slice(0, -1));
+    } else {
+      setError("");
+    }
+
+    if (255 < content.length) {
+      setError("too long");
+    }
+  }, [content]);
+
   const sendEdited = async () => {
-    props.changeComment(props.id, content);
+    props.changeComment(props.id, content, setContent);
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = async () => {
     if (editing) {
+      await sendEdited();
       setEditing(false);
-      sendEdited();
     } else {
       setEditing(true);
     }
@@ -58,10 +76,15 @@ function Comment(props: Props) {
 
   const handleRemoveClick = () => props.removeComment(props.id);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const closeContent = async () => {
     setEditing(false);
-    sendEdited();
+    setContent(props.content);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await sendEdited();
+    setEditing(false);
   };
 
   return (
@@ -69,20 +92,20 @@ function Comment(props: Props) {
       <div className="rel">
         <div className="line-v"></div>
         <div className="same-line right">
-          <Link
-            to={
-              props.author_id === context.me.id
-                ? "/me"
-                : `/users/${props.author_id}`
-            }
-            className="same-line right rel no-dec"
-            style={{ width: "fit-content" }}
-          >
-            <div className="profile-picture">
-              <img src={author.avatar} alt={author.avatarAlt} />
-            </div>
+          <div className="same-line right no-dec">
+            <Link
+              to={
+                props.author_id === context.me.id
+                  ? "/me"
+                  : `/users/${props.author_id}`
+              }
+            >
+              <div className="profile-picture">
+                <img src={author.avatar} alt={author.avatarAlt} />
+              </div>
+            </Link>
             <h3 className="username">{author.username}</h3>
-          </Link>
+          </div>
           <BtnContainer
             showEdit={isAuthor}
             showRemove={isAuthor || isPostAuthor}
@@ -96,8 +119,16 @@ function Comment(props: Props) {
               autoFocus
               className="content"
               value={content}
-              onChange={e => setContent(e.target.value)}
+              onChange={e => setContent(e.target.value.replace(/\s+/g, " "))}
+              style={{
+                border: error
+                  ? "1px solid rgb(200, 50, 50)"
+                  : "1px solid rgb(50, 200, 100)",
+              }}
             />
+            <button className="link close-btn" onClick={closeContent}>
+              <RiCloseFill />
+            </button>
             <button className="btn btn-large">Change</button>
           </form>
         ) : (

@@ -33,7 +33,7 @@ router.put("/:comment_id", async (req, res) => {
 
   try {
     const response = await db.query(
-      "UPDATE comments SET content = $1 WHERE id = $2",
+      "UPDATE comments SET content = $1 WHERE id = $2 RETURNING *",
       [newComment, comment_id]
     );
 

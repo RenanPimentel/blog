@@ -27,11 +27,8 @@ function Card({ content, id, title, topic, isOwner }: Props) {
   return (
     <article className="card no-dec">
       <div className="same-line">
-        <Link className="no-dec" to={`/posts/${id}`}>
-          <h2
-            className="title overflow"
-            style={{ maxWidth: "14rem", width: "100%" }}
-          >
+        <Link className="no-dec" to={`/posts/${id}`} style={{ width: "0" }}>
+          <h2 className="title overflow" style={{ maxWidth: "100%" }}>
             {title}
           </h2>
         </Link>
