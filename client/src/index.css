@@ -545,6 +545,10 @@ tr {
   gap: 2rem;
 }
 
+.user-posts {
+  position: relative;
+}
+
 .content-container {
   height: 10rem;
 }
@@ -662,10 +666,16 @@ svg {
   text-decoration: none;
 }
 
+.container,
 .post-container {
   width: 100%;
   max-width: var(--max-width);
   position: relative;
+  margin: auto;
+}
+
+.user-posts {
+  max-width: var(--max-width);
   margin: auto;
 }
 

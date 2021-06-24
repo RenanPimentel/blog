@@ -39,40 +39,12 @@ function PostPreview({ title, topic, content }: Props) {
     },
   };
 
-  /*
-<section className="post-container">
-      <ProfileHeader
-        post_id={id || ""}
-        banner={author.banner}
-        avatar={author.avatar}
-        username={author.username}
-        id={author_id}
-      />
-      <h1>{title}</h1>
-      <div className="details">
-        <span>
-          {read_time} minute{read_time && read_time <= 1 ? "" : "s"} read
-        </span>
-        {new Date(updated_at || "") > new Date(created_at || "") ? (
-          <div>
-            <span>created at {getDate(created_at)}</span>{" "}
-            <span>updated at {getDate(updated_at)}</span>
-          </div>
-        ) : (
-          <span>created at {getDate(updated_at)}</span>
-        )}
-      </div>
-      <p>{content}</p>
-      <p className="topic">{topic}</p>
-      <PostFooter id={id} />
-    </section>
-*/
-
   return (
     <section className="post-preview">
       <div className="post-container">
         <ProfileHeader
           getViews={false}
+          showFollow={false}
           post_id={me.id || ""}
           banner={me.banner}
           avatar={me.avatar}

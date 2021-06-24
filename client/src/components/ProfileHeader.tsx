@@ -3,10 +3,12 @@ import { FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
+import FollowButton from "./FollowButton";
 
 interface Props extends IUser {
   post_id: string;
   getViews: boolean;
+  showFollow: boolean;
 }
 
 function ProfileHeader({
@@ -16,6 +18,7 @@ function ProfileHeader({
   id,
   post_id,
   getViews,
+  showFollow,
 }: Props) {
   const context = useContext(MainContext);
   const [viewCount, setViewCount] = useState(0);
@@ -51,15 +54,19 @@ function ProfileHeader({
               />
             </Link>
             <h2 className="username">{username}</h2>
-            {getViews ? (
-              <div className="views center">
-                <FaEye />
-                <p></p>
-                <span>{viewCount}</span>
-              </div>
-            ) : (
-              <div></div>
-            )}
+            <div className="views center">
+              {getViews ? (
+                <>
+                  <FaEye />
+                  <p></p>
+                  <span>{viewCount}</span>
+                </>
+              ) : showFollow ? (
+                <FollowButton user_id={id} />
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
         </div>
       </div>

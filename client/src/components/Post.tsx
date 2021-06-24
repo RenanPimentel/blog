@@ -57,6 +57,7 @@ function Post({
     <section className="post-container">
       <ProfileHeader
         getViews={true}
+        showFollow={false}
         post_id={id || ""}
         banner={author.banner}
         avatar={author.avatar}

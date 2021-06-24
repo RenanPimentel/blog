@@ -19,7 +19,7 @@ interface Props {
 }
 
 function MyContextProvider({ children }: Props) {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(localStorage.getItem("dark") === "true");
   const [state, dispatch] = useReducer(reducer, defaultState);
 
   const logout = async () => {
