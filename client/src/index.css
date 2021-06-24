@@ -339,10 +339,6 @@ input.border-red {
   position: relative;
   width: 50px;
   height: 50px;
-  min-width: none;
-  min-height: none;
-  max-width: none;
-  max-height: none;
   border-radius: 50%;
   overflow: hidden;
   display: grid;
@@ -371,13 +367,15 @@ input.border-red {
   list-style: none;
   background: var(--main-bg);
   border-radius: 20px;
-  padding: 1rem 2rem;
-  padding-right: 1rem;
   box-shadow: 0 0 10px -5px var(--main-fcolor);
-  transition: all 0.2s ease;
 }
 
-.profile-container .profile-settings:hover {
+.profile-container:hover .profile-settings {
+  padding: 1rem 2rem;
+  padding-right: 1rem;
+}
+
+.nav-user .profile-settings:hover {
   box-shadow: 0 0 14px -7px var(--main-fcolor);
 }
 
@@ -487,27 +485,25 @@ p.content {
 
 .container-wrapper {
   position: absolute;
-  right: -10px;
-  width: 0;
-  height: 0;
-  opacity: 0;
-  overflow: hidden;
-  z-index: 100;
+  top: 50px;
+  right: 0;
   transition: var(--transition);
+  z-index: -1;
+  max-width: 0;
+  width: 100%;
 }
 
 .profile-container:hover .container-wrapper {
   padding: 20px;
-  opacity: 1;
-  right: 0;
-  top: 50px;
-  width: auto;
   height: fit-content;
+  z-index: 100;
+  max-width: fit-content;
 }
 
 .profile-settings li {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   align-items: flex-end;
 }
 

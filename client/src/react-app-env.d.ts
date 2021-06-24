@@ -54,6 +54,8 @@ interface MainContext {
   defaultAvatar: string;
   defaultBanner: string;
   me: IMe;
+  isDark: boolean;
+  setIsDark(isDark: boolean): void;
   logout(): void;
   getMe(): void;
   setMe(me: IMe): void;

@@ -3,25 +3,24 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function ChangeName() {
-  const context = useContext(MainContext);
-  const [changingName, setChangingName] = useState(context.me?.username || "");
+  const { me, setMe } = useContext(MainContext);
+  const [changingName, setChangingName] = useState(me?.username || "");
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setChangingName(context.me?.username || "");
-  }, [context]);
+    setChangingName(me?.username || "");
+  }, [me]);
 
   const setUsername = async () => {
     try {
       const response = await api.post("/me/username", {
         username: changingName,
       });
-      context.setMe(response.data.data.user);
+      setMe(response.data.data.user);
     } catch (err) {
       setError(
         err.response.data.errors.map((e: FieldError) => e.reason).join(", ")
       );
-
       setTimeout(() => setError(""), 3000);
     }
   };
@@ -42,7 +41,7 @@ function ChangeName() {
           />
         </div>
         {error && <span className="error btn-large">{error}</span>}
-        {changingName === context.me?.username || changingName === "" ? (
+        {changingName === me?.username || changingName === "" ? (
           <button title="missing username" disabled className="btn btn-large">
             Set
           </button>

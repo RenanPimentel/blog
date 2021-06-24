@@ -1,10 +1,10 @@
-/* eslint-disable no-restricted-globals */
 import React, {
   createContext,
   ReactElement,
   useCallback,
   useReducer,
 } from "react";
+import { useState } from "react";
 import { api } from "../util/api";
 import { reducer } from "./reducer";
 
@@ -19,10 +19,12 @@ interface Props {
 }
 
 function MyContextProvider({ children }: Props) {
+  const [isDark, setIsDark] = useState(false);
   const [state, dispatch] = useReducer(reducer, defaultState);
 
   const logout = async () => {
     await api.get("/account/logout");
+    // eslint-disable-next-line no-restricted-globals
     location.assign("/me");
   };
 
@@ -63,6 +65,8 @@ function MyContextProvider({ children }: Props) {
   const value: MainContext = {
     defaultAvatar,
     defaultBanner,
+    setIsDark,
+    isDark,
     logout,
     getMe,
     setMyPosts,

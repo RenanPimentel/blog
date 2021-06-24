@@ -56,6 +56,7 @@ function Post({
   return (
     <section className="post-container">
       <ProfileHeader
+        getViews={true}
         post_id={id || ""}
         banner={author.banner}
         avatar={author.avatar}

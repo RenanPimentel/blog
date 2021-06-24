@@ -1,24 +1,25 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { BsSun, BsMoon } from "react-icons/bs";
+import React, { useContext, useEffect } from "react";
+import { BsMoon, BsSun } from "react-icons/bs";
+import { MainContext } from "../context/context";
 
 function ToggleDark() {
-  const [dark, setDark] = useState(localStorage.getItem("dark") === "true");
+  const { isDark, setIsDark } = useContext(MainContext);
 
   useEffect(() => {
-    localStorage.setItem("dark", String(dark));
-    document.getElementById("root")?.classList[dark ? "add" : "remove"]("dark");
-  }, [dark]);
+    localStorage.setItem("dark", String(isDark));
+    document
+      .getElementById("root")
+      ?.classList[isDark ? "add" : "remove"]("dark");
+  }, [isDark]);
 
   const toggleDark = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
-    setDark(!dark);
+    setIsDark(!isDark);
   };
 
   return (
     <div className="toggle-dark" onClick={e => toggleDark(e)}>
-      <button>{dark ? <BsSun /> : <BsMoon />}</button>
+      <button>{isDark ? <BsSun /> : <BsMoon />}</button>
     </div>
   );
 }

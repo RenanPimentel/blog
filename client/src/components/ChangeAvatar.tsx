@@ -3,22 +3,20 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function ChangeAvatar() {
-  const context = useContext(MainContext);
-  const [avatar, setAvatar] = useState(
-    context.me?.avatar || context.defaultAvatar
-  );
-  const [preview, setPreview] = useState(context.me?.avatar || "");
+  const { me, defaultAvatar, setMe } = useContext(MainContext);
+  const [avatar, setAvatar] = useState(me?.avatar || defaultAvatar);
+  const [preview, setPreview] = useState(me?.avatar || "");
   const [error, setError] = useState("");
 
   const setProfilePicture = async () => {
     const response = await api.post("/me/avatar", { avatar });
-    context.setMe(response.data.data.user);
+    setMe(response.data.data.user);
   };
 
   useEffect(() => {
-    setAvatar(context.me?.avatar || context.defaultAvatar);
-    setPreview(context.me?.avatar || "");
-  }, [context.defaultAvatar, context.me]);
+    setAvatar(me?.avatar || defaultAvatar);
+    setPreview(me?.avatar || "");
+  }, [defaultAvatar, me]);
 
   useEffect(() => {
     (async () => {
@@ -28,17 +26,17 @@ function ChangeAvatar() {
         if (blob.size > 100_000) {
           setError("Select a smaller image");
           setTimeout(() => setError(""), 3000);
-          setAvatar(context.defaultAvatar);
+          setAvatar(defaultAvatar);
         } else if (blob.type.startsWith("image/")) {
           setAvatar(preview);
         } else {
-          setAvatar(context.defaultAvatar);
+          setAvatar(defaultAvatar);
         }
       } catch (e) {
-        setAvatar(context.defaultAvatar);
+        setAvatar(defaultAvatar);
       }
     })();
-  }, [context.defaultAvatar, preview]);
+  }, [defaultAvatar, preview]);
 
   return (
     <div>
@@ -61,7 +59,7 @@ function ChangeAvatar() {
           />
         </div>
         {error && <span className="error btn-large">{error}</span>}
-        {avatar === context.defaultAvatar || avatar === context.me?.avatar ? (
+        {avatar === defaultAvatar || avatar === me?.avatar ? (
           <button title="missing image" disabled className="btn btn-large">
             Set
           </button>

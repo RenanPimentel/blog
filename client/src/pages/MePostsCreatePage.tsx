@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import PostForm from "../components/PostForm";
+import PostPreview from "../components/PostPreview";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
@@ -64,6 +65,7 @@ function MePostsCreate() {
     <main className="wrapper">
       <h2>Create new post</h2>
       <PostForm {...formProps} />
+      <PostPreview {...formProps} />
     </main>
   );
 }

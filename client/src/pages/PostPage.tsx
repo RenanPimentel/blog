@@ -7,7 +7,7 @@ import { api } from "../util/api";
 
 function PostPage() {
   const [post, setPost] = useState<IPost>({});
-  const { post_id } = useParams() as { post_id: string };
+  const { post_id } = useParams<{ post_id: string }>();
 
   useEffect(() => {
     (async () => {

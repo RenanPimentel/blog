@@ -3,22 +3,20 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function ChangeBanner() {
-  const context = useContext(MainContext);
-  const [banner, setBanner] = useState(
-    context.me?.banner || context.defaultBanner
-  );
-  const [preview, setPreview] = useState(context.me?.banner || "");
+  const { me, defaultBanner, setMe } = useContext(MainContext);
+  const [banner, setBanner] = useState(me?.banner || defaultBanner);
+  const [preview, setPreview] = useState(me?.banner || "");
   const [error, setError] = useState("");
 
   const setProfileBanner = async () => {
     const response = await api.post("/me/banner", { banner });
-    context.setMe(response.data.data.user);
+    setMe(response.data.data.user);
   };
 
   useEffect(() => {
-    setBanner(context.me?.banner || context.defaultBanner);
-    setPreview(context.me?.banner || "");
-  }, [context.defaultBanner, context.me]);
+    setBanner(me?.banner || defaultBanner);
+    setPreview(me?.banner || "");
+  }, [defaultBanner, me]);
 
   useEffect(() => {
     (async () => {
@@ -28,17 +26,17 @@ function ChangeBanner() {
         if (blob.size > 100_000) {
           setError("Select a smaller image");
           setTimeout(() => setError(""), 3000);
-          setBanner(context.defaultBanner);
+          setBanner(defaultBanner);
         } else if (blob.type.startsWith("image/")) {
           setBanner(preview);
         } else {
-          setBanner(context.defaultBanner);
+          setBanner(defaultBanner);
         }
       } catch (e) {
-        setBanner(context.defaultBanner);
+        setBanner(defaultBanner);
       }
     })();
-  }, [context.defaultBanner, preview]);
+  }, [defaultBanner, preview]);
 
   return (
     <div>
@@ -61,7 +59,7 @@ function ChangeBanner() {
           />
         </div>
         {error && <span className="error btn-large">{error}</span>}
-        {banner === context.defaultBanner || banner === context.me?.banner ? (
+        {banner === defaultBanner || banner === me?.banner ? (
           <button title="missing image" disabled className="btn btn-large">
             Set
           </button>
