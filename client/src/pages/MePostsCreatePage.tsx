@@ -63,7 +63,7 @@ function MePostsCreate() {
 
   return (
     <main className="wrapper">
-      <h2>Create new post</h2>
+      <h2 className="fit-content">Create new post</h2>
       <PostForm {...formProps} />
       <PostPreview {...formProps} />
     </main>

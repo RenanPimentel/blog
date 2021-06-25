@@ -35,7 +35,7 @@ function FollowButton({ user_id }: Props) {
     <div className="follow-container">
       <div className="same-line">
         {followerCount}
-        <button onClick={handleClick} className="link">
+        <button title="follow" onClick={handleClick} className="link">
           {isFollowing ? <FaMinus /> : <FaPlus />}
         </button>
       </div>

@@ -401,6 +401,7 @@ input.border-red {
   flex-direction: column;
   gap: 1rem;
   position: relative;
+  margin-bottom: 4rem;
 }
 
 .comment-content .close-btn {
@@ -543,6 +544,10 @@ tr {
   width: 100%;
   grid-template-columns: repeat(auto-fill, 20rem);
   gap: 2rem;
+}
+
+.fit-content {
+  width: fit-content;
 }
 
 .user-posts {

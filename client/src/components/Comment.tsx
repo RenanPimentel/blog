@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { RiCloseFill } from "react-icons/ri";
+import { FaMinus, FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
@@ -14,40 +15,59 @@ interface Props extends IComment {
   ): void;
 }
 
-function Comment(props: Props) {
+function Comment({
+  updated_at,
+  created_at,
+  author_id,
+  post_author_id,
+  content: propsContent,
+  id,
+  post_id,
+  ...props
+}: Props) {
   const context = useContext(MainContext);
+  const [isAuthor, setIsAuthor] = useState(false);
+  const [isPostAuthor, setIsPostAuthor] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [content, setContent] = useState(propsContent);
+  const [error, setError] = useState("");
+  const [likeCount, setLikeCount] = useState(0);
+  const [likes, setLikes] = useState(false);
   const [author, setAuthor] = useState({
     avatar: "",
     avatarAlt: "",
     username: "",
   });
-  const [isAuthor, setIsAuthor] = useState(false);
-  const [isPostAuthor, setIsPostAuthor] = useState(false);
-  const [editing, setEditing] = useState(false);
-  const [content, setContent] = useState(props.content);
-  const [error, setError] = useState("");
   const contentPRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     (async () => {
-      const response = await api.get(`/users/${props.author_id}`);
+      const response = await api.get(`/users/${author_id}`);
       setAuthor({
         ...response.data.data.user,
         avatarAlt: `${response.data.data.user.username} avatar`,
       });
     })();
-  }, [props.author_id]);
+  }, [author_id]);
 
   useEffect(() => {
-    setIsAuthor(context.me.id === props.author_id);
-  }, [context.me.id, props.author_id]);
+    setIsAuthor(context.me.id === author_id);
+  }, [context.me.id, author_id]);
 
   useEffect(() => {
     (async () => {
-      const response = await api.get(`/posts/${props.post_id}`);
+      const response = await api.get(`/posts/${post_id}`);
       setIsPostAuthor(response.data.data.post.author_id === context.me.id);
     })();
-  }, [context.me.id, props.post_id]);
+  }, [context.me.id, post_id]);
+
+  useEffect(() => {
+    if (!id) return;
+    (async () => {
+      const response = await api.get(`/comments/${id}/likes/count`);
+      setLikeCount(Number(response.data.data.count));
+    })();
+  }, [id]);
 
   useEffect(() => {
     if (256 < content.length) {
@@ -61,8 +81,16 @@ function Comment(props: Props) {
     }
   }, [content]);
 
+  useEffect(() => {
+    if (!id) return;
+    (async () => {
+      const response = await api.get(`/comments/${id}/like`);
+      setLikes(response.data.data.likes);
+    })();
+  }, [id]);
+
   const sendEdited = async () => {
-    props.changeComment(props.id, content, setContent);
+    props.changeComment(id, content, setContent);
   };
 
   const handleEditClick = async () => {
@@ -74,11 +102,23 @@ function Comment(props: Props) {
     }
   };
 
-  const handleRemoveClick = () => props.removeComment(props.id);
+  const handleLikeClick = async () => {
+    console.log("a");
+    await api.put(`/comments/${id}/like`);
+    if (likes) {
+      setLikes(false);
+      setLikeCount(likeCount - 1);
+    } else {
+      setLikes(true);
+      setLikeCount(likeCount + 1);
+    }
+  };
+
+  const handleRemoveClick = () => props.removeComment(id);
 
   const closeContent = async () => {
     setEditing(false);
-    setContent(props.content);
+    setContent(propsContent);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -94,11 +134,7 @@ function Comment(props: Props) {
         <div className="same-line right">
           <div className="same-line right no-dec">
             <Link
-              to={
-                props.author_id === context.me.id
-                  ? "/me"
-                  : `/users/${props.author_id}`
-              }
+              to={author_id === context.me.id ? "/me" : `/users/${author_id}`}
             >
               <div className="profile-picture">
                 <img src={author.avatar} alt={author.avatarAlt} />
@@ -106,12 +142,22 @@ function Comment(props: Props) {
             </Link>
             <h3 className="username">{author.username}</h3>
           </div>
-          <BtnContainer
-            showEdit={isAuthor}
-            showRemove={isAuthor || isPostAuthor}
-            handleEditClick={handleEditClick}
-            handleRemoveClick={handleRemoveClick}
-          />
+          <div className="same-line" style={{ gap: "2rem" }}>
+            {new Date(created_at) < new Date(updated_at) && (
+              <i
+                title={`updated at ${new Date(updated_at).toLocaleString()}`}
+                style={{ color: "gray" }}
+              >
+                updated
+              </i>
+            )}
+            <BtnContainer
+              showEdit={isAuthor}
+              showRemove={isAuthor || isPostAuthor}
+              handleEditClick={handleEditClick}
+              handleRemoveClick={handleRemoveClick}
+            />
+          </div>
         </div>
         {editing ? (
           <form className="comment-content" onSubmit={handleSubmit}>
@@ -134,8 +180,14 @@ function Comment(props: Props) {
         ) : (
           <div className="comment-content">
             <p ref={contentPRef} className="content">
-              {props.content}
+              {content}
             </p>
+            <div className="same-line">
+              <button className="link" title="like" onClick={handleLikeClick}>
+                {likes ? <FaMinus /> : <FaPlus />}
+              </button>
+              {likeCount}
+            </div>
           </div>
         )}
       </div>

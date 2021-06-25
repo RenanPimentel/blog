@@ -68,4 +68,69 @@ router.delete("/:comment_id", async (req, res) => {
   res.status(204).send();
 });
 
+router.put("/:comment_id/like", async (req, res) => {
+  const { comment_id } = req.params;
+
+  try {
+    const response = await db.query(
+      "SELECT * FROM comment_likes WHERE user_id = $1 AND comment_id = $2",
+      [req.cookies.me.id, comment_id]
+    );
+
+    if (response.rowCount === 0) {
+      await db.query(
+        "INSERT INTO comment_likes (comment_id, user_id) VALUES ($1, $2)",
+        [comment_id, req.cookies.me.id]
+      );
+    } else {
+      await db.query(
+        "DELETE FROM comment_likes WHERE user_id = $1 AND comment_id = $2",
+        [req.cookies.me.id, comment_id]
+      );
+    }
+
+    res.status(204).send();
+  } catch (err) {
+    handleErr(res, err);
+  }
+});
+
+router.get("/:comment_id/like", async (req, res) => {
+  const { comment_id } = req.params;
+
+  try {
+    const response = await db.query(
+      "SELECT * FROM comment_likes WHERE user_id = $1 AND comment_id = $2",
+      [req.cookies.me.id, comment_id]
+    );
+
+    res.json({
+      data: { likes: response.rowCount > 0 },
+      errors: null,
+    } as MyResponse);
+  } catch (err) {
+    handleErr(res, err);
+  }
+});
+
+router.get("/:comment_id/likes/count", async (req, res) => {
+  const { comment_id } = req.params;
+
+  try {
+    const response = await db.query(
+      "SELECT COUNT(DISTINCT(user_id)) FROM comment_likes WHERE comment_id = $1",
+      [comment_id]
+    );
+
+    const { count } = response.rows[0];
+
+    res.json({
+      data: { count },
+      errors: null,
+    } as MyResponse);
+  } catch (err) {
+    handleErr(res, err);
+  }
+});
+
 export default router;

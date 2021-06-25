@@ -9,6 +9,10 @@ interface Props {
 }
 
 function BtnContainer(props: Props) {
+  if (!props.showEdit && !props.showRemove) {
+    return <></>;
+  }
+
   return (
     <div className="btn-container">
       {props.showEdit && (
