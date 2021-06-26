@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { useState } from "react";
+import React, { useContext, useState } from "react";
+import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import PostForm from "../components/PostForm";
 import PostPreview from "../components/PostPreview";
@@ -11,6 +11,8 @@ function MePostsCreate() {
   const history = useHistory();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [lines, setLines] = useState<string[]>([""]);
+  const [selectValues, setSelectValues] = useState<string[]>(["###"]);
   const [topic, setTopic] = useState("");
   const [titleError, setTitleError] = useState("");
   const [topicError, setTopicError] = useState("");
@@ -18,7 +20,6 @@ function MePostsCreate() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       const response = await api.post("/posts", {
         post: { title, content, topic },
@@ -61,11 +62,29 @@ function MePostsCreate() {
     contentError,
   };
 
+  useEffect(() => {
+    const newContent = lines
+      .map((line, i) => [selectValues[i], line].join(" "))
+      .join("\n");
+    setContent(newContent);
+  }, [lines, selectValues]);
+
   return (
     <main className="wrapper">
       <h2 className="fit-content">Create new post</h2>
-      <PostForm {...formProps} />
-      <PostPreview {...formProps} />
+      <section className="same-line wrap top" style={{ gap: "30px" }}>
+        <PostForm
+          topic={topic}
+          setTopic={setTopic}
+          title={title}
+          setTitle={setTitle}
+          values={lines}
+          setValues={setLines}
+          selects={selectValues}
+          setSelects={setSelectValues}
+        />
+        <PostPreview {...formProps} />
+      </section>
     </main>
   );
 }

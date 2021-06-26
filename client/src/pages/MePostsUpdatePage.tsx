@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import PostForm from "../components/PostForm";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
@@ -63,7 +62,6 @@ function MePostsUpdatePage() {
   return (
     <main className="wrapper">
       <h2>Update your post</h2>
-      {singlePost.id ? <PostForm {...formProps} /> : <h4>loading...</h4>}
     </main>
   );
 }

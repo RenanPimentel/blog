@@ -1,69 +1,78 @@
 import React from "react";
-import Input from "./Input";
-import Textarea from "./Textarea";
+import CreatePostSelect from "./CreatePostSelect";
 
 interface Props {
-  handleSubmit(e: React.FormEvent<HTMLFormElement>): void;
+  values: string[];
+  setValues: CallableFunction;
+  selects: string[];
+  setSelects: CallableFunction;
   title: string;
   setTitle: CallableFunction;
   topic: string;
   setTopic: CallableFunction;
-  content: string;
-  setContent: CallableFunction;
-  titleError: string;
-  topicError: string;
-  contentError: string;
 }
 
 function PostForm({
-  handleSubmit,
-  content,
-  setContent,
+  setValues,
+  values,
+  selects,
+  setSelects,
   setTitle,
-  setTopic,
   title,
+  setTopic,
   topic,
-  titleError,
-  topicError,
-  contentError,
 }: Props) {
+  const addLine = () => {
+    setValues([...values, ""]);
+    setSelects([...selects, ""]);
+  };
+
+  const removeLine = (i: number) => {
+    setValues(values.filter((_, j) => j !== i));
+    setSelects(selects.filter((_, j) => j !== i));
+  };
+
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit}>
-        <div className="form-control">
-          <Input
-            error={titleError}
-            label="Title"
-            onChange={e => setTitle(e.target.value)}
-            value={title}
-            type="text"
-            id="title"
+    <section className="post-form-wrapper">
+      <div className="same-line right top">
+        <label htmlFor="title">Title</label>
+        <textarea
+          id="title"
+          className="textarea"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+        />
+      </div>
+      <div className="same-line right top">
+        <label htmlFor="topic">Topic</label>
+        <textarea
+          id="topic"
+          className="textarea"
+          value={topic}
+          onChange={e => setTopic(e.target.value)}
+        />
+      </div>
+      {values.map((value, i) => (
+        <div className="same-line right top" key={i}>
+          <CreatePostSelect selects={selects} setSelects={setSelects} i={i} />
+          <textarea
+            className="textarea"
+            value={value}
+            onChange={e =>
+              setValues(
+                values.map((val, j) => (j === i ? e.target.value : val))
+              )
+            }
           />
+          <button className="btn large-btn" onClick={() => removeLine(i)}>
+            -
+          </button>
         </div>
-        <div className="form-control">
-          <Input
-            error={topicError}
-            label="Topic"
-            onChange={e => setTopic(e.target.value)}
-            value={topic}
-            type="text"
-            id="title"
-          />
-        </div>
-        <div className="form-control">
-          <Textarea
-            error={contentError}
-            label="Content"
-            id="content"
-            value={content}
-            onChange={e => setContent(e.target.value)}
-          />
-        </div>
-        <button type="submit" className="btn btn-large">
-          Send
-        </button>
-      </form>
-    </div>
+      ))}
+      <button className="btn large-btn" onClick={addLine}>
+        +
+      </button>
+    </section>
   );
 }
 

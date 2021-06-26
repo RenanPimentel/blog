@@ -1,16 +1,6 @@
 import React, { useContext } from "react";
-import ReactMarkdown from "react-markdown";
-import {
-  NormalComponents,
-  SpecialComponents,
-} from "react-markdown/src/ast-to-react";
-import { Prism } from "react-syntax-highlighter";
-import {
-  materialLight,
-  materialOceanic,
-} from "react-syntax-highlighter/dist/esm/styles/prism";
-import gfm from "remark-gfm";
 import { MainContext } from "../context/context";
+import Markdown from "./Markdown";
 import ProfileHeader from "./ProfileHeader";
 
 interface Props {
@@ -20,24 +10,7 @@ interface Props {
 }
 
 function PostPreview({ title, topic, content }: Props) {
-  const { isDark, me } = useContext(MainContext);
-
-  const components: Partial<NormalComponents & SpecialComponents> = {
-    code({ node, inline, className, children, ...props }) {
-      const match = /language-(\w+)/.exec(className || "");
-      return !inline && match ? (
-        <Prism
-          style={isDark ? materialOceanic : materialLight}
-          language={match[1]}
-          PreTag="div"
-          children={String(children).replace(/\n$/, "")}
-          {...props}
-        />
-      ) : (
-        <code className={className} {...props} />
-      );
-    },
-  };
+  const { me } = useContext(MainContext);
 
   return (
     <section className="post-preview">
@@ -52,9 +25,7 @@ function PostPreview({ title, topic, content }: Props) {
           id={me.id}
         />
         <h1>{title}</h1>
-        <ReactMarkdown components={components} remarkPlugins={[gfm]}>
-          {content}
-        </ReactMarkdown>
+        <Markdown content={content} />
         {topic && <p className="topic">{topic}</p>}
       </div>
     </section>

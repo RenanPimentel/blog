@@ -23,7 +23,7 @@ function MePostsPage() {
     <main className="wrapper">
       <h2 className="fit-content">
         <Link className="link color" to="/me/posts/create">
-          Upload Post
+          Create Post
         </Link>
       </h2>
       <h1>Your posts</h1>

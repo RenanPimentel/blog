@@ -17,7 +17,6 @@ function PostPage() {
         const response = await api.get(`/posts/${post_id}`);
         setPost(response.data.data.post);
       } catch (err) {
-        console.dir(err);
         setError(true);
       }
     })();
