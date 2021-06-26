@@ -47,11 +47,29 @@ input {
 
 textarea {
   font-family: "Ubuntu", sans-serif;
+  background: var(--main-bg);
   outline: none;
 }
 
 input:focus {
   box-shadow: 0 0 10px -5px var(--main-fcolor);
+}
+
+hr {
+  background: var(--main-fcolor);
+  color: var(--main-fcolor);
+  height: 1px;
+  border: none;
+}
+
+pre::-webkit-scrollbar {
+  background: inherit;
+  height: 10px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: var(--main-color);
+  border-radius: 10px;
 }
 
 .btn {
@@ -132,6 +150,7 @@ input:focus {
 }
 
 .textarea {
+  font-family: "Ubuntu Mono", monospace;
   border: none;
   background: var(--pure-bg);
   color: var(--main-fcolor);
@@ -140,7 +159,7 @@ input:focus {
   line-height: 20px;
   font-size: 16px;
   width: 100%;
-  height: 2rem;
+  height: auto;
   transition: border 0.3s ease;
 }
 
@@ -154,13 +173,21 @@ input:focus {
   gap: 2rem;
 }
 
+.post-form-wrapper .same-line {
+  width: 100%;
+}
+
+.post-form-wrapper textarea {
+  height: fit-content;
+}
+
 .post-container * {
   text-align: start !important;
 }
 
 .post-preview,
 .post-form-wrapper {
-  min-width: 300px;
+  min-width: 500px;
 }
 
 .wrap {
@@ -222,10 +249,6 @@ input:focus {
 
 .form-control .input:focus {
   box-shadow: 0 0 12px -5px var(--main-fcolor);
-}
-
-textarea {
-  background: var(--main-bg);
 }
 
 .nav {
@@ -652,11 +675,6 @@ tr {
   font-size: 26px;
 }
 
-.md-preview h3 {
-  font-size: 16px;
-  font-weight: normal;
-}
-
 .fit-content {
   width: fit-content;
 }
@@ -667,6 +685,7 @@ tr {
 
 .content-container {
   height: 10rem;
+  overflow: hidden;
 }
 
 p {

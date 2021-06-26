@@ -3,6 +3,7 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
+import Markdown from "./Markdown";
 
 interface Props {
   id?: string;
@@ -49,7 +50,7 @@ function Card({ content, id, title, topic, isOwner }: Props) {
       </div>
       <Link className="no-dec" to={`/posts/${id}`}>
         <div className="content-container">
-          <p title={content}>{content}</p>
+          <Markdown content={content || ""} />
         </div>
         <div className="topic">{topic}</div>
       </Link>

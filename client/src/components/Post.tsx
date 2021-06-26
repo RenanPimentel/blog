@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
+import Markdown from "./Markdown";
 import PostFooter from "./PostFooter";
 import ProfileHeader from "./ProfileHeader";
 
@@ -78,7 +79,7 @@ function Post({
           <span>created at {getDate(updated_at)}</span>
         )}
       </div>
-      <p>{content}</p>
+      <Markdown content={content || ""} />
       <p className="topic">{topic}</p>
       <PostFooter id={id} />
     </section>

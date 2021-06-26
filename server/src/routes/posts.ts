@@ -163,7 +163,7 @@ router.delete("/:post_id", async (req, res) => {
 
 router.put("/:post_id", async (req, res) => {
   const { post_id } = req.params;
-  const { title, content, topic } = req.body;
+  const { title, content, topic } = req.body.post;
   const { id, password } = req.cookies.me;
 
   if (!id || !password) {

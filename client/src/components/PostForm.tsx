@@ -24,7 +24,7 @@ function PostForm({
 }: Props) {
   const addLine = () => {
     setValues([...values, ""]);
-    setSelects([...selects, ""]);
+    setSelects([...selects, "p"]);
   };
 
   const removeLine = (i: number) => {
