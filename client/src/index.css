@@ -109,18 +109,22 @@ input:focus {
 }
 
 .form-control .input {
+  height: 2.5rem;
   margin: 0.5rem 0;
   font-size: 16px;
   min-width: 100px;
-  line-height: 1.5rem;
+  line-height: 1.75rem;
   background: var(--pure-bg);
   border: none;
   border-radius: 20px;
   padding: 0 1.5rem;
-  line-height: 30px;
   outline: none;
   box-shadow: 0 0 10px -5px black;
   transition: var(--transition);
+}
+
+.form-control .btn {
+  height: 2.5rem;
 }
 
 .form-control .container {
@@ -389,6 +393,14 @@ input.border-red {
   width: 100%;
 }
 
+.red-svg svg {
+  fill: rgb(200, 50, 50);
+}
+
+.baseline {
+  align-items: baseline;
+}
+
 .comment-btns {
   justify-content: flex-end;
   width: 100%;
@@ -429,15 +441,38 @@ input.border-red {
   margin-top: 10px;
 }
 
+.like-comment {
+  display: flex;
+  align-items: center;
+  justify-content: baseline;
+  position: absolute;
+  background: inherit;
+  bottom: 0;
+  right: 0;
+  padding: 0.5rem;
+  margin: 0.5rem;
+}
+
+.flex-spaced {
+  display: flex;
+  justify-content: space-around !important;
+  align-items: center;
+}
+
+.like-comment button {
+  display: grid;
+  place-items: center;
+}
+
 .content {
+  position: relative;
   background: var(--pure-bg);
-  padding: 1rem;
   border-radius: 20px;
   box-shadow: 0 0 10px -5px black;
   transition: all 0.2s ease;
-  width: fit-content;
+  min-width: fit-content;
   text-overflow: clip;
-  width: 100%;
+  padding: 1rem;
   font-size: 16px;
   line-height: 32px;
   display: flex;
@@ -445,6 +480,10 @@ input.border-red {
   align-items: center;
   justify-content: flex-start;
   resize: none;
+  padding-bottom: 2rem;
+}
+.content p {
+  margin: 0.2rem;
 }
 
 textarea.content {

@@ -25,7 +25,7 @@ function ProfileHeader({
 
   useEffect(() => {
     (async () => {
-      if (id && getViews) {
+      if (id && getViews && post_id) {
         const viewsResponse = await api.get(`/posts/views/${post_id}/count`);
         setViewCount(viewsResponse.data.data.count);
       }

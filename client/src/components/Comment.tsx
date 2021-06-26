@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { RiCloseFill } from "react-icons/ri";
-import { FaMinus, FaPlus } from "react-icons/fa";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
@@ -131,8 +131,8 @@ function Comment({
     <div className="comment-container top">
       <div className="rel">
         <div className="line-v"></div>
-        <div className="same-line right">
-          <div className="same-line right no-dec">
+        <div className="same-line flex-spaced">
+          <div className="same-line right">
             <Link
               to={author_id === context.me.id ? "/me" : `/users/${author_id}`}
             >
@@ -142,11 +142,11 @@ function Comment({
             </Link>
             <h3 className="username">{author.username}</h3>
           </div>
-          <div className="same-line" style={{ gap: "2rem" }}>
+          <div className="same-line" style={{ gap: "1rem" }}>
             {new Date(created_at) < new Date(updated_at) && (
               <i
                 title={`updated at ${new Date(updated_at).toLocaleString()}`}
-                style={{ color: "gray" }}
+                style={{ color: "gray", marginRight: "1rem" }}
               >
                 updated
               </i>
@@ -170,6 +170,7 @@ function Comment({
                 border: error
                   ? "1px solid rgb(200, 50, 50)"
                   : "1px solid rgb(50, 200, 100)",
+                height: contentPRef.current?.clientHeight,
               }}
             />
             <button className="link close-btn" onClick={closeContent}>
@@ -179,14 +180,18 @@ function Comment({
           </form>
         ) : (
           <div className="comment-content">
-            <p ref={contentPRef} className="content">
-              {content}
-            </p>
-            <div className="same-line">
-              <button className="link" title="like" onClick={handleLikeClick}>
-                {likes ? <FaMinus /> : <FaPlus />}
-              </button>
-              {likeCount}
+            <div className="content">
+              <p ref={contentPRef}>{content}</p>
+              <div className="like-comment">
+                <button
+                  className="link red-svg"
+                  title="like"
+                  onClick={handleLikeClick}
+                >
+                  {likes ? <FaHeart /> : <FaRegHeart />}
+                </button>
+                {likeCount}
+              </div>
             </div>
           </div>
         )}

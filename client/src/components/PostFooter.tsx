@@ -42,7 +42,7 @@ function PostFooter(props: Props) {
         >
           {like ? <FaHeart /> : <FaRegHeart />}
         </button>
-        <p className="red">{likeCount}</p>
+        <p>{likeCount}</p>
       </div>
     </footer>
   );

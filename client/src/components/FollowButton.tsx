@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaMinus, FaPlus } from "react-icons/fa";
+import { FaUserSlash, FaUserPlus } from "react-icons/fa";
 import { api } from "../util/api";
 
 interface Props {
@@ -36,7 +36,7 @@ function FollowButton({ user_id }: Props) {
       <div className="same-line">
         {followerCount}
         <button title="follow" onClick={handleClick} className="link">
-          {isFollowing ? <FaMinus /> : <FaPlus />}
+          {isFollowing ? <FaUserSlash /> : <FaUserPlus />}
         </button>
       </div>
     </div>
