@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import CreatePost from "../components/CreatePost";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
@@ -8,6 +8,7 @@ function MePostsUpdatePage() {
   const [singlePost, setSinglePost] = useState<IPost>({});
   const { post_id } = useParams<{ post_id: string }>();
   const { updateMyPost } = useContext(MainContext);
+  const history = useHistory();
 
   useEffect(() => {
     api.get(`/posts/${post_id}`).then(res => {
@@ -23,6 +24,7 @@ function MePostsUpdatePage() {
     updateMyPost(post_id, post);
     await api.put(`/posts/${post_id}`, { post });
     updateMyPost(post_id, post);
+    history.push("/me/posts");
   };
 
   return (

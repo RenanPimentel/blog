@@ -57,6 +57,7 @@ function Post({
   return (
     <section className="post-container">
       <ProfileHeader
+        isAuthor={context.me.id === author_id}
         getViews={true}
         showFollow={false}
         post_id={id || ""}

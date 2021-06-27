@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
+import BtnContainer from "./BtnContainer";
 import FollowButton from "./FollowButton";
 
 interface Props extends IUser {
   post_id: string;
   getViews: boolean;
   showFollow: boolean;
+  isAuthor: boolean;
 }
 
 function ProfileHeader({
@@ -19,9 +21,11 @@ function ProfileHeader({
   post_id,
   getViews,
   showFollow,
+  isAuthor,
 }: Props) {
   const context = useContext(MainContext);
   const [viewCount, setViewCount] = useState(0);
+  const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -31,6 +35,14 @@ function ProfileHeader({
       }
     })();
   }, [id, post_id, getViews]);
+
+  const handleEditClick = () => {
+    history.push(`/me/posts/${post_id}/update`);
+  };
+
+  const handleRemoveClick = async () => {
+    await api.delete(`/posts/${post_id}`);
+  };
 
   return (
     <header>
@@ -54,18 +66,28 @@ function ProfileHeader({
               />
             </Link>
             <h2 className="username">{username}</h2>
-            <div className="views center">
-              {getViews ? (
-                <>
-                  <FaEye />
-                  <p></p>
-                  <span>{viewCount}</span>
-                </>
-              ) : showFollow ? (
-                <FollowButton user_id={id} />
-              ) : (
-                <></>
+            <div>
+              {isAuthor && (
+                <BtnContainer
+                  showEdit={true}
+                  showRemove={true}
+                  handleEditClick={handleEditClick}
+                  handleRemoveClick={handleRemoveClick}
+                />
               )}
+              <div className="views center">
+                {getViews ? (
+                  <>
+                    <FaEye />
+                    <p></p>
+                    <span>{viewCount}</span>
+                  </>
+                ) : showFollow ? (
+                  <FollowButton user_id={id} />
+                ) : (
+                  <></>
+                )}
+              </div>
             </div>
           </div>
         </div>

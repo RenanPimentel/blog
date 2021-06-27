@@ -47,7 +47,7 @@ function App() {
         <Route exact path="/me/posts/create">
           <MePostsCreatePage />
         </Route>
-        <Route exact path="/me/posts/update/:post_id">
+        <Route exact path="/me/posts/:post_id/update">
           <MePostsUpdatePage />
         </Route>
         <Route exact path="/users/:user_id">

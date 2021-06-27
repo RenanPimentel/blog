@@ -45,6 +45,7 @@ function UserPage() {
       <div className="container">
         <div className="line-v"></div>
         <ProfileHeader
+          isAuthor={false}
           showFollow={true}
           getViews={false}
           post_id=""

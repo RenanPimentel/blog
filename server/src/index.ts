@@ -28,6 +28,7 @@ app.use("/api/v1/comments", commentsRouter);
 
 app.listen(PORT, async () => {
   await db.connect();
+
   console.log(`ready at port ${PORT}`);
 });
 

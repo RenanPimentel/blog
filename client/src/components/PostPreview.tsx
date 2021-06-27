@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useParams } from "react-router-dom";
 import { MainContext } from "../context/context";
 import Markdown from "./Markdown";
 import ProfileHeader from "./ProfileHeader";
@@ -11,14 +12,16 @@ interface Props {
 
 function PostPreview({ title, topic, content }: Props) {
   const { me } = useContext(MainContext);
+  const { post_id } = useParams<{ post_id: string }>();
 
   return (
     <section className="post-preview">
       <div className="post-container">
         <ProfileHeader
+          isAuthor={false}
           getViews={false}
           showFollow={false}
-          post_id={me.id || ""}
+          post_id={post_id}
           banner={me.banner}
           avatar={me.avatar}
           username={me.username}
