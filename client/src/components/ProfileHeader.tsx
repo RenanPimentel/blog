@@ -68,12 +68,15 @@ function ProfileHeader({
             <h2 className="username">{username}</h2>
             <div>
               {isAuthor && (
-                <BtnContainer
-                  showEdit={true}
-                  showRemove={true}
-                  handleEditClick={handleEditClick}
-                  handleRemoveClick={handleRemoveClick}
-                />
+                <>
+                  <br />
+                  <BtnContainer
+                    showEdit={true}
+                    showRemove={true}
+                    handleEditClick={handleEditClick}
+                    handleRemoveClick={handleRemoveClick}
+                  />
+                </>
               )}
               <div className="views center">
                 {getViews ? (

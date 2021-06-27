@@ -13,9 +13,11 @@ function FollowButton({ user_id }: Props) {
   useEffect(() => {
     (async () => {
       if (!user_id) return;
-      const response = await api.get(`/users/${user_id}/followers/count`);
+      const response = await api.get<FollowerCountResponse>(
+        `/users/${user_id}/followers/count`
+      );
 
-      setFollowerCount(response.data.data.count);
+      setFollowerCount(Number(response.data.data.count));
       setIsFollowing(response.data.data.follows);
     })();
   }, [user_id]);

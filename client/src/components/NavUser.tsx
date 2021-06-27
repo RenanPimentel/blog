@@ -1,9 +1,16 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
+import { api } from "../util/api";
 
 function NavUser() {
-  const { logout, me, defaultAvatar } = useContext(MainContext);
+  const { me, defaultAvatar } = useContext(MainContext);
+
+  const logout = async () => {
+    await api.get("/account/logout");
+    // eslint-disable-next-line no-restricted-globals
+    location.assign("/me");
+  };
 
   return (
     <div className="nav-user">
@@ -32,7 +39,7 @@ function NavUser() {
               <div className="line"></div>
             </li>
             <li>
-              <span onClick={logout} className="link">
+              <span className="link" onClick={logout}>
                 Logout
               </span>
               <div className="line"></div>

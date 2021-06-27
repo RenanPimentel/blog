@@ -23,7 +23,6 @@ interface IPost {
 
 interface IUser {
   id?: string;
-  password?: string;
   username?: string;
   email?: string;
   avatar?: string;
@@ -56,7 +55,6 @@ interface MainContext {
   me: IMe;
   isDark: boolean;
   setIsDark(isDark: boolean): void;
-  logout(): void;
   getMe(): void;
   setMe(me: IMe): void;
   removeMyPost(id?: string): void;
@@ -66,3 +64,10 @@ interface MainContext {
 }
 
 type FieldError = { field: string; reason: string };
+
+type CommentsResponse = { data: { comments: IComment[] } };
+type UserResponse = { data: { user: IUser } };
+type PostResponse = { data: { post: IPost } };
+type CountResponse = { data: { count: string } };
+type LikesResponse = { data: { likes: boolean } };
+type FollowerCountResponse = { data: { follows: boolean; count: string } };

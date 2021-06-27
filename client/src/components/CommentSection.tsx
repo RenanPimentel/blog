@@ -1,25 +1,20 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "../util/api";
 import Comment from "./Comment";
 import SendComment from "./SendComment";
 
 interface Props extends IPost {}
 
-type Response = { data: { comments: IComment[] } };
-
 function CommentSection({ id }: Props) {
   const [comments, setComments] = useState<IComment[]>([]);
 
-  const cb = useCallback(async () => {
-    if (id) {
-      const response = await api.get<Response>(`/posts/${id}/comments`);
-      setComments(response.data.data.comments);
-    }
-  }, [id]);
-
   useEffect(() => {
-    cb();
-  }, [cb]);
+    (async () => {
+      if (!id) return;
+      const response = await api.get<CommentsResponse>(`/posts/${id}/comments`);
+      setComments(response.data.data.comments);
+    })();
+  }, [id]);
 
   const addComment = (comment: IComment) => {
     setComments([...comments, comment]);
@@ -30,17 +25,21 @@ function CommentSection({ id }: Props) {
     setComments(comments.filter(comment => comment.id !== id));
   };
 
-  const changeComment = async (
-    id: string,
-    comment: string,
-    setComment: CallableFunction
-  ) => {
-    const response = await api.put(`/comments/${id}`, { comment });
+  const changeComment = async (id: string, comment: string) => {
+    await api.put(`/comments/${id}`, { comment });
     setComments(
-      comments.map(cmt => (cmt.id === id ? { ...cmt, content: comment } : cmt))
+      comments.map(cmt => {
+        if (cmt.id === id) {
+          return {
+            ...cmt,
+            content: comment,
+            updated_at: new Date().toISOString(),
+          };
+        } else {
+          return cmt;
+        }
+      })
     );
-
-    setComment(response.data.data.comment.content || "");
   };
 
   return (

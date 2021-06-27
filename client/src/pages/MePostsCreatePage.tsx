@@ -14,9 +14,7 @@ function MePostsCreatePage() {
     topic: string;
     content: string;
   }) => {
-    const response = await api.post("/posts", {
-      post,
-    });
+    const response = await api.post<PostResponse>("/posts", { post });
     context.addMyPost(response.data.data.post);
     history.push(`/posts/${response.data.data.post.id}`);
   };

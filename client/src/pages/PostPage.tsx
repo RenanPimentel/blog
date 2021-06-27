@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import CommentSection from "../components/CommentSection";
 import Post from "../components/Post";
 import { api } from "../util/api";
-import ErrorPage from "./ErrorPage";
+import NotFoundPage from "./NotFoundPage";
 
 function PostPage() {
   const [post, setPost] = useState<IPost>({});
@@ -14,7 +14,7 @@ function PostPage() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await api.get(`/posts/${post_id}`);
+        const response = await api.get<PostResponse>(`/posts/${post_id}`);
         setPost(response.data.data.post);
       } catch (err) {
         setError(true);
@@ -23,7 +23,7 @@ function PostPage() {
   }, [post_id]);
 
   if (error) {
-    return <ErrorPage notFound="Post" />;
+    return <NotFoundPage notFound="Post" />;
   }
 
   if (!post.id) {

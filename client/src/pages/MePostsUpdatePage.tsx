@@ -5,15 +5,15 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function MePostsUpdatePage() {
+  const { updateMyPost } = useContext(MainContext);
   const [singlePost, setSinglePost] = useState<IPost>({});
   const { post_id } = useParams<{ post_id: string }>();
-  const { updateMyPost } = useContext(MainContext);
   const history = useHistory();
 
   useEffect(() => {
-    api.get(`/posts/${post_id}`).then(res => {
-      setSinglePost(res.data.data.post);
-    });
+    api
+      .get<PostResponse>(`/posts/${post_id}`)
+      .then(res => setSinglePost(res.data.data.post));
   }, [post_id]);
 
   const sendPost = async (post: {
@@ -21,7 +21,6 @@ function MePostsUpdatePage() {
     topic: string;
     content: string;
   }) => {
-    updateMyPost(post_id, post);
     await api.put(`/posts/${post_id}`, { post });
     updateMyPost(post_id, post);
     history.push("/me/posts");

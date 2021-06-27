@@ -5,29 +5,36 @@ import { api } from "../util/api";
 interface Props extends IPost {}
 
 function PostFooter(props: Props) {
-  const [like, setLike] = useState(false);
+  const [likes, setLikes] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
   const toggleLike = async () => {
-    if (like) {
-      await api.delete(`/posts/likes/${props.id}`);
-      setLikeCount(Number(likeCount) - 1);
-      setLike(false);
+    if (likes) {
+      await api.delete(`/posts/${props.id}/likes`);
+      setLikeCount(likeCount - 1);
+      setLikes(false);
     } else {
-      await api.post(`/posts/likes/${props.id}`);
-      setLikeCount(Number(likeCount) + 1);
-      setLike(true);
+      await api.post(`/posts/${props.id}/likes`);
+      setLikeCount(likeCount + 1);
+      setLikes(true);
     }
   };
 
   useEffect(() => {
     (async () => {
       if (props.id) {
-        const countResponse = await api.get(`/posts/likes/${props.id}/count`);
-        setLikeCount(countResponse.data.data.count);
+        const countPromise = api.get<CountResponse>(
+          `/posts/${props.id}/likes/count`
+        );
+        const boolPromise = api.get<LikesResponse>(`/posts/${props.id}/likes`);
 
-        const boolResponse = await api.get(`/posts/likes/${props.id}`);
-        setLike(boolResponse.data.data.like);
+        const [countResponse, boolResponse] = await Promise.all([
+          countPromise,
+          boolPromise,
+        ]);
+
+        setLikeCount(Number(countResponse.data.data.count));
+        setLikes(boolResponse.data.data.likes);
       }
     })();
   }, [props.id]);
@@ -40,7 +47,7 @@ function PostFooter(props: Props) {
           className="link red center"
           style={{ padding: 0 }}
         >
-          {like ? <FaHeart /> : <FaRegHeart />}
+          {likes ? <FaHeart /> : <FaRegHeart />}
         </button>
         <p>{likeCount}</p>
       </div>

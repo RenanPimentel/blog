@@ -203,7 +203,7 @@ pre::-webkit-scrollbar-thumb {
   background: var(--pure-bg);
   border: none;
   border-radius: 20px;
-  padding: 0 1.5rem;
+  padding: 0 1.25rem;
   outline: none;
   box-shadow: 0 0 10px -5px black;
   transition: var(--transition);
@@ -337,7 +337,7 @@ a.no-bg {
 }
 
 input.border-red {
-  border: 1px solid red;
+  border: 1px solid rgb(200, 50, 50);
 }
 
 .settings {

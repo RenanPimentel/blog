@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import ErrorPage from "./pages/ErrorPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import ForgotPage from "./pages/ForgotPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -26,20 +26,20 @@ function App() {
         <Route exact path="/login">
           <LoginPage />
         </Route>
+        <Route exact path="/login/forgot">
+          <ForgotPage />
+        </Route>
         <Route exact path="/register">
           <RegisterPage />
         </Route>
         <Route exact path="/resetpass">
           <ResetpassPage />
         </Route>
-        <Route exact path="/login/forgot">
-          <ForgotPage />
+        <Route exact path="/settings">
+          <SettingsPage />
         </Route>
         <Route exact path="/me">
           <MePage />
-        </Route>
-        <Route exact path="/posts/:post_id">
-          <PostPage />
         </Route>
         <Route exact path="/me/posts">
           <MePostsPage />
@@ -50,14 +50,14 @@ function App() {
         <Route exact path="/me/posts/:post_id/update">
           <MePostsUpdatePage />
         </Route>
+        <Route exact path="/posts/:post_id">
+          <PostPage />
+        </Route>
         <Route exact path="/users/:user_id">
           <UserPage />
         </Route>
-        <Route exact path="/settings">
-          <SettingsPage />
-        </Route>
         <Route path="*">
-          <ErrorPage />
+          <NotFoundPage />
         </Route>
       </Switch>
     </BrowserRouter>

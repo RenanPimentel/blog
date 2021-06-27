@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
+import BtnContainer from "./BtnContainer";
 import Markdown from "./Markdown";
 
 interface Props {
@@ -10,19 +10,24 @@ interface Props {
   title?: string;
   content?: string;
   topic?: string;
-  isOwner?: boolean;
+  isOwner: boolean;
 }
 
 function Card({ content, id, title, topic, isOwner }: Props) {
   const { removeMyPost } = useContext(MainContext);
+  const history = useHistory();
 
-  const deletePost = async (id?: string) => {
+  const deletePost = async (id: string) => {
     try {
       await api.delete(`/posts/${id}`);
       removeMyPost(id);
     } catch (err) {
       console.dir(err);
     }
+  };
+
+  const redirectToUpdate = (id: string) => {
+    history.push(`/me/posts/${id}/update`);
   };
 
   return (
@@ -34,18 +39,12 @@ function Card({ content, id, title, topic, isOwner }: Props) {
           </h2>
         </Link>
         {isOwner && (
-          <div className="btn-container">
-            <Link className="link" to={`/me/posts/update/${id}`}>
-              <FaRegEdit style={{ fill: "rgb(50, 200, 100)" }} />
-            </Link>
-            <button
-              onClick={() => deletePost(id)}
-              className="link"
-              title={`delete #${id}`}
-            >
-              <FaRegTrashAlt style={{ fill: "rgb(200, 50, 50)" }} />
-            </button>
-          </div>
+          <BtnContainer
+            showEdit={true}
+            showRemove={true}
+            handleEditClick={() => redirectToUpdate(id || "")}
+            handleRemoveClick={() => deletePost(id || "")}
+          />
         )}
       </div>
       <Link className="no-dec" to={`/posts/${id}`}>

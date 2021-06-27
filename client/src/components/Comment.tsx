@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { RiCloseFill } from "react-icons/ri";
-import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
@@ -8,11 +8,7 @@ import BtnContainer from "./BtnContainer";
 
 interface Props extends IComment {
   removeComment(id: string): void;
-  changeComment(
-    id: string,
-    content: string,
-    setContent: CallableFunction
-  ): void;
+  changeComment(id: string, content: string): void;
 }
 
 function Comment({
@@ -20,77 +16,59 @@ function Comment({
   created_at,
   author_id,
   post_author_id,
-  content: propsContent,
+  content: defaultComment,
   id,
   post_id,
-  ...props
+  changeComment,
+  removeComment,
 }: Props) {
-  const context = useContext(MainContext);
-  const [isAuthor, setIsAuthor] = useState(false);
+  const { me } = useContext(MainContext);
+  const [isCommentAuthor, setIsCommentAuthor] = useState(false);
   const [isPostAuthor, setIsPostAuthor] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [content, setContent] = useState(propsContent);
+  const [comment, setComment] = useState(defaultComment);
   const [error, setError] = useState("");
   const [likeCount, setLikeCount] = useState(0);
   const [likes, setLikes] = useState(false);
-  const [author, setAuthor] = useState({
-    avatar: "",
-    avatarAlt: "",
-    username: "",
-  });
+  const [author, setAuthor] = useState<IUser>({ avatar: "", username: "" });
   const contentPRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
+    if (!author_id || !post_id || !id || !post_author_id) return;
+    setIsCommentAuthor(me.id === author_id);
     (async () => {
-      const response = await api.get(`/users/${author_id}`);
-      setAuthor({
-        ...response.data.data.user,
-        avatarAlt: `${response.data.data.user.username} avatar`,
-      });
+      const userPromise = api.get<UserResponse>(`/users/${author_id}`);
+      const likeCountPromise = api.get<CountResponse>(
+        `/comments/${id}/likes/count`
+      );
+      const likesPromise = api.get<LikesResponse>(`/comments/${id}/like`);
+
+      const [userResponse, likeCountResponse, likesResponse] =
+        await Promise.all([userPromise, likeCountPromise, likesPromise]);
+
+      setLikes(likesResponse.data.data.likes);
+      setAuthor(userResponse.data.data.user);
+      setIsPostAuthor(post_author_id === me.id);
+      setLikeCount(Number(likeCountResponse.data.data.count));
     })();
-  }, [author_id]);
+  }, [author_id, id, me.id, post_author_id, post_id]);
 
   useEffect(() => {
-    setIsAuthor(context.me.id === author_id);
-  }, [context.me.id, author_id]);
-
-  useEffect(() => {
-    (async () => {
-      const response = await api.get(`/posts/${post_id}`);
-      setIsPostAuthor(response.data.data.post.author_id === context.me.id);
-    })();
-  }, [context.me.id, post_id]);
-
-  useEffect(() => {
-    if (!id) return;
-    (async () => {
-      const response = await api.get(`/comments/${id}/likes/count`);
-      setLikeCount(Number(response.data.data.count));
-    })();
-  }, [id]);
-
-  useEffect(() => {
-    if (256 < content.length) {
-      setContent(content.slice(0, -1));
+    if (256 < comment.length) {
+      setComment(comment.slice(0, -1));
     } else {
       setError("");
     }
 
-    if (255 < content.length) {
+    if (255 < comment.length) {
       setError("too long");
     }
-  }, [content]);
-
-  useEffect(() => {
-    if (!id) return;
-    (async () => {
-      const response = await api.get(`/comments/${id}/like`);
-      setLikes(response.data.data.likes);
-    })();
-  }, [id]);
+  }, [comment]);
 
   const sendEdited = async () => {
-    props.changeComment(id, content, setContent);
+    if (comment !== defaultComment) {
+      changeComment(id, comment);
+    }
   };
 
   const handleEditClick = async () => {
@@ -103,7 +81,6 @@ function Comment({
   };
 
   const handleLikeClick = async () => {
-    console.log("a");
     await api.put(`/comments/${id}/like`);
     if (likes) {
       setLikes(false);
@@ -114,11 +91,9 @@ function Comment({
     }
   };
 
-  const handleRemoveClick = () => props.removeComment(id);
-
   const closeContent = async () => {
     setEditing(false);
-    setContent(propsContent);
+    setComment(defaultComment);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -133,11 +108,9 @@ function Comment({
         <div className="line-v"></div>
         <div className="same-line flex-spaced">
           <div className="same-line right">
-            <Link
-              to={author_id === context.me.id ? "/me" : `/users/${author_id}`}
-            >
+            <Link to={author_id === me.id ? "/me" : `/users/${author_id}`}>
               <div className="profile-picture">
-                <img src={author.avatar} alt={author.avatarAlt} />
+                <img src={author.avatar} alt={`${author.username} avatar`} />
               </div>
             </Link>
             <h3 className="username">{author.username}</h3>
@@ -152,10 +125,10 @@ function Comment({
               </i>
             )}
             <BtnContainer
-              showEdit={isAuthor}
-              showRemove={isAuthor || isPostAuthor}
+              showEdit={isCommentAuthor}
+              showRemove={isCommentAuthor || isPostAuthor}
               handleEditClick={handleEditClick}
-              handleRemoveClick={handleRemoveClick}
+              handleRemoveClick={() => removeComment(id)}
             />
           </div>
         </div>
@@ -164,8 +137,8 @@ function Comment({
             <textarea
               autoFocus
               className="content"
-              value={content}
-              onChange={e => setContent(e.target.value.replace(/\s+/g, " "))}
+              value={comment}
+              onChange={e => setComment(e.target.value.replace(/\s+/g, " "))}
               style={{
                 border: error
                   ? "1px solid rgb(200, 50, 50)"
@@ -181,7 +154,7 @@ function Comment({
         ) : (
           <div className="comment-content">
             <div className="content">
-              <p ref={contentPRef}>{content}</p>
+              <p ref={contentPRef}>{comment}</p>
               <div className="like-comment">
                 <button
                   className="link red-svg"
@@ -190,7 +163,7 @@ function Comment({
                 >
                   {likes ? <FaHeart /> : <FaRegHeart />}
                 </button>
-                {likeCount}
+                <p>{likeCount}</p>
               </div>
             </div>
           </div>

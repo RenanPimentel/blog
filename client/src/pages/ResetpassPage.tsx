@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import Input from "../components/Input";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
-import ErrorPage from "./ErrorPage";
+import NotFoundPage from "./NotFoundPage";
 
 interface Obj {
   [key: string]: string;
@@ -34,7 +34,7 @@ function ResetpassPage() {
   }, [query.user_id, query.user_pass]);
 
   if (!found) {
-    return <ErrorPage />;
+    return <NotFoundPage />;
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

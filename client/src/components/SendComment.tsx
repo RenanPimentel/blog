@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-import { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
-import Input from "./Input";
 
 interface Props {
   addComment(comment: IComment): void;
@@ -15,26 +13,33 @@ function SendComment({ addComment }: Props) {
   const [error, setError] = useState("");
   const { post_id } = useParams<{ post_id: string }>();
 
+  useEffect(() => {
+    if (256 < comment.length) {
+      setComment(comment.slice(0, -1));
+    } else {
+      setError("");
+    }
+
+    if (255 < comment.length) {
+      setError("too long");
+    }
+  }, [comment]);
+
   const sendComment = () => {
     (async () => {
-      try {
-        const response = await api.post(`/posts/${post_id}/comments`, {
-          comment,
-          post_author_id: context.me.id,
-        });
-        addComment(response.data.data.comment);
-      } catch (err) {
-        console.dir(err);
-        setError(
-          err.response.data.errors.map((e: FieldError) => e.reason).join(", ")
-        );
-      }
+      const response = await api.post(`/posts/${post_id}/comments`, {
+        comment,
+        post_author_id: context.me.id,
+      });
+      addComment(response.data.data.comment);
     })();
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleClick = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
-    sendComment();
+    await sendComment();
     setComment("");
   };
 
@@ -42,12 +47,14 @@ function SendComment({ addComment }: Props) {
     <form className="send-comment">
       <div className="line-v"></div>
       <div className="form-control comment-div">
-        <Input
-          error={error}
+        <input
           type="text"
           className="input"
           value={comment}
           onChange={e => setComment(e.target.value)}
+          style={{
+            border: `1px solid ${error ? "rgb(200, 50, 50)" : "transparent"}`,
+          }}
         />
         <button type="submit" className="btn large" onClick={handleClick}>
           Comment

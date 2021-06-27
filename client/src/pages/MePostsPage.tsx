@@ -5,18 +5,20 @@ import Posts from "../components/Posts";
 import { MainContext } from "../context/context";
 
 function MePostsPage() {
-  const context = useContext(MainContext);
+  const { me, setMyPosts } = useContext(MainContext);
 
   useEffect(() => {
-    if (context.me.id) {
-      if (!context.me.posts) {
-        context.setMyPosts(context.me.id);
-      }
+    if (me.id && !me.posts) {
+      setMyPosts(me.id);
     }
-  }, [context]);
+  }, [me.id, me.posts, setMyPosts]);
 
-  if (!context.me.posts) {
+  if (!me.posts) {
     return <div>Loading...</div>;
+  }
+
+  if (!me.posts.length) {
+    return <h2>No posts</h2>;
   }
 
   return (
@@ -27,7 +29,7 @@ function MePostsPage() {
         </Link>
       </h2>
       <h1>Your posts</h1>
-      <Posts posts={context.me.posts} />
+      <Posts posts={me.posts} />
     </main>
   );
 }

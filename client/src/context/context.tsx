@@ -22,12 +22,6 @@ function MyContextProvider({ children }: Props) {
   const [isDark, setIsDark] = useState(localStorage.getItem("dark") === "true");
   const [state, dispatch] = useReducer(reducer, defaultState);
 
-  const logout = async () => {
-    await api.get("/account/logout");
-    // eslint-disable-next-line no-restricted-globals
-    location.assign("/me");
-  };
-
   const getMe = useCallback(async () => {
     try {
       const response = await api.get("/me");
@@ -67,7 +61,6 @@ function MyContextProvider({ children }: Props) {
     defaultBanner,
     setIsDark,
     isDark,
-    logout,
     getMe,
     setMyPosts,
     setMe,

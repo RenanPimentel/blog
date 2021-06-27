@@ -5,18 +5,15 @@ interface Props {
   notFound?: string;
 }
 
-function ErrorPage({ notFound }: Props) {
+function NotFoundPage({ notFound }: Props) {
   const history = useHistory();
-  const sendBack = () => {
-    history.goBack();
-  };
 
   return (
     <div className="wrapper">
       <h1>{notFound} not found</h1>
       <button
         className="link large"
-        onClick={sendBack}
+        onClick={() => history.goBack()}
         style={{ textDecoration: "underline", padding: "0" }}
       >
         Go Back
@@ -25,8 +22,8 @@ function ErrorPage({ notFound }: Props) {
   );
 }
 
-ErrorPage.defaultProps = {
+NotFoundPage.defaultProps = {
   notFound: "Page",
 };
 
-export default ErrorPage;
+export default NotFoundPage;

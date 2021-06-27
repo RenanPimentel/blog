@@ -4,7 +4,7 @@ import Card from "../components/Card";
 import ProfileHeader from "../components/ProfileHeader";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
-import ErrorPage from "./ErrorPage";
+import NotFoundPage from "./NotFoundPage";
 
 interface Params {
   user_id: string;
@@ -37,7 +37,7 @@ function UserPage() {
   }, [user_id]);
 
   if (error) {
-    return <ErrorPage notFound="User" />;
+    return <NotFoundPage notFound="User" />;
   }
 
   return (
@@ -64,7 +64,14 @@ function UserPage() {
             <h2>User Posts</h2>
             <div className="posts-container">
               {userPosts.map(post => (
-                <Card {...post} key={post.id} />
+                <Card
+                  isOwner={false}
+                  content={post.content}
+                  id={post.id}
+                  title={post.title}
+                  topic={post.topic}
+                  key={post.id}
+                />
               ))}
             </div>
           </>

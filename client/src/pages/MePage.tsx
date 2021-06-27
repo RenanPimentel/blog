@@ -9,10 +9,11 @@ function MePage() {
     return (
       <main className="wrapper">
         <h1>You are not logged in!</h1>
-        <Link className="btn btn-large no-bg" to="/login">
+        <Link className="link" to="/login">
           Do you have an account? Login
         </Link>
-        <Link className="btn btn-large no-bg" to="/register">
+        <br />
+        <Link className="link" to="/register">
           Create your own account! Register
         </Link>
       </main>

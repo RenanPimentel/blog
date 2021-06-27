@@ -16,8 +16,6 @@ interface Props {
   topic?: string;
 }
 
-type Response = { data: { user: IUser } };
-
 function Post({
   content,
   created_at,
@@ -43,7 +41,7 @@ function Post({
   useEffect(() => {
     (async () => {
       if (author_id !== undefined) {
-        const response = await api.get<Response>(`/users/${author_id}`);
+        const response = await api.get<UserResponse>(`/users/${author_id}`);
         const { avatar, username, banner } = response.data.data.user;
         setAuthor({
           avatar: avatar || context.defaultAvatar,

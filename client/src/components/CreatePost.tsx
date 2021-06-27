@@ -54,24 +54,24 @@ function CreatePost(props: Props) {
 
   return (
     <section>
-      <section className="same-line wrap top" style={{ gap: "30px" }}>
+      <article className="same-line wrap top" style={{ gap: "40px" }}>
         <PostForm
           topic={topic}
-          setTopic={setTopic}
           title={title}
-          setTitle={setTitle}
           values={lines}
-          setValues={setLines}
           selects={selects}
+          setTopic={setTopic}
+          setTitle={setTitle}
+          setValues={setLines}
           setSelects={setSelects}
         />
         <PostPreview title={title} content={content} topic={topic} />
-      </section>
+      </article>
       <br />
       <div className="same-line" style={{ width: "100%" }}>
         <button
-          onClick={() => props.sendPost({ topic, content, title })}
           className="btn btn-large"
+          onClick={() => props.sendPost({ topic, content, title })}
         >
           Send
         </button>

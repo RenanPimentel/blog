@@ -220,11 +220,11 @@ router.get("/author/:author_id", async (req, res) => {
   }
 });
 
-router.get("/likes/:post_id/count", async (req, res) => {
+router.get("/:post_id/likes/count", async (req, res) => {
   const { post_id } = req.params;
 
   const response = await db.query(
-    "SELECT COUNT(*) FROM post_likes WHERE post_id = $1",
+    "SELECT COUNT(DISTINCT(user_id)) FROM post_likes WHERE post_id = $1",
     [post_id]
   );
 
@@ -252,7 +252,7 @@ router.get("/views/:post_id/count", async (req, res) => {
   }
 });
 
-router.get("/likes/:post_id", async (req, res) => {
+router.get("/:post_id/likes", async (req, res) => {
   const { post_id } = req.params;
 
   const response = await db.query(
@@ -260,12 +260,12 @@ router.get("/likes/:post_id", async (req, res) => {
     [post_id, req.cookies.me?.id]
   );
 
-  const like = response.rowCount === 1;
+  const likes = response.rowCount === 1;
 
-  res.json({ data: { like }, errors: null } as MyResponse);
+  res.json({ data: { likes }, errors: null } as MyResponse);
 });
 
-router.post("/likes/:post_id", async (req, res) => {
+router.post("/:post_id/likes", async (req, res) => {
   const { post_id } = req.params;
 
   const postResponse = await db.query("SELECT id FROM posts WHERE id = $1", [
@@ -288,7 +288,7 @@ router.post("/likes/:post_id", async (req, res) => {
   res.status(204).send();
 });
 
-router.delete("/likes/:post_id", async (req, res) => {
+router.delete("/:post_id/likes", async (req, res) => {
   const { post_id } = req.params;
 
   const postResponse = await db.query("SELECT id FROM posts WHERE id = $1", [
