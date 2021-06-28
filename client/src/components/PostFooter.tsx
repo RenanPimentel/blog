@@ -45,6 +45,7 @@ function PostFooter(props: Props) {
         <button
           onClick={toggleLike}
           className="link red center"
+          title="Like"
           style={{ padding: 0 }}
         >
           {likes ? <FaHeart /> : <FaRegHeart />}

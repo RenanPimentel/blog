@@ -10,6 +10,7 @@ import postsRouter from "./routes/posts";
 import accountRouter from "./routes/account";
 import usersRouter from "./routes/users";
 import commentsRouter from "./routes/comments";
+import searchRouter from "./routes/search";
 
 const db = new Client();
 const app = express();
@@ -25,6 +26,7 @@ app.use("/api/v1/me", meRouter);
 app.use("/api/v1/posts", postsRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/comments", commentsRouter);
+app.use("/api/v1/search", searchRouter);
 
 app.listen(PORT, async () => {
   await db.connect();
