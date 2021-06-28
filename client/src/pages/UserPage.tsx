@@ -31,7 +31,7 @@ function UserPage() {
         setError(true);
       }
 
-      const postsResponse = await api.get(`/posts/author/${user_id}`);
+      const postsResponse = await api.get(`/posts/by/${user_id}`);
       setUserPosts(postsResponse.data.data.posts);
     })();
   }, [user_id]);

@@ -3,14 +3,18 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Posts from "../components/Posts";
 import { MainContext } from "../context/context";
+import { api } from "../util/api";
 
 function MePostsPage() {
   const { me, setMyPosts } = useContext(MainContext);
 
   useEffect(() => {
-    if (me.id && !me.posts) {
-      setMyPosts(me.id);
-    }
+    (async () => {
+      if (me.id && !me.posts?.length) {
+        const response = await api.get(`/posts/by/${me.id}`);
+        setMyPosts(response.data.data.posts);
+      }
+    })();
   }, [me.id, me.posts, setMyPosts]);
 
   if (!me.posts) {

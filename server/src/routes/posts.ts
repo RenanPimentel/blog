@@ -3,15 +3,31 @@ import { db } from "../index";
 import { getReadTime } from "../utils/getReadTime";
 import { handleErr } from "../utils/handleErr";
 
+/*
+  /posts
+*/
 const router = Router();
 
-router.post("/", async (req, res) => {
-  const { post }: PostsBody = req.body;
-  const { id: user_id } = req.cookies.me;
+router.get("/", async (req, res) => {
+  const { me } = req.cookies;
 
   try {
-    const errors: FieldError[] = [];
+    const response = await db.query(
+      "SELECT * FROM posts WHERE author_id != $1 ORDER BY id",
+      [me.id]
+    );
+    res.json({ errors: null, data: { posts: response.rows } } as MyResponse);
+  } catch (err) {
+    handleErr(res, err);
+  }
+});
 
+router.post("/", async (req, res) => {
+  const errors: FieldError[] = [];
+  const { post }: PostsBody = req.body;
+  const { id: userId } = req.cookies.me;
+
+  try {
     if (!post) {
       res.status(400).json({
         errors: [{ reason: "Must provide a post" }],
@@ -41,27 +57,10 @@ router.post("/", async (req, res) => {
 
     const response = await db.query(
       "INSERT INTO posts (title, content, read_time, topic, author_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [post.title, post.content, getReadTime(post.content), post.topic, user_id]
+      [post.title, post.content, getReadTime(post.content), post.topic, userId]
     );
 
-    res
-      .status(201)
-      .json({ data: { post: response.rows[0] }, errors: null } as MyResponse);
-  } catch (err) {
-    handleErr(res, err);
-  }
-});
-
-router.get("/", async (req, res) => {
-  const { id } = req.cookies.me;
-
-  try {
-    const response = await db.query(
-      "SELECT * FROM posts WHERE author_id != $1 ORDER BY id LIMIT 10",
-      [id]
-    );
-    const posts = response.rows;
-    res.json({ errors: null, data: { posts } } as MyResponse);
+    res.json({ data: { post: response.rows[0] }, errors: null } as MyResponse);
   } catch (err) {
     handleErr(res, err);
   }
@@ -69,6 +68,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:post_id", async (req, res) => {
   const { post_id } = req.params;
+  const { me } = req.cookies;
 
   try {
     const response = await db.query("SELECT * FROM posts WHERE id = $1", [
@@ -83,20 +83,19 @@ router.get("/:post_id", async (req, res) => {
       return;
     }
 
-    const userResponse = await db.query(
+    const viewResponse = await db.query(
       "SELECT user_id FROM post_views WHERE user_id = $1 AND post_id = $2",
-      [req.cookies.me.id, post_id]
+      [me.id, post_id]
     );
 
-    if (userResponse.rowCount === 0) {
+    if (viewResponse.rowCount === 0) {
       await db.query(
         "INSERT INTO post_views (user_id, post_id) VALUES ($1, $2)",
-        [req.cookies.me.id, post_id]
+        [me.id, post_id]
       );
     }
 
-    const post = response.rows[0];
-    res.json({ errors: null, data: { post } } as MyResponse);
+    res.json({ errors: null, data: { post: response.rows[0] } } as MyResponse);
   } catch (err) {
     handleErr(res, err);
   }
@@ -107,8 +106,8 @@ router.get("/:post_id/comments", async (req, res) => {
 
   try {
     const response = await db.query(
-      "SELECT * FROM comments WHERE post_id = $1 ORDER BY id",
-      [Number(post_id)]
+      "SELECT * FROM comments WHERE post_id = $1",
+      [post_id]
     );
 
     res.json({ errors: null, data: { comments: response.rows } } as MyResponse);
@@ -118,11 +117,11 @@ router.get("/:post_id/comments", async (req, res) => {
 });
 
 router.post("/:post_id/comments", async (req, res) => {
-  const { post_id } = req.params;
   const { comment, post_author_id } = req.body;
+  const { post_id } = req.params;
   const { me } = req.cookies;
 
-  if (comment.length <= 0) {
+  if (!comment) {
     res.status(400).json({
       data: null,
       errors: [{ reason: "missing comment" }],
@@ -147,12 +146,12 @@ router.post("/:post_id/comments", async (req, res) => {
 
 router.delete("/:post_id", async (req, res) => {
   const { post_id } = req.params;
-  const { id } = req.cookies.me;
+  const { me } = req.cookies;
 
   try {
     await db.query("DELETE FROM posts WHERE id = $1 AND author_id = $2", [
       post_id,
-      id,
+      me.id,
     ]);
 
     res.status(204).send();
@@ -164,30 +163,22 @@ router.delete("/:post_id", async (req, res) => {
 router.put("/:post_id", async (req, res) => {
   const { post_id } = req.params;
   const { title, content, topic } = req.body.post;
-  const { id, password } = req.cookies.me;
+  const { me } = req.cookies;
 
-  if (!id || !password) {
-    res.status(400).json({
-      errors: [{ reason: "Missing user information" }],
-      data: null,
-    } as MyResponse);
-    return;
-  }
-
-  const authorResponse = await db.query(
+  const postAuthorResponse = await db.query(
     "SELECT author_id FROM posts WHERE id = $1",
     [post_id]
   );
 
-  const passwordResponse = await db.query(
+  const postAuthorPassResponse = await db.query(
     "SELECT password FROM users WHERE id = $1",
-    [authorResponse.rows[0].author_id]
+    [postAuthorResponse.rows[0].author_id]
   );
 
-  const userActualPassword = passwordResponse.rows[0].password;
+  const userActualPassword = postAuthorPassResponse.rows[0].password;
 
-  if (userActualPassword !== password) {
-    res.status(400).json({
+  if (userActualPassword !== me.password) {
+    res.status(403).json({
       errors: [{ reason: "You can't do this" }],
       data: null,
     } as MyResponse);
@@ -205,12 +196,12 @@ router.put("/:post_id", async (req, res) => {
   }
 });
 
-router.get("/author/:author_id", async (req, res) => {
+router.get("/by/:author_id", async (req, res) => {
   const { author_id } = req.params;
 
   try {
     const response = await db.query(
-      "SELECT * FROM posts WHERE author_id = $1 ORDER BY id",
+      "SELECT * FROM posts WHERE author_id = $1",
       [author_id]
     );
 
@@ -228,12 +219,9 @@ router.get("/:post_id/likes/count", async (req, res) => {
     [post_id]
   );
 
-  const count = response.rows[0]?.count;
+  const { count } = response.rows[0];
 
-  if (count) {
-    res.json({ data: { count }, errors: null } as MyResponse);
-    return;
-  }
+  res.json({ data: { count }, errors: null } as MyResponse);
 });
 
 router.get("/views/:post_id/count", async (req, res) => {

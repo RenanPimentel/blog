@@ -16,11 +16,7 @@ function MePostsUpdatePage() {
       .then(res => setSinglePost(res.data.data.post));
   }, [post_id]);
 
-  const sendPost = async (post: {
-    title: string;
-    topic: string;
-    content: string;
-  }) => {
+  const sendPost = async (post: IPost) => {
     await api.put(`/posts/${post_id}`, { post });
     updateMyPost(post_id, post);
     history.push("/me/posts");

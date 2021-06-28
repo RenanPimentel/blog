@@ -58,8 +58,8 @@ interface MainContext {
   getMe(): void;
   setMe(me: IMe): void;
   removeMyPost(id?: string): void;
-  setMyPosts(id?: string): void;
-  updateMyPost(id?: string, post: { title; content; topic }): void;
+  setMyPosts(posts: IPost[]): void;
+  updateMyPost(id?: string, post: IPost): void;
   addMyPost(post: IPost): void;
 }
 

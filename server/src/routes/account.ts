@@ -8,6 +8,9 @@ import { sendEmail } from "../utils/sendEmail";
 import { setCookie } from "../utils/setCookie";
 import { validateName } from "../utils/validateName";
 
+/*
+  /account
+*/
 const router = Router();
 
 router.post("/register", async (req, res) => {
@@ -33,13 +36,10 @@ router.post("/register", async (req, res) => {
   }
 
   const invalidUsername = validateName(username);
-
-  if (invalidUsername) {
-    errors.push(invalidUsername);
-  }
+  invalidUsername && errors.push(invalidUsername);
 
   if (errors.length > 0) {
-    res.status(400).json({ errors, data: null } as MyResponse);
+    res.status(400).json({ data: null, errors } as MyResponse);
     return;
   }
 
@@ -50,16 +50,16 @@ router.post("/register", async (req, res) => {
       [username, email, hashedPassword]
     );
 
-    const user = response.rows[0];
-    res.status(200).json({ data: { user }, errors: null } as MyResponse);
+    const data = { user: response.rows[0] };
+    res.status(200).json({ data, errors: null } as MyResponse);
   } catch (err) {
     handleErr(res, err);
   }
 });
 
 router.post("/login", async (req, res) => {
-  const { login, password }: LoginBody = req.body;
   const errors: FieldError[] = [];
+  const { login, password }: LoginBody = req.body;
   const emailOrUsername = isEmail(login) ? "email" : "username";
 
   if (!login) {
@@ -74,7 +74,7 @@ router.post("/login", async (req, res) => {
   }
 
   if (errors.length > 0) {
-    res.status(400).json({ errors } as MyResponse);
+    res.status(400).json({ data: null, errors } as MyResponse);
     return;
   }
 
@@ -86,7 +86,8 @@ router.post("/login", async (req, res) => {
     const user = response.rows[0];
 
     if (!user) {
-      res.status(400).json({
+      res.status(404).json({
+        data: null,
         errors: [{ field: "login", reason: `User '${login}' not found` }],
       } as MyResponse);
       return;
@@ -95,7 +96,8 @@ router.post("/login", async (req, res) => {
     const isRightPassword = await argon2.verify(user.password, password || "");
 
     if (!isRightPassword) {
-      res.status(400).json({
+      res.status(401).json({
+        data: null,
         errors: [{ field: "password", reason: "Incorrect password" }],
       } as MyResponse);
       return;
@@ -103,11 +105,7 @@ router.post("/login", async (req, res) => {
 
     setCookie(res, "me", user);
 
-    await db.query("UPDATE users SET last_login = NOW() WHERE id= $1", [
-      user.id,
-    ]);
-
-    res.status(200).json({ data: { user }, errors: null } as MyResponse);
+    res.json({ data: { user }, errors: null } as MyResponse);
   } catch (err) {
     handleErr(res, err);
   }
@@ -120,10 +118,11 @@ router.all("/logout", async (_, res) => {
 
 router.post("/forgot", async (req, res) => {
   res.clearCookie("me");
+  const { email } = req.body;
 
   const response = await db.query(
     "SELECT id, password, username FROM users WHERE email = $1",
-    [req.body.email]
+    [email]
   );
   const user = response.rows[0];
 
@@ -134,27 +133,16 @@ router.post("/forgot", async (req, res) => {
     } as MyResponse);
     return;
   }
+
   const href =
     `${CLIENT_URL}/resetpass` +
-    `?user_id=${encodeURI(user.id)}&user_pass=${encodeURI(user.password)}`;
+    `?user_id=${encodeURI(user.id)}&` +
+    `user_pass=${encodeURI(user.password)}`;
 
   const emailRes = await sendEmail(
-    req.body.email,
-    "password",
-    `<!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </head>
-      <body>
-        <a href="${href}" class="link">
-          Click here to reset your password
-        </a>
-      </body>
-    </html>
-    `
+    email,
+    "forgotten password",
+    `<a href="${href}" class="link">Click here to reset your password</a>`
   );
 
   res.send({
@@ -165,22 +153,22 @@ router.post("/forgot", async (req, res) => {
 
 router.post("/password", async (req, res) => {
   const { password } = req.body;
+  const { user_id, user_pass } = req.query;
 
-  if (password?.length < 5) {
+  if (!password || password.length < 5) {
     res.status(400).json({
+      data: null,
       errors: [
         {
           reason: "Password must contain at least 5 letters",
           field: "password",
         },
       ],
-      data: null,
     } as MyResponse);
     return;
   }
 
   const hPassword = await argon2.hash(password);
-  const { user_id, user_pass } = req.query;
 
   try {
     const response = await db.query(
@@ -191,7 +179,7 @@ router.post("/password", async (req, res) => {
 
     if (!user) {
       res
-        .status(400)
+        .status(401)
         .json({ data: null, errors: [{ reason: "Wrong url" }] } as MyResponse);
       return;
     }

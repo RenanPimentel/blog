@@ -33,9 +33,8 @@ function MyContextProvider({ children }: Props) {
     dispatch({ type: "SET_ME", payload: me });
   };
 
-  const setMyPosts: MainContext["setMyPosts"] = async id => {
-    const response = await api.get(`/posts/author/${id}`);
-    dispatch({ type: "SET_MY_POSTS", payload: response.data.data.posts });
+  const setMyPosts: MainContext["setMyPosts"] = async posts => {
+    dispatch({ type: "SET_MY_POSTS", payload: posts });
   };
 
   const removeMyPost: MainContext["removeMyPost"] = id => {
@@ -43,7 +42,8 @@ function MyContextProvider({ children }: Props) {
   };
 
   const updateMyPost: MainContext["updateMyPost"] = (id, post) => {
-    dispatch({ type: "UPDATE_MY_POST", payload: { id, post } });
+    const newPosts = state.me.posts?.map(p => (p.id === id ? post : p));
+    dispatch({ type: "SET_MY_POSTS", payload: newPosts });
   };
 
   const addMyPost: MainContext["addMyPost"] = post => {

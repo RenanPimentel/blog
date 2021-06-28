@@ -5,7 +5,7 @@ export async function checkMe(req: Request, res: Response, next: NextFunction) {
   const { me } = req.cookies;
 
   if (!me) {
-    res.status(400).json({
+    res.status(401).json({
       data: null,
       errors: [{ reason: "You may have to able cookies" }],
     } as MyResponse);
@@ -19,13 +19,9 @@ export async function checkMe(req: Request, res: Response, next: NextFunction) {
   const userActualPassword = passwordResponse.rows[0].password;
 
   if (userActualPassword !== me.password) {
-    res.status(400).json({
+    res.status(401).json({
       data: null,
-      errors: [
-        {
-          reason: "User failed authentication, you may have to able cookies",
-        },
-      ],
+      errors: [{ reason: "You may have to able cookies" }],
     } as MyResponse);
     return;
   }

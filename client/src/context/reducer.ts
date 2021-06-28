@@ -11,18 +11,6 @@ export function reducer(state: IState, action: Action): IState {
         posts: state.me.posts.filter(post => post.id !== action.payload),
       },
     };
-  } else if (action.type === "UPDATE_MY_POST") {
-    return {
-      ...state,
-      me: {
-        ...state.me,
-        posts: state.me.posts.map(post =>
-          post.id === action.payload.id
-            ? { ...post, ...action.payload.post }
-            : post
-        ),
-      },
-    };
   } else if (action.type === "ADD_MY_POST") {
     state.me.posts.push(action.payload);
     return { ...state };
