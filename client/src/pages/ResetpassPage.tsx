@@ -1,14 +1,9 @@
-import React, { useContext, useState } from "react";
-import { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Input from "../components/Input";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 import NotFoundPage from "./NotFoundPage";
-
-interface Obj {
-  [key: string]: string;
-}
 
 function ResetpassPage() {
   const { setMe } = useContext(MainContext);
@@ -17,21 +12,16 @@ function ResetpassPage() {
   const [repeatedPasswordError, setRepeatedPasswordError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [found, setFound] = useState(false);
-  const reactLocation = useLocation();
+  const locationSearch = useLocation().search;
 
-  const arr = reactLocation.search.split(/\?|&/g).filter(Boolean);
-  const query: Obj = {};
-
-  for (const str of arr) {
-    const [key, ...value] = str.split("=");
-    query[key] = value.join("=");
-  }
+  const user_id = new URLSearchParams(locationSearch).get("user_id");
+  const user_pass = new URLSearchParams(locationSearch).get("user_pass");
 
   useEffect(() => {
-    api.get(`/users/${query.user_id}?user_pass=${query.user_pass}`).then(() => {
+    api.get(`/users/${user_id}?user_pass=${user_pass}`).then(() => {
       setFound(true);
     });
-  }, [query.user_id, query.user_pass]);
+  }, [user_id, user_pass]);
 
   if (!found) {
     return <NotFoundPage />;
@@ -47,8 +37,8 @@ function ResetpassPage() {
     try {
       const response = await api.post(
         "/account/password" +
-          `?user_id=${encodeURI(query.user_id)}` +
-          `&user_pass=${encodeURI(query.user_pass)}`,
+          `?user_id=${encodeURI(String(user_id))}` +
+          `&user_pass=${encodeURI(String(user_pass))}`,
         { password }
       );
 

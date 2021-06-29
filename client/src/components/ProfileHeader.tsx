@@ -65,7 +65,9 @@ function ProfileHeader({
                 alt={`${username} avatar`}
               />
             </Link>
-            <h2 className="username">{username}</h2>
+            <h2 className="username" style={{ marginTop: "10px" }}>
+              {username}
+            </h2>
             <div>
               {isAuthor && (
                 <>

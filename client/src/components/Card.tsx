@@ -26,9 +26,8 @@ function Card({ content, id, title, topic, isOwner }: Props) {
     }
   };
 
-  const redirectToUpdate = (id: string) => {
+  const redirectToUpdate = (id: string) =>
     history.push(`/me/posts/${id}/update`);
-  };
 
   return (
     <article className="card no-dec">
@@ -51,7 +50,11 @@ function Card({ content, id, title, topic, isOwner }: Props) {
         <div className="content-container">
           <Markdown content={content || ""} />
         </div>
-        <div className="topic">{topic}</div>
+        <div className="topic-container">
+          {topic?.split(" ").map(topic => (
+            <span className="topic">{topic}</span>
+          ))}
+        </div>
       </Link>
     </article>
   );

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { api } from "../util/api";
 import PostForm from "./PostForm";
 import PostPreview from "./PostPreview";
 
 interface Props {
-  topic?: string;
-  title?: string;
-  content?: string;
+  postId?: string;
   sendPost(post: { title: string; topic: string; content: string }): void;
 }
 
@@ -14,19 +13,21 @@ interface ValuesObj {
 }
 
 function CreatePost(props: Props) {
-  const [title, setTitle] = useState(props.title || "");
-  const [content, setContent] = useState(props.content || "");
-  const [topic, setTopic] = useState(props.topic || "");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [topic, setTopic] = useState("");
   const [lines, setLines] = useState([""]);
   const [selects, setSelects] = useState(["p"]);
 
   useEffect(() => {
-    setContent(props.content || "");
-    setTitle(props.title || "");
-    setTopic(props.topic || "");
-    setSelects(["p"]);
-    setLines(props.content ? [props.content] : [""]);
-  }, [props]);
+    (async () => {
+      const response = await api.get<PostResponse>(`/posts/${props.postId}`);
+      const { post } = response.data.data;
+      setTitle(post.title || "");
+      setLines([post.content?.trim() || ""]);
+      setTopic(post.topic || "");
+    })();
+  }, [props.postId]);
 
   useEffect(() => {
     const selectValsObj: ValuesObj = {

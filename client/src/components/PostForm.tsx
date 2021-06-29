@@ -1,4 +1,5 @@
 import React from "react";
+import { FaMinus, FaPlus } from "react-icons/fa";
 import CreatePostSelect from "./CreatePostSelect";
 
 interface Props {
@@ -64,13 +65,13 @@ function PostForm({
               )
             }
           />
-          <button className="btn large-btn" onClick={() => removeLine(i)}>
-            -
+          <button className="btn large-btn svg" onClick={() => removeLine(i)}>
+            <FaMinus />
           </button>
         </div>
       ))}
-      <button className="btn large-btn" onClick={addLine}>
-        +
+      <button className="btn large-btn svg" onClick={addLine}>
+        <FaPlus />
       </button>
     </section>
   );

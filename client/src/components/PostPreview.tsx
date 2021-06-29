@@ -29,7 +29,13 @@ function PostPreview({ title, topic, content }: Props) {
         />
         <h1>{title}</h1>
         <Markdown content={content} />
-        {topic && <p className="topic">{topic}</p>}
+        <div className="same-line right">
+          {topic.split(" ").map((topic, i) => (
+            <p className="topic" key={i}>
+              {topic}
+            </p>
+          ))}
+        </div>
       </div>
     </section>
   );

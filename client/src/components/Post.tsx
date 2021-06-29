@@ -64,7 +64,6 @@ function Post({
         username={author.username}
         id={author_id}
       />
-      <h1>{title}</h1>
       <div className="details">
         <span>
           {read_time} minute{read_time && read_time <= 1 ? "" : "s"} read
@@ -78,8 +77,15 @@ function Post({
           <span>created at {getDate(updated_at)}</span>
         )}
       </div>
+      <h1>{title}</h1>
       <Markdown content={content || ""} />
-      <p className="topic">{topic}</p>
+      <div className="same-line right">
+        {topic?.split(" ").map((topic, i) => (
+          <p className="topic" key={i}>
+            {topic}
+          </p>
+        ))}
+      </div>
       <PostFooter id={id} />
     </section>
   );

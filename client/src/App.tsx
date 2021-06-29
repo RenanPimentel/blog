@@ -14,6 +14,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ResetpassPage from "./pages/ResetpassPage";
 import SettingsPage from "./pages/SettingsPage";
 import UserPage from "./pages/UserPage";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   return (
@@ -37,6 +38,9 @@ function App() {
         </Route>
         <Route exact path="/settings">
           <SettingsPage />
+        </Route>
+        <Route exact path="/search">
+          <SearchPage />
         </Route>
         <Route exact path="/me">
           <MePage />

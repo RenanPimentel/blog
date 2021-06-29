@@ -148,7 +148,7 @@ function Comment({
       <div className="rel">
         <div className="line-v"></div>
         <div className="same-line flex-spaced">
-          <div className="same-line right">
+          <div className="same-line right" style={{ alignItems: "center" }}>
             <Link to={author_id === me.id ? "/me" : `/users/${author_id}`}>
               <div className="profile-picture">
                 <img src={author.avatar} alt={`${author.username} avatar`} />
@@ -179,7 +179,7 @@ function Comment({
           <form className="comment-content" onSubmit={handleSubmit}>
             <textarea
               autoFocus
-              className="content"
+              className="comment"
               value={comment}
               onChange={e => setComment(e.target.value.replace(/\s+/g, " "))}
               style={{
@@ -196,8 +196,9 @@ function Comment({
           </form>
         ) : (
           <div className="comment-content">
-            <div className="content">
+            <div className="comment">
               <p ref={contentPRef}>{comment}</p>
+              <div></div> {/* for like-comment always be on the right */}
               <div className="like-comment">
                 <i style={{ color: "gray", marginRight: "2rem" }}>
                   {getTimeBetween(created_at)}

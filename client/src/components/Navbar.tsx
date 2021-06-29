@@ -1,9 +1,10 @@
-/* eslint-disable no-restricted-globals */
 import React, { useEffect } from "react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
+import Logo from "./Logo";
 import NavUser from "./NavUser";
+import SearchBar from "./SearchBar";
 import ToggleDark from "./ToggleDark";
 
 function Navbar() {
@@ -15,12 +16,16 @@ function Navbar() {
 
   return (
     <nav className="nav">
+      <Link className="logo-container" to="/">
+        <Logo />
+      </Link>
+      <div
+        className="container"
+        style={{ display: "flex", justifyContent: "flex-start", maxWidth: "" }}
+      >
+        <SearchBar />
+      </div>
       <ul className="links">
-        <li>
-          <Link className="link" to="/">
-            Home
-          </Link>
-        </li>
         {me?.id ? (
           <NavUser />
         ) : (

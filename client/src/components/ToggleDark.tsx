@@ -7,9 +7,7 @@ function ToggleDark() {
 
   useEffect(() => {
     localStorage.setItem("dark", String(isDark));
-    document
-      .getElementById("root")
-      ?.classList[isDark ? "add" : "remove"]("dark");
+    document.body?.classList[isDark ? "add" : "remove"]("dark");
   }, [isDark]);
 
   const toggleDark = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -18,7 +16,7 @@ function ToggleDark() {
   };
 
   return (
-    <div className="toggle-dark" onClick={e => toggleDark(e)}>
+    <div className="toggle-dark" onClick={toggleDark}>
       <button>{isDark ? <BsSun /> : <BsMoon />}</button>
     </div>
   );
