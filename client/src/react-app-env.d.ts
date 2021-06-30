@@ -71,3 +71,4 @@ type PostResponse = { data: { post: IPost } };
 type CountResponse = { data: { count: string } };
 type LikesResponse = { data: { likes: boolean } };
 type FollowerCountResponse = { data: { follows: boolean; count: string } };
+type SearchResponse = { data: { users: IUser[]; posts: IPost[] } };

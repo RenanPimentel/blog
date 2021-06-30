@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import Card from "../components/Card";
+import PostCard from "../components/PostCard";
 import ProfileHeader from "../components/ProfileHeader";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
@@ -64,7 +64,7 @@ function UserPage() {
             <h2>User Posts</h2>
             <div className="posts-container">
               {userPosts.map(post => (
-                <Card
+                <PostCard
                   isOwner={false}
                   content={post.content}
                   id={post.id}

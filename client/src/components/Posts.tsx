@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "./Card";
+import PostCard from "./PostCard";
 
 type Props = { posts: IPost[] };
 
@@ -8,7 +8,7 @@ function Posts({ posts }: Props) {
     <div className="posts-container">
       {posts.length ? (
         posts.map(post => (
-          <Card
+          <PostCard
             content={post.content}
             id={post.id}
             title={post.title}

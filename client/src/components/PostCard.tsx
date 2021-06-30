@@ -13,7 +13,7 @@ interface Props {
   isOwner: boolean;
 }
 
-function Card({ content, id, title, topic, isOwner }: Props) {
+function PostCard({ content, id, title, topic, isOwner }: Props) {
   const { removeMyPost } = useContext(MainContext);
   const history = useHistory();
 
@@ -30,7 +30,7 @@ function Card({ content, id, title, topic, isOwner }: Props) {
     history.push(`/me/posts/${id}/update`);
 
   return (
-    <article className="card no-dec">
+    <article className="card">
       <div className="same-line">
         <Link className="no-dec" to={`/posts/${id}`} style={{ width: "0" }}>
           <h2 className="title overflow" style={{ maxWidth: "100%" }}>
@@ -51,8 +51,10 @@ function Card({ content, id, title, topic, isOwner }: Props) {
           <Markdown content={content || ""} />
         </div>
         <div className="topic-container">
-          {topic?.split(" ").map(topic => (
-            <span className="topic">{topic}</span>
+          {topic?.split(" ").map((topic, i) => (
+            <span className="topic" key={i}>
+              {topic}
+            </span>
           ))}
         </div>
       </Link>
@@ -60,4 +62,4 @@ function Card({ content, id, title, topic, isOwner }: Props) {
   );
 }
 
-export default Card;
+export default PostCard;

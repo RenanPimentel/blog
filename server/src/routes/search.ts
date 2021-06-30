@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 
   try {
     const postsResponse = await db.query(
-      "SELECT * FROM posts WHERE title ILIKE $1",
+      "SELECT * FROM posts WHERE title ILIKE $1 OR topic ILIKE $1",
       [query]
     );
     const usersResponse = await db.query(

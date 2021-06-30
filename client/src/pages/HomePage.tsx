@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
-import Card from "../components/Card";
+import PostCard from "../components/PostCard";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
@@ -50,7 +50,7 @@ function HomePage() {
     <main className="wrapper">
       <div className="posts-container">
         {posts.map(post => (
-          <Card
+          <PostCard
             content={post.content || ""}
             id={post.id || ""}
             title={post.title || ""}
