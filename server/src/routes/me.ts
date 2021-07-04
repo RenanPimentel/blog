@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
 
   try {
     const response = await db.query(
-      "SELECT id, email, username, created_at, updated_at, last_login, avatar, banner FROM users WHERE id = $1 AND password = $2",
+      "SELECT * FROM users WHERE id = $1 AND password = $2",
       [me.id, me.password]
     );
     const user = response.rows[0];
