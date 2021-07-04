@@ -2,17 +2,22 @@ import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import PostCard from "../components/PostCard";
+import UserCard from "../components/UserCard";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function MePage() {
   const { me } = useContext(MainContext) as MainContext;
   const [posts, setPosts] = useState<IPost[]>([]);
+  const [users, setUsers] = useState<IUser[]>([]);
 
   useEffect(() => {
     (async () => {
-      const response = await api.get<PostsResponse>("/me/follows");
+      const response = await api.get<PostsResponse & UsersResponse>(
+        "/me/follows"
+      );
       setPosts(response.data.data.posts);
+      setUsers(response.data.data.users);
     })();
   }, []);
 
@@ -33,11 +38,24 @@ function MePage() {
 
   return (
     <main className="wrapper">
-      <div className="posts-container">
+      <section className="posts-container">
         {posts.map(post => (
-          <PostCard {...post} isOwner={false} key={post.id} />
+          <PostCard
+            author={users.find(user => user.id === post.author_id) || users[0]}
+            showBy={true}
+            {...post}
+            isOwner={false}
+            key={post.id}
+          />
         ))}
-      </div>
+      </section>
+      <br />
+      <h2>Your follows</h2>
+      <section className="posts-container">
+        {users.map(user => (
+          <UserCard {...user} key={user.id} />
+        ))}
+      </section>
     </main>
   );
 }

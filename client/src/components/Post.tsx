@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 import Markdown from "./Markdown";
-import PostFooter from "./PostFooter";
+import PostLikeContainer from "./PostLikeContainer";
 import ProfileHeader from "./ProfileHeader";
+import Topics from "./Topics";
 
 interface Props {
   title?: string;
@@ -79,14 +80,8 @@ function Post({
       </div>
       <h1>{title}</h1>
       <Markdown content={content || ""} />
-      <div className="same-line right">
-        {topic?.split(" ").map((topic, i) => (
-          <p className="topic" key={i}>
-            {topic}
-          </p>
-        ))}
-      </div>
-      <PostFooter id={id} />
+      <Topics topics={topic?.split(" ")} />
+      <PostLikeContainer id={id} />
     </section>
   );
 }

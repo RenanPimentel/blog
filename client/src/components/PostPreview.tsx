@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { MainContext } from "../context/context";
 import Markdown from "./Markdown";
 import ProfileHeader from "./ProfileHeader";
+import Topics from "./Topics";
 
 interface Props {
   title: string;
@@ -29,13 +30,7 @@ function PostPreview({ title, topic, content }: Props) {
         />
         <h1>{title}</h1>
         <Markdown content={content} />
-        <div className="same-line right">
-          {topic.split(" ").map((topic, i) => (
-            <p className="topic" key={i}>
-              {topic}
-            </p>
-          ))}
-        </div>
+        <Topics topics={topic.split(" ")} />
       </div>
     </section>
   );

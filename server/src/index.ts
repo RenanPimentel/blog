@@ -35,6 +35,10 @@ wss.on("connection", (socket, _) => {
     if (!msgUser.id) return;
     user = msgUser;
 
+    db.query(
+      "UPDATE users SET last_login = NOW() WHERE id = $1 AND password = $2",
+      [user?.id, user?.password]
+    );
     db.query("UPDATE users SET online = TRUE WHERE id = $1 AND password = $2", [
       user?.id,
       user?.password,
@@ -42,6 +46,10 @@ wss.on("connection", (socket, _) => {
   });
 
   socket.on("close", () => {
+    db.query(
+      "UPDATE users SET last_login = NOW() WHERE id = $1 AND password = $2",
+      [user?.id, user?.password]
+    );
     db.query(
       "UPDATE users SET online = FALSE WHERE id = $1 AND password = $2",
       [user?.id, user?.password]

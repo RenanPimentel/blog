@@ -4,7 +4,7 @@ import { api } from "../util/api";
 
 interface Props extends IPost {}
 
-function PostFooter(props: Props) {
+function PostLikeContainer(props: Props) {
   const [likes, setLikes] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
@@ -56,4 +56,4 @@ function PostFooter(props: Props) {
   );
 }
 
-export default PostFooter;
+export default PostLikeContainer;

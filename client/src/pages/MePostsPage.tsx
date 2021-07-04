@@ -18,11 +18,19 @@ function MePostsPage() {
   }, [me.id, me.posts, setMyPosts]);
 
   if (!me.posts) {
-    return <div>Loading...</div>;
+    return (
+      <main className="wrapper">
+        <div>Loading...</div>
+      </main>
+    );
   }
 
   if (!me.posts.length) {
-    return <h2>No posts</h2>;
+    return (
+      <main className="wrapper">
+        <h2>No posts</h2>
+      </main>
+    );
   }
 
   return (

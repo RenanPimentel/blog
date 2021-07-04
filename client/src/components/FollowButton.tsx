@@ -35,7 +35,7 @@ function FollowButton({ user_id }: Props) {
 
   return (
     <div className="follow-container">
-      <div className="same-line">
+      <div className="same-line" style={{ alignItems: "center" }}>
         {followerCount}
         <button title="follow" onClick={handleClick} className="link">
           {isFollowing ? <FaUserSlash /> : <FaUserPlus />}

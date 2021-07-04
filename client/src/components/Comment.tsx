@@ -11,10 +11,9 @@ interface Props extends IComment {
   changeComment(id: string, content: string): void;
 }
 
-const getSingleTime = (
-  num: number,
-  type: "year" | "month" | "day" | "hour" | "minute" | "second"
-) => {
+type Time = "year" | "month" | "day" | "week" | "hour" | "minute" | "second";
+
+const getFormattedTime = (num: number, type: Time) => {
   if (num === 1) {
     return `a ${type} ago`;
   }
@@ -36,20 +35,23 @@ const getTimeBetween = (dateStr: string) => {
   const mins = Math.floor(timeBetween / (1000 * 60));
   const hours = Math.floor(timeBetween / (1000 * 60 * 60));
   const days = Math.floor(timeBetween / (1000 * 60 * 60 * 24));
+  const weeks = Math.floor(timeBetween / (1000 * 60 * 60 * 24 * 7));
   const months = Math.floor(timeBetween / (1000 * 60 * 60 * 24 * 30));
   const years = Math.floor(timeBetween / (1000 * 60 * 60 * 24 * 30 * 365));
 
   return years
-    ? getSingleTime(years, "year")
+    ? getFormattedTime(years, "year")
     : months
-    ? getSingleTime(months, "month")
+    ? getFormattedTime(months, "month")
+    : weeks
+    ? getFormattedTime(weeks, "week")
     : days
-    ? getSingleTime(days, "day")
+    ? getFormattedTime(days, "day")
     : hours
-    ? getSingleTime(hours, "hour")
+    ? getFormattedTime(hours, "hour")
     : mins
-    ? getSingleTime(mins, "minute")
-    : getSingleTime(secs, "second");
+    ? getFormattedTime(mins, "minute")
+    : getFormattedTime(secs, "second");
 };
 
 function Comment({
@@ -157,9 +159,7 @@ function Comment({
                 />
               </div>
             </Link>
-            <h3 title={getTimeBetween(created_at)} className="username">
-              {author.username}
-            </h3>
+            <h3 className="username">{author.username}</h3>
           </div>
           <div className="same-line" style={{ gap: "1rem" }}>
             {new Date(created_at) < new Date(updated_at) && (
@@ -202,7 +202,10 @@ function Comment({
             <div className="comment">
               <p ref={contentPRef}>{comment}</p>
               <div></div> {/* for like-comment always be on the right */}
-              <div className="like-comment">
+              <div
+                className="like-comment"
+                title={"created at " + new Date(created_at).toLocaleString()}
+              >
                 <i style={{ color: "gray", marginRight: "2rem" }}>
                   {getTimeBetween(created_at)}
                 </i>

@@ -12,10 +12,16 @@ router.get("/", async (req, res) => {
   const { me } = req.cookies;
 
   try {
-    const response = await db.query(
-      "SELECT * FROM posts WHERE author_id != $1 ORDER BY id",
-      [me.id]
-    );
+    const response = req.query.author
+      ? await db.query(
+          "SELECT posts.id, author_id, title, username, avatar, content, topic, last_login, online FROM users RIGHT JOIN posts ON users.id = posts.author_id"
+        )
+      : await db.query<Post>("SELECT * FROM posts ORDER BY updated_at", [
+          me.id,
+        ]);
+
+    response.rows.forEach(row => delete row.password);
+
     res.json({ errors: null, data: { posts: response.rows } } as MyResponse);
   } catch (err) {
     handleErr(res, err);
@@ -57,7 +63,13 @@ router.post("/", async (req, res) => {
 
     const response = await db.query(
       "INSERT INTO posts (title, content, read_time, topic, author_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [post.title, post.content, getReadTime(post.content), post.topic, userId]
+      [
+        post.title,
+        post.content,
+        getReadTime(post.content),
+        Array.from(new Set(post.topic.split(" ").filter(Boolean))).join(" "),
+        userId,
+      ]
     );
 
     res.json({ data: { post: response.rows[0] }, errors: null } as MyResponse);
@@ -188,7 +200,13 @@ router.put("/:post_id", async (req, res) => {
   try {
     await db.query(
       "UPDATE posts SET title = $1, content = $2, topic = $3, read_time = $4 WHERE id = $5",
-      [title, content, topic, getReadTime(content), post_id]
+      [
+        title,
+        content,
+        Array.from(new Set(topic.split(" ").filter(Boolean))).join(" "),
+        getReadTime(content),
+        post_id,
+      ]
     );
     res.status(204).send();
   } catch (err) {
@@ -201,7 +219,7 @@ router.get("/by/:author_id", async (req, res) => {
 
   try {
     const response = await db.query(
-      "SELECT * FROM posts WHERE author_id = $1",
+      "SELECT posts.id, title, content, topic, username FROM posts RIGHT JOIN users ON posts.author_id = users.id WHERE author_id = $1",
       [author_id]
     );
 

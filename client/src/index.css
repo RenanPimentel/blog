@@ -833,6 +833,8 @@ p {
   padding: 0.5rem;
   color: var(--blue);
   border-radius: 10px;
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .topic::before {
@@ -990,11 +992,14 @@ svg {
   border: 1px solid transparent;
   border-radius: 20px;
   padding: 1rem;
+  overflow: hidden;
   transition: var(--transition);
+  background: var(--main-bg);
 }
 
 .card:hover {
   border: 1px solid var(--main-color);
+  background: var(--pure-bg);
 }
 
 .title {
@@ -1043,6 +1048,13 @@ svg {
 
 .online.true {
   background: rgb(50, 200, 100);
+}
+
+.by {
+  display: block;
+  margin-top: 1rem;
+  color: gray;
+  text-align: left;
 }
 
 @media (max-width: 450px) {

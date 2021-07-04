@@ -67,9 +67,12 @@ function UserPage() {
                 <PostCard
                   isOwner={false}
                   content={post.content}
+                  author={user}
                   id={post.id}
                   title={post.title}
                   topic={post.topic}
+                  showBy={false}
+                  author_id={user.id}
                   key={post.id}
                 />
               ))}

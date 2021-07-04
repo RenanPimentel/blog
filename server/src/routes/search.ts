@@ -13,14 +13,21 @@ router.get("/", async (req, res) => {
     .replace(/[\u0300-\u036f]/g, "");
 
   try {
-    const postsResponse = await db.query(
-      "SELECT * FROM posts WHERE title ILIKE $1 OR topic ILIKE $1",
+    const postsPromise = db.query(
+      "SELECT title, posts.id, topic, content, username, author_id FROM posts RIGHT JOIN users ON users.id = posts.author_id WHERE title ILIKE $1 OR topic ILIKE $1",
       [query]
     );
-    const usersResponse = await db.query(
-      "SELECT * FROM users WHERE username ILIKE $1",
+    const usersPromise = db.query(
+      "SELECT * FROM users WHERE username ILIKE $1 ORDER BY last_login DESC",
       [query]
     );
+
+    const [postsResponse, usersResponse] = await Promise.all([
+      postsPromise,
+      usersPromise,
+    ]);
+
+    usersResponse.rows.forEach(row => delete row.password);
 
     res.json({
       data: { posts: postsResponse.rows, users: usersResponse.rows },

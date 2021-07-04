@@ -34,6 +34,11 @@ router.all("/:user_id/follow", async (req, res) => {
   const { user_id } = req.params;
   const { me } = req.cookies;
 
+  if (user_id === me.id) {
+    res.status(204).send();
+    return;
+  }
+
   try {
     const response = await db.query(
       "SELECT follower_id FROM follows WHERE followed_id = $1 AND follower_id = $2",

@@ -70,16 +70,23 @@ router.get("/follows", async (req, res) => {
     "SELECT followed_id FROM follows WHERE follower_id = $1",
     [me.id]
   );
-
   const queryInStr = `($${followsResponse.rows
     .map((_, i) => i + 1)
     .join(", $")})`;
+
   const postsResponse = await db.query(
     `SELECT * FROM posts WHERE author_id IN ${queryInStr} ORDER BY updated_at desc`,
     [...followsResponse.rows.map(row => Number(row.followed_id))]
   );
+  const usersResponse = await db.query(
+    `SELECT * FROM users WHERE id IN ${queryInStr} ORDER BY username`,
+    [...followsResponse.rows.map(row => Number(row.followed_id))]
+  );
 
-  res.json({ data: { posts: postsResponse.rows }, errors: null } as MyResponse);
+  res.json({
+    data: { posts: postsResponse.rows, users: usersResponse.rows },
+    errors: null,
+  } as MyResponse);
 });
 
 export default router;

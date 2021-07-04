@@ -42,6 +42,7 @@ interface Post {
   title: string;
   topic: string;
   read_time: number;
+  author_id: number;
 }
 
 interface StrObj {

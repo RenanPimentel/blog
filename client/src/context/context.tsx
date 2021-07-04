@@ -42,7 +42,9 @@ function MyContextProvider({ children }: Props) {
   };
 
   const updateMyPost: MainContext["updateMyPost"] = (id, post) => {
-    const newPosts = state.me.posts?.map(p => (p.id === id ? post : p));
+    const newPosts = state.me.posts?.map(p =>
+      p.id === id ? { ...post, id } : p
+    );
     dispatch({ type: "SET_MY_POSTS", payload: newPosts });
   };
 

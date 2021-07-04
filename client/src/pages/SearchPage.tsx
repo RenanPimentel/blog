@@ -25,7 +25,7 @@ function SearchPage() {
   return (
     <main className="wrapper">
       <h1>
-        Search: <i>{query}</i>
+        Search: <i>'{query}'</i>
       </h1>
       <section>
         {elements.posts.length > 0 && <h2>Posts</h2>}
@@ -33,7 +33,9 @@ function SearchPage() {
           {elements.posts.map(post => (
             <PostCard
               {...post}
+              author={{ username: post.username }}
               isOwner={post.author_id === me.id}
+              showBy={true}
               key={post.id}
             />
           ))}

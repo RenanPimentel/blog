@@ -4,16 +4,23 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 import BtnContainer from "./BtnContainer";
 import Markdown from "./Markdown";
+import Topics from "./Topics";
 
-interface Props {
-  id?: string;
-  title?: string;
-  content?: string;
-  topic?: string;
+interface Props extends IPost {
   isOwner: boolean;
+  showBy: boolean;
+  author?: IUser;
 }
 
-function PostCard({ content, id, title, topic, isOwner }: Props) {
+function PostCard({
+  author,
+  content,
+  id,
+  title,
+  topic,
+  isOwner,
+  showBy,
+}: Props) {
   const { removeMyPost } = useContext(MainContext);
   const history = useHistory();
 
@@ -26,13 +33,15 @@ function PostCard({ content, id, title, topic, isOwner }: Props) {
     }
   };
 
-  const redirectToUpdate = (id: string) =>
+  const redirectToUpdate = (id: string) => {
     history.push(`/me/posts/${id}/update`);
+  };
 
   return (
     <article className="card">
       <div className="same-line">
         <Link className="no-dec" to={`/posts/${id}`} style={{ width: "0" }}>
+          {showBy && <i className="by">By {author?.username}</i>}
           <h2 className="title overflow" style={{ maxWidth: "100%" }}>
             {title}
           </h2>
@@ -50,13 +59,7 @@ function PostCard({ content, id, title, topic, isOwner }: Props) {
         <div className="content-container">
           <Markdown content={content || ""} />
         </div>
-        <div className="topic-container">
-          {topic?.split(" ").map((topic, i) => (
-            <span className="topic" key={i}>
-              {topic}
-            </span>
-          ))}
-        </div>
+        <Topics topics={topic?.split(" ")} />
       </Link>
     </article>
   );

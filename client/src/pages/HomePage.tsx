@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
-import PostCard from "../components/PostCard";
+import Posts from "../components/Posts";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
@@ -12,7 +12,7 @@ function HomePage() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await api.get("/posts");
+        const response = await api.get<SearchResponse>("/posts?author=true");
         setPosts(response.data.data.posts);
       } catch (err) {
         console.dir(err);
@@ -48,18 +48,7 @@ function HomePage() {
 
   return (
     <main className="wrapper">
-      <div className="posts-container">
-        {posts.map(post => (
-          <PostCard
-            content={post.content || ""}
-            id={post.id || ""}
-            title={post.title || ""}
-            topic={post.topic || ""}
-            isOwner={false}
-            key={post.id}
-          />
-        ))}
-      </div>
+      <Posts posts={posts} />
     </main>
   );
 }
