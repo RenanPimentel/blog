@@ -3,8 +3,9 @@ import React, {
   ReactElement,
   useCallback,
   useReducer,
+  useState,
 } from "react";
-import { useState } from "react";
+import io from "socket.io-client";
 import { api } from "../util/api";
 import { reducer } from "./reducer";
 
@@ -21,6 +22,7 @@ interface Props {
 function MyContextProvider({ children }: Props) {
   const [isDark, setIsDark] = useState(localStorage.getItem("dark") === "true");
   const [state, dispatch] = useReducer(reducer, defaultState);
+  const socket = io("ws://localhost:4000");
 
   const getMe = useCallback(async () => {
     try {
@@ -69,6 +71,7 @@ function MyContextProvider({ children }: Props) {
     removeMyPost,
     addMyPost,
     updateMyPost,
+    socket,
     ...state,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;

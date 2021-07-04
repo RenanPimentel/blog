@@ -20,11 +20,23 @@ import SettingsPage from "./pages/SettingsPage";
 import UserPage from "./pages/UserPage";
 
 function App() {
-  const { me } = useContext(MainContext);
-  const ws = new WebSocket("ws://localhost:4000/api/v1");
+  const { me, socket } = useContext(MainContext);
 
-  ws.addEventListener("open", () => {
-    ws.send(JSON.stringify({ id: me.id, password: me.password }));
+  socket.on("open", () => {
+    socket.send(JSON.stringify({ ...me, status: "connecting" }));
+  });
+
+  socket.on("notification", (message: string) => {
+    const msg: { for: string[]; data: { comment: string }; from: string } =
+      JSON.parse(message);
+
+    /*
+      TODO: implement notification in NavUser component
+    */
+    if (msg.for.find(id => id === me.id)) {
+      console.log("message from", msg.from);
+      console.log(msg.data.comment);
+    }
   });
 
   return (

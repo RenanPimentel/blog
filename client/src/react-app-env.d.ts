@@ -50,6 +50,7 @@ interface MainContext {
   defaultBanner: string;
   me: IMe;
   isDark: boolean;
+  socket: Socket<DefaultEventsMap, DefaultEventsMap>;
   setIsDark(isDark: boolean): void;
   getMe(): void;
   setMe(me: IMe): void;

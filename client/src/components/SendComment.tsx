@@ -5,10 +5,11 @@ import { api } from "../util/api";
 
 interface Props {
   addComment(comment: IComment): void;
+  post: IPost;
 }
 
-function SendComment({ addComment }: Props) {
-  const context = useContext(MainContext);
+function SendComment({ addComment, post }: Props) {
+  const { me, socket } = useContext(MainContext);
   const [comment, setComment] = useState("");
   const [error, setError] = useState("");
   const { post_id } = useParams<{ post_id: string }>();
@@ -29,8 +30,22 @@ function SendComment({ addComment }: Props) {
     (async () => {
       const response = await api.post(`/posts/${post_id}/comments`, {
         comment,
-        post_author_id: context.me.id,
+        post_author_id: post.author_id,
       });
+      console.log({
+        for: [post.author_id],
+        data: { comment },
+        from: me.id,
+      });
+
+      socket.emit(
+        "notification",
+        JSON.stringify({
+          for: [post.author_id],
+          data: { comment },
+          from: me.id,
+        })
+      );
       addComment(response.data.data.comment);
     })();
   };
@@ -40,6 +55,7 @@ function SendComment({ addComment }: Props) {
   ) => {
     e.preventDefault();
     await sendComment();
+    socket.emit("notification", { data: { comment }, for: [] });
     setComment("");
   };
 

@@ -7,12 +7,18 @@ interface Props extends IPost {}
 
 function CommentSection({ id }: Props) {
   const [comments, setComments] = useState<IComment[]>([]);
+  const [post, setPost] = useState<IPost>({});
 
   useEffect(() => {
     (async () => {
       if (!id) return;
-      const response = await api.get<CommentsResponse>(`/posts/${id}/comments`);
-      setComments(response.data.data.comments);
+      const commentResponse = await api.get<CommentsResponse>(
+        `/posts/${id}/comments`
+      );
+      const postResponse = await api.get<PostResponse>(`/posts/${id}`);
+
+      setComments(commentResponse.data.data.comments);
+      setPost(postResponse.data.data.post);
     })();
   }, [id]);
 
@@ -46,7 +52,7 @@ function CommentSection({ id }: Props) {
     <section className="comments-container">
       <div className="rel">
         <div className="line-v"></div>
-        <SendComment addComment={addComment} />
+        <SendComment post={post} addComment={addComment} />
       </div>
       {comments?.length === 0 ? (
         <>

@@ -4,7 +4,7 @@ import express, { Express } from "express";
 import { Application } from "express-ws";
 import http from "http";
 import { Client } from "pg";
-import WebSocket from "ws";
+import { Server } from "socket.io";
 import { checkMe } from "./checkMe";
 import { PORT } from "./config";
 import { corsOptions } from "./constants";
@@ -19,43 +19,14 @@ interface App extends Express, Application {}
 
 const db = new Client();
 const app = express() as App;
+const httpServer = http.createServer(app);
+const io = require("socket.io")(httpServer, {
+  cors: { origin: "*" },
+}) as Server;
 
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors(corsOptions));
-
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-
-wss.on("connection", (socket, _) => {
-  let user: null | { id: string; password: string } = null;
-
-  socket.on("message", data => {
-    let msgUser = JSON.parse(String(data));
-    if (!msgUser.id) return;
-    user = msgUser;
-
-    db.query(
-      "UPDATE users SET last_login = NOW() WHERE id = $1 AND password = $2",
-      [user?.id, user?.password]
-    );
-    db.query("UPDATE users SET online = TRUE WHERE id = $1 AND password = $2", [
-      user?.id,
-      user?.password,
-    ]);
-  });
-
-  socket.on("close", () => {
-    db.query(
-      "UPDATE users SET last_login = NOW() WHERE id = $1 AND password = $2",
-      [user?.id, user?.password]
-    );
-    db.query(
-      "UPDATE users SET online = FALSE WHERE id = $1 AND password = $2",
-      [user?.id, user?.password]
-    );
-  });
-});
 
 app.use(["/api/v1/posts", "/api/v1/comments", "/api/v1/me"], checkMe);
 
@@ -66,9 +37,55 @@ app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/comments", commentsRouter);
 app.use("/api/v1/search", searchRouter);
 
-server.listen(PORT, async () => {
+io.on("connection", socket => {
+  let data: null | { id: string; password: string } = null;
+
+  socket.on("notification", message => {
+    /*
+      notify comments in author posts or new posts from followed user
+    */
+
+    const msg = typeof message === "string" ? JSON.parse(message) : message;
+
+    io.emit("notification", JSON.stringify(msg));
+  });
+
+  socket.on("message", message => {
+    let msg = JSON.parse(String(message));
+
+    if (msg.status === "connecting") {
+      data = msg;
+
+      db.query(
+        "UPDATE users SET last_login = NOW() WHERE id = $1 AND password = $2",
+        [data?.id, data?.password]
+      );
+      db.query(
+        "UPDATE users SET online = TRUE WHERE id = $1 AND password = $2",
+        [data?.id, data?.password]
+      );
+    } else if (msg.status === "notification") {
+      /*
+        TODO: push notification data to table and if user is online push it to client via ws
+      */
+    }
+  });
+
+  socket.on("close", () => {
+    db.query(
+      "UPDATE users SET last_login = NOW() WHERE id = $1 AND password = $2",
+      [data?.id, data?.password]
+    );
+    db.query(
+      "UPDATE users SET online = FALSE WHERE id = $1 AND password = $2",
+      [data?.id, data?.password]
+    );
+  });
+});
+
+httpServer.listen(PORT, async () => {
   await db.connect();
-  console.log(`ready at port ${PORT}`);
+  console.log(`server at ${PORT}`);
 });
 
 export { db };
