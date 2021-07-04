@@ -1,9 +1,7 @@
 import React, { MutableRefObject, useContext, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
-
-type DataError = { field: string; reason: string };
 
 function RegisterPage() {
   const { getMe } = useContext(MainContext);
@@ -12,33 +10,20 @@ function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [check, setCheck] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!check) {
+      return;
+    }
+
     try {
-      await api.post("/register", { username, email, password });
+      await api.post("/account/register", { username, email, password });
       history.push("/me");
       getMe();
-    } catch (e) {
-      const errors: DataError[] = e.response.data.errors;
-
-      errors.forEach(err => {
-        const input = formEl.current?.querySelector(
-          `#${err.field}`
-        ) as HTMLInputElement;
-
-        const div = document.createElement("div");
-        div.classList.add("error");
-        div.textContent = err.reason;
-        input.parentElement?.appendChild(div);
-        input.classList.add("border-red");
-
-        setTimeout(() => {
-          input.parentElement?.removeChild(div);
-          input.classList.remove("border-red");
-        }, 2500);
-      });
-    }
+    } catch (e) {}
   };
 
   return (
@@ -77,6 +62,19 @@ function RegisterPage() {
               id="password"
               placeholder="my safe password"
             />
+          </div>
+          <div className="form-control">
+            <div className="same-line right">
+              <label htmlFor="cookies">
+                Accept <Link to="/legal">legal</Link> terms:
+              </label>
+              <input
+                type="checkbox"
+                id="cookies"
+                checked={check}
+                onChange={e => setCheck(e.target.checked)}
+              />
+            </div>
           </div>
           <div className="form-control">
             <button type="submit" className="btn btn-large">

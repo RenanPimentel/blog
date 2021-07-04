@@ -11,6 +11,47 @@ interface Props extends IComment {
   changeComment(id: string, content: string): void;
 }
 
+const getSingleTime = (
+  num: number,
+  type: "year" | "month" | "day" | "hour" | "minute" | "second"
+) => {
+  if (num === 1) {
+    return `a ${type} ago`;
+  }
+
+  if (type !== "second") {
+    return `${num} ${type}s ago`;
+  } else {
+    return "now";
+  }
+};
+
+const getTimeBetween = (dateStr: string) => {
+  const now = new Date();
+  const date = new Date(dateStr);
+
+  const timeBetween = Number(now) - Number(date);
+
+  const secs = Math.floor(timeBetween / 1000);
+  const mins = Math.floor(timeBetween / (1000 * 60));
+  const hours = Math.floor(timeBetween / (1000 * 60 * 60));
+  const days = Math.floor(timeBetween / (1000 * 60 * 60 * 24));
+  const months = Math.floor(timeBetween / (1000 * 60 * 60 * 24 * 30));
+  const years = Math.floor(timeBetween / (1000 * 60 * 60 * 24 * 30 * 365));
+
+  return years
+    ? getSingleTime(years, "year")
+    : months
+    ? getSingleTime(months, "month")
+    : days
+    ? getSingleTime(days, "day")
+    : hours
+    ? getSingleTime(hours, "hour")
+    : mins
+    ? getSingleTime(mins, "minute")
+    : getSingleTime(secs, "second");
+};
+
 function Comment({
   updated_at,
   created_at,
@@ -69,47 +110,6 @@ function Comment({
     if (comment !== defaultComment) {
       changeComment(id, comment);
     }
-  };
-
-  const getSingleTime = (
-    num: number,
-    type: "year" | "month" | "day" | "hour" | "minute" | "second"
-  ) => {
-    if (num === 1) {
-      return `a ${type} ago`;
-    }
-
-    if (type !== "second") {
-      return `${num} ${type}s ago`;
-    } else {
-      return "now";
-    }
-  };
-
-  const getTimeBetween = (dateStr: string) => {
-    const now = new Date();
-    const date = new Date(dateStr);
-
-    const timeBetween = Number(now) - Number(date);
-
-    const secs = Math.floor(timeBetween / 1000);
-    const mins = Math.floor(timeBetween / (1000 * 60));
-    const hours = Math.floor(timeBetween / (1000 * 60 * 60));
-    const days = Math.floor(timeBetween / (1000 * 60 * 60 * 24));
-    const months = Math.floor(timeBetween / (1000 * 60 * 60 * 24 * 30));
-    const years = Math.floor(timeBetween / (1000 * 60 * 60 * 24 * 30 * 365));
-
-    return years
-      ? getSingleTime(years, "year")
-      : months
-      ? getSingleTime(months, "month")
-      : days
-      ? getSingleTime(days, "day")
-      : hours
-      ? getSingleTime(hours, "hour")
-      : mins
-      ? getSingleTime(mins, "minute")
-      : getSingleTime(secs, "second");
   };
 
   const handleEditClick = async () => {

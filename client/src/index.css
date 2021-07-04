@@ -12,12 +12,23 @@
   --transition: all 0.3s ease-out;
   --max-width: 800px;
   --nav-size: 50px;
+  --page-width: 50vw;
 }
 
 #root {
   min-height: 100vh;
   background: var(--main-bg);
   color: var(--main-fcolor);
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+  background: var(--main-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--main-fcolor);
+  border-radius: 50px;
 }
 
 .dark {
@@ -28,16 +39,6 @@
   --blue-bg: rgba(0, 0, 255, 0.2);
   --blue: rgb(150, 150, 255);
   transition: var(--transition);
-}
-
-body::-webkit-scrollbar {
-  width: 0.5rem;
-  background: var(--main-bg);
-}
-
-body::-webkit-scrollbar-thumb {
-  background: var(--main-fcolor);
-  border-radius: 50px;
 }
 
 * {
@@ -57,17 +58,17 @@ html {
   width: 100%;
 }
 
+textarea,
 input {
   font-family: "Ubuntu", sans-serif;
   outline: none;
 }
 
 textarea {
-  font-family: "Ubuntu", sans-serif;
   background: var(--main-bg);
-  outline: none;
 }
 
+textarea:focus,
 input:focus {
   box-shadow: 0 0 10px -5px var(--main-fcolor);
 }
@@ -80,18 +81,12 @@ hr {
 }
 
 pre {
-  border-radius: 5px;
+  border-radius: 7px;
 }
 
 pre::-webkit-scrollbar {
-  background: inherit;
-  height: 10px;
-  border-radius: 0 0 10px 10px;
-}
-
-pre::-webkit-scrollbar-thumb {
-  background: var(--main-fcolor);
-  border-radius: 10px;
+  background: transparent;
+  height: 7px;
 }
 
 .btn {
@@ -103,7 +98,7 @@ pre::-webkit-scrollbar-thumb {
   padding: 0.5rem 0.75rem;
   border: none;
   border-radius: 50px;
-  transition: color 0.5s ease, transform 0.05s ease;
+  transition: color 0.3s ease, transform 0.05s ease;
   cursor: pointer;
 }
 
@@ -116,6 +111,7 @@ pre::-webkit-scrollbar-thumb {
 }
 
 .btn:disabled {
+  background: gray;
   cursor: initial;
 }
 
@@ -125,14 +121,14 @@ pre::-webkit-scrollbar-thumb {
 }
 
 .large {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
 }
 
 .form-container {
-  width: 50vw;
+  width: var(--page-width);
+  margin: auto;
   min-width: 250px;
   height: 20rem;
-  margin: auto;
   display: grid;
   place-items: center;
 }
@@ -177,7 +173,6 @@ pre::-webkit-scrollbar-thumb {
 
 .textarea {
   font-family: "Ubuntu Mono", monospace;
-  border: none;
   background: var(--pure-bg);
   color: var(--main-fcolor);
   border: 1px solid transparent;
@@ -191,6 +186,41 @@ pre::-webkit-scrollbar-thumb {
   border-radius: 10px;
   padding: 0.5rem;
   transition: border 0.3s ease;
+}
+
+.search-input {
+  background: transparent;
+  text-align: start !important;
+  line-height: 26px;
+  padding: 0.5rem 0;
+  font-size: 16px;
+  border: none;
+}
+
+.search-input:focus {
+  box-shadow: none;
+}
+
+.search-input-container {
+  display: flex;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  max-width: 50rem;
+  width: 100%;
+  padding: 0 0.5rem;
+  margin: 0 1rem;
+  transition: all 0.2s ease;
+  background: var(--pure-bg);
+  width: 100%;
+}
+
+.search-input-container:hover,
+.search-input-container:focus-within {
+  border: 1px solid var(--main-color);
+}
+
+.search-input-container button:focus {
+  outline: none;
 }
 
 button.svg {
@@ -387,11 +417,13 @@ a.no-bg {
   color: var(--main-fcolor);
   margin-top: 1rem;
 }
+
 .border-red:hover,
 .border-red:focus,
+.border-red:focus-within,
 .border-red {
   border: 1px solid rgb(200, 50, 50);
-  transition: all .2s ease;
+  transition: all 0.2s ease;
 }
 
 .settings {
@@ -445,16 +477,6 @@ a.no-bg {
   height: 150px !important;
 }
 
-.profile-picture {
-  width: 70px;
-  height: 70px;
-  margin: 0 1rem;
-}
-
-.profile .profile-picture {
-  transform: translate(0, -50%);
-}
-
 .card-avatar {
   position: relative;
   overflow: hidden;
@@ -495,6 +517,12 @@ a.no-bg {
 
 .profile .profile-banner img {
   width: 100%;
+}
+
+.profile .profile-picture {
+  --nav-size: 70px;
+  transform: translate(0, -50%);
+  margin-left: 2rem;
 }
 
 .profile-picture {

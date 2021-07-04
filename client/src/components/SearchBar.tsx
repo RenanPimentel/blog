@@ -8,7 +8,7 @@ function SearchBar() {
   const history = useHistory();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value.trim());
+    setQuery(e.target.value);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -17,7 +17,8 @@ function SearchBar() {
       setError(true);
     } else {
       setError(false);
-      history.push(`/search?query=${query}`);
+      setQuery(query.trim());
+      history.push(`/search?query=${query.trim()}`);
     }
   };
 
@@ -27,24 +28,17 @@ function SearchBar() {
 
   return (
     <form className="search-bar" onSubmit={handleSubmit}>
-      {error ? (
+      <div className={`search-input-container ${error ? "border-red" : ""}`}>
         <input
+          className={`search-input `}
           type="text"
-          className="textarea border-red"
           value={query}
           onChange={handleInputChange}
         />
-      ) : (
-        <input
-          type="text"
-          className="textarea"
-          value={query}
-          onChange={handleInputChange}
-        />
-      )}
-      <button type="submit" className="link">
-        <FaSearch />
-      </button>
+        <button type="submit" className="link">
+          <FaSearch />
+        </button>
+      </div>
     </form>
   );
 }
