@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useContext } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
+import { MainContext } from "../context/context";
 
 function SearchBar() {
+  const { me } = useContext(MainContext);
   const [query, setQuery] = useState("");
   const [error, setError] = useState(false);
   const history = useHistory();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!me.id) {
+      setError(true);
+      return;
+    }
     setQuery(e.target.value);
   };
 

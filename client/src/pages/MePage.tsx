@@ -1,9 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import PostCard from "../components/PostCard";
 import { MainContext } from "../context/context";
+import { api } from "../util/api";
 
 function MePage() {
   const { me } = useContext(MainContext) as MainContext;
+  const [posts, setPosts] = useState<IPost[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await api.get<PostsResponse>("/me/follows");
+      setPosts(response.data.data.posts);
+    })();
+  }, []);
 
   if (!me?.id) {
     return (
@@ -22,7 +33,11 @@ function MePage() {
 
   return (
     <main className="wrapper">
-      <h1>Welcome {me.username}!</h1>
+      <div className="posts-container">
+        {posts.map(post => (
+          <PostCard {...post} isOwner={false} key={post.id} />
+        ))}
+      </div>
     </main>
   );
 }

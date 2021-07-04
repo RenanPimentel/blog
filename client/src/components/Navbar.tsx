@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
-import { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
 import Logo from "./Logo";
 import NavUser from "./NavUser";
 import SearchBar from "./SearchBar";
-import ToggleDark from "./ToggleDark";
 
 function Navbar() {
   const { getMe, me } = useContext(MainContext) as MainContext;
@@ -43,7 +41,6 @@ function Navbar() {
           </>
         )}
       </ul>
-      <ToggleDark />
     </nav>
   );
 }

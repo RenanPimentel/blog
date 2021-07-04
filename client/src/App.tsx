@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import ToggleDark from "./components/ToggleDark";
 import { MainContext } from "./context/context";
 import ForgotPage from "./pages/ForgotPage";
 import HomePage from "./pages/HomePage";
@@ -29,6 +30,7 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
+      <ToggleDark />
       <Switch>
         <Route exact path="/">
           <HomePage />

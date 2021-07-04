@@ -1,14 +1,4 @@
 /// <reference types="react-scripts" />
-interface IMe {
-  id?: string;
-  password?: string;
-  username?: string;
-  email?: string;
-  avatar?: string;
-  banner?: string;
-  last_login?: string;
-  posts: IPost[];
-}
 
 interface IPost {
   id?: string;
@@ -21,6 +11,11 @@ interface IPost {
   author_id?: string;
 }
 
+interface IMe extends IUser {
+  password?: string;
+  posts?: IPost[];
+}
+
 interface IUser {
   id?: string;
   username?: string;
@@ -28,6 +23,7 @@ interface IUser {
   avatar?: string;
   banner?: string;
   last_login?: string;
+  online?: boolean;
 }
 
 interface IState {
@@ -68,6 +64,7 @@ type FieldError = { field: string; reason: string };
 type CommentsResponse = { data: { comments: IComment[] } };
 type UserResponse = { data: { user: IUser } };
 type PostResponse = { data: { post: IPost } };
+type PostsResponse = { data: { posts: IPost[] } };
 type CountResponse = { data: { count: string } };
 type LikesResponse = { data: { likes: boolean } };
 type FollowerCountResponse = { data: { follows: boolean; count: string } };

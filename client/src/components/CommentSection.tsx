@@ -17,7 +17,7 @@ function CommentSection({ id }: Props) {
   }, [id]);
 
   const addComment = (comment: IComment) => {
-    setComments([...comments, comment]);
+    setComments([comment, ...comments]);
   };
 
   const removeComment = async (id: string) => {

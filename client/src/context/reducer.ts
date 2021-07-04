@@ -8,11 +8,11 @@ export function reducer(state: IState, action: Action): IState {
       ...state,
       me: {
         ...state.me,
-        posts: state.me.posts.filter(post => post.id !== action.payload),
+        posts: state.me.posts?.filter(post => post.id !== action.payload),
       },
     };
   } else if (action.type === "ADD_MY_POST") {
-    state.me.posts.push(action.payload);
+    state.me.posts?.push(action.payload);
     return { ...state };
   }
 

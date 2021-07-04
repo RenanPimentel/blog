@@ -89,6 +89,10 @@ pre::-webkit-scrollbar {
   height: 7px;
 }
 
+textarea::-webkit-scrollbar {
+  border-radius: 50px;
+}
+
 .btn {
   display: block;
   width: max-content;
@@ -203,11 +207,11 @@ pre::-webkit-scrollbar {
 
 .search-input-container {
   display: flex;
-  border-radius: 10px;
+  border-radius: 30px;
   border: 1px solid transparent;
   max-width: 50rem;
   width: 100%;
-  padding: 0 0.5rem;
+  padding: 0 20px;
   margin: 0 1rem;
   transition: all 0.2s ease;
   background: var(--pure-bg);
@@ -981,14 +985,16 @@ svg {
 }
 
 .card {
-  box-shadow: 0 0 10px -5px var(--main-fcolor);
+  box-shadow: 0 0 10px -5px black;
   transition: box-shadow 0.3s ease;
+  border: 1px solid transparent;
   border-radius: 20px;
   padding: 1rem;
+  transition: var(--transition);
 }
 
 .card:hover {
-  box-shadow: 0 0 10px -2px var(--main-fcolor);
+  border: 1px solid var(--main-color);
 }
 
 .title {
@@ -998,9 +1004,9 @@ svg {
   flex: 1;
 }
 
-.card:hover .title {
+/* .card:hover .title {
   color: var(--main-color);
-}
+} */
 
 .color {
   color: var(--main-color);
@@ -1018,8 +1024,25 @@ svg {
   margin: 0;
 }
 
-textarea::-webkit-scrollbar {
-  border-radius: 50px;
+.avatar-container {
+  width: fit-content;
+  height: fit-content;
+  position: relative;
+}
+
+.online {
+  position: absolute;
+  border-radius: 50%;
+  --size: 30px;
+  width: var(--size);
+  height: var(--size);
+  background: rgb(200, 50, 50);
+  top: 0;
+  right: 0;
+}
+
+.online.true {
+  background: rgb(50, 200, 100);
 }
 
 @media (max-width: 450px) {

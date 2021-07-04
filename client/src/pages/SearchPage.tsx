@@ -28,7 +28,7 @@ function SearchPage() {
         Search: <i>{query}</i>
       </h1>
       <section>
-        <h2>Posts</h2>
+        {elements.posts.length > 0 && <h2>Posts</h2>}
         <div className="posts-container">
           {elements.posts.map(post => (
             <PostCard
@@ -40,7 +40,7 @@ function SearchPage() {
         </div>
       </section>
       <section>
-        <h2>Users</h2>
+        {elements.users.length > 0 && <h2>Users</h2>}
         <div className="posts-container">
           {elements.users.map(user => (
             <UserCard {...user} key={user.id} />

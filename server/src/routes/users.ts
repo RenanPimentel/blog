@@ -1,7 +1,9 @@
 import { Router } from "express";
 import { db } from "../index";
 import { handleErr } from "../utils/handleErr";
-
+/*
+  /users
+*/
 const router = Router();
 
 router.get("/:user_id", async (req, res) => {

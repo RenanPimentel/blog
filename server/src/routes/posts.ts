@@ -106,7 +106,7 @@ router.get("/:post_id/comments", async (req, res) => {
 
   try {
     const response = await db.query(
-      "SELECT * FROM comments WHERE post_id = $1",
+      "SELECT * FROM comments WHERE post_id = $1 ORDER BY created_at DESC",
       [post_id]
     );
 

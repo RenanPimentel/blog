@@ -4,7 +4,15 @@ import { MainContext } from "../context/context";
 
 interface Props extends IUser {}
 
-function PostCard({ id, avatar, banner, email, last_login, username }: Props) {
+function PostCard({
+  id,
+  avatar,
+  banner,
+  email,
+  last_login,
+  username,
+  online,
+}: Props) {
   const { defaultAvatar } = useContext(MainContext);
 
   return (
@@ -17,8 +25,11 @@ function PostCard({ id, avatar, banner, email, last_login, username }: Props) {
         </Link>
       </div>
       <Link className="no-dec" to={`/users/${id}`}>
-        <div className="card-avatar">
-          <img src={avatar || defaultAvatar} alt={`${username} avatar`} />
+        <div className="avatar-container">
+          <div className="card-avatar">
+            <img src={avatar || defaultAvatar} alt={`${username} avatar`} />
+          </div>
+          <div className={`online ${online}`}></div>
         </div>
       </Link>
     </article>

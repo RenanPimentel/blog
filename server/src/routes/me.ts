@@ -64,4 +64,22 @@ router.post("/change", async (req, res) => {
   }
 });
 
+router.get("/follows", async (req, res) => {
+  const { me } = req.cookies;
+  const followsResponse = await db.query(
+    "SELECT followed_id FROM follows WHERE follower_id = $1",
+    [me.id]
+  );
+
+  const queryInStr = `($${followsResponse.rows
+    .map((_, i) => i + 1)
+    .join(", $")})`;
+  const postsResponse = await db.query(
+    `SELECT * FROM posts WHERE author_id IN ${queryInStr} ORDER BY updated_at desc`,
+    [...followsResponse.rows.map(row => Number(row.followed_id))]
+  );
+
+  res.json({ data: { posts: postsResponse.rows }, errors: null } as MyResponse);
+});
+
 export default router;

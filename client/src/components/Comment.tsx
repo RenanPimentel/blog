@@ -63,7 +63,7 @@ function Comment({
   changeComment,
   removeComment,
 }: Props) {
-  const { me } = useContext(MainContext);
+  const { me, defaultAvatar } = useContext(MainContext);
   const [isCommentAuthor, setIsCommentAuthor] = useState(false);
   const [isPostAuthor, setIsPostAuthor] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -151,7 +151,10 @@ function Comment({
           <div className="same-line right" style={{ alignItems: "center" }}>
             <Link to={author_id === me.id ? "/me" : `/users/${author_id}`}>
               <div className="profile-picture">
-                <img src={author.avatar} alt={`${author.username} avatar`} />
+                <img
+                  src={author.avatar || defaultAvatar}
+                  alt={`${author.username} avatar`}
+                />
               </div>
             </Link>
             <h3 title={getTimeBetween(created_at)} className="username">
