@@ -6,7 +6,7 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function MePostsCreatePage() {
-  const context = useContext(MainContext);
+  const { addMyPost, socket, me } = useContext(MainContext);
   const history = useHistory();
 
   const sendPost = async (post: {
@@ -14,9 +14,16 @@ function MePostsCreatePage() {
     topic: string;
     content: string;
   }) => {
-    const response = await api.post<PostResponse>("/posts", { post });
-    context.addMyPost(response.data.data.post);
-    history.push(`/posts/${response.data.data.post.id}`);
+    const response = await api.post<PostResponse>("/posts", { post: post });
+    const { post: completePost } = response.data.data;
+    addMyPost(completePost);
+
+    socket.emit("notification", {
+      for: [completePost.author_id],
+      data: { type: "post", from: me.id, content: completePost.title },
+    });
+
+    history.push(`/posts/${completePost.id}`);
   };
 
   return (

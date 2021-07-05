@@ -45,6 +45,11 @@ interface Action {
   payload: any;
 }
 
+interface INotification {
+  for: string[];
+  data: { type: string; from: string; content: string };
+}
+
 interface MainContext {
   defaultAvatar: string;
   defaultBanner: string;
@@ -69,7 +74,7 @@ type PostsResponse = { data: { posts: IPost[] } };
 type CountResponse = { data: { count: string } };
 type LikesResponse = { data: { likes: boolean } };
 type FollowerCountResponse = { data: { follows: boolean; count: string } };
+type UsersResponse = { data: { users: IUser[] } };
 type SearchResponse = {
   data: { posts: (IPost & { username: string })[]; users: IUser[] };
 };
-type UsersResponse = { data: { users: IUser[] } };

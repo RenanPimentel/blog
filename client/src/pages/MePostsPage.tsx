@@ -28,6 +28,11 @@ function MePostsPage() {
   if (!me.posts.length) {
     return (
       <main className="wrapper">
+        <h2 className="fit-content">
+          <Link className="link color" to="/me/posts/create">
+            Create Post
+          </Link>
+        </h2>
         <h2>No posts</h2>
       </main>
     );

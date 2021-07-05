@@ -20,6 +20,7 @@ function CreatePost(props: Props) {
   const [selects, setSelects] = useState(["p"]);
 
   useEffect(() => {
+    if (!props.postId) return;
     (async () => {
       const response = await api.get<PostResponse>(`/posts/${props.postId}`);
       const { post } = response.data.data;

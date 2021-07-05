@@ -32,20 +32,11 @@ function SendComment({ addComment, post }: Props) {
         comment,
         post_author_id: post.author_id,
       });
-      console.log({
-        for: [post.author_id],
-        data: { comment },
-        from: me.id,
-      });
 
-      socket.emit(
-        "notification",
-        JSON.stringify({
-          for: [post.author_id],
-          data: { comment },
-          from: me.id,
-        })
-      );
+      socket.emit("notification", {
+        for: [post.author_id],
+        data: { type: "comment", from: me.id, content: comment },
+      });
       addComment(response.data.data.comment);
     })();
   };
@@ -55,7 +46,6 @@ function SendComment({ addComment, post }: Props) {
   ) => {
     e.preventDefault();
     await sendComment();
-    socket.emit("notification", { data: { comment }, for: [] });
     setComment("");
   };
 

@@ -22,21 +22,13 @@ import UserPage from "./pages/UserPage";
 function App() {
   const { me, socket } = useContext(MainContext);
 
-  socket.on("open", () => {
-    socket.send(JSON.stringify({ ...me, status: "connecting" }));
+  socket.once("connect", () => {
+    if (me.id) socket.emit("connect_message", me);
   });
 
-  socket.on("notification", (message: string) => {
-    const msg: { for: string[]; data: { comment: string }; from: string } =
-      JSON.parse(message);
-
-    /*
-      TODO: implement notification in NavUser component
-    */
-    if (msg.for.find(id => id === me.id)) {
-      console.log("message from", msg.from);
-      console.log(msg.data.comment);
-    }
+  socket.on("notification", (msg: INotification) => {
+    /* TODO: implement notification in NavUser component */
+    console.log(msg);
   });
 
   return (
