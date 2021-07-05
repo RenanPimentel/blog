@@ -13,14 +13,13 @@ function RegisterPage() {
   const [check, setCheck] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!check) return;
     e.preventDefault();
-
-    if (!check) {
-      return;
-    }
 
     try {
       await api.post("/account/register", { username, email, password });
+      // eslint-disable-next-line no-restricted-globals
+      location.reload();
       history.push("/me");
       getMe();
     } catch (e) {}

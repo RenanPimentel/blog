@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ToggleDark from "./components/ToggleDark";
@@ -18,18 +18,41 @@ import ResetpassPage from "./pages/ResetpassPage";
 import SearchPage from "./pages/SearchPage";
 import SettingsPage from "./pages/SettingsPage";
 import UserPage from "./pages/UserPage";
+import { api } from "./util/api";
 
 function App() {
   const { me, socket } = useContext(MainContext);
+  const [notifications, setNotifications] = useState<INotification[]>([]);
 
-  socket.once("connect", () => {
-    if (me.id) socket.emit("connect_message", me);
+  socket?.once("connect", () => {
+    if (me.id) socket?.emit("connect_message", me);
   });
 
-  socket.on("notification", (msg: INotification) => {
+  socket?.on("notification", (msg: INotification) => {
     /* TODO: implement notification in NavUser component */
     console.log(msg);
+    setNotifications([msg, ...notifications]);
   });
+
+  useEffect(() => {
+    (async () => {
+      const response = await api.get("/notifications");
+      setNotifications(response.data.data.notifications);
+    })();
+  }, []);
+
+  useEffect(() => {
+    /*
+      TODO: add a sound effect
+    */
+    if (notifications.length !== 0) {
+      document.title = document.title.match(/\([0-9]+\)/g)
+        ? document.title.replace(/\([0-9]+\)/g, `(${notifications.length})`)
+        : `${document.title} (${notifications.length})`;
+    }
+
+    console.log(notifications);
+  }, [notifications]);
 
   return (
     <BrowserRouter>

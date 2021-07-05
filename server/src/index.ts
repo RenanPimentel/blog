@@ -12,6 +12,7 @@ import { corsOptions } from "./constants";
 import accountRouter from "./routes/account";
 import commentsRouter from "./routes/comments";
 import meRouter from "./routes/me";
+import notificationsRouter from "./routes/notifications";
 import postsRouter from "./routes/posts";
 import searchRouter from "./routes/search";
 import usersRouter from "./routes/users";
@@ -29,77 +30,83 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 
-app.use(["/api/v1/posts", "/api/v1/comments", "/api/v1/me"], checkMe);
+app.use(
+  [
+    "/api/v1/me",
+    "/api/v1/users",
+    "/api/v1/posts",
+    "/api/v1/comments",
+    "/api/v1/notifications",
+  ],
+  checkMe
+);
 
-app.use("/api/v1/account", accountRouter);
 app.use("/api/v1/me", meRouter);
+app.use("/api/v1/account", accountRouter);
 app.use("/api/v1/posts", postsRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/comments", commentsRouter);
 app.use("/api/v1/search", searchRouter);
+app.use("/api/v1/notifications", notificationsRouter);
 
-io.on(
-  "connection",
-  (
-    socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap> & {
-      me?: { id: string; password: string };
-    }
-  ) => {
-    socket.on("notification", msg => {
-      /* notify comments in author posts or new posts from followed user */
+type MySocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap> & {
+  me?: { id: string; password: string };
+};
 
-      if (msg.data.type === "post") {
-        msg.for = msg.for.map((str: string) => `user${str}`);
-      }
+io.on("connection", (socket: MySocket) => {
+  socket.on("notification", msg => {
+    /* notify comments in author posts or new posts from followed user */
 
-      io.to(msg.for).emit("notification", msg);
-    });
+    if (msg.data.type === "post")
+      msg.for = msg.for.map((str: string) => `user${str}`);
 
-    socket.on("connect_message", async data => {
-      socket.me = data;
+    io.to(msg.for).emit("notification", { ...msg, for: null });
+  });
 
-      if (!socket.me?.id) return;
+  socket.on("connect_message", async data => {
+    socket.me = data;
 
-      const followResponse = await db.query(
-        "SELECT followed_id id FROM follows WHERE follower_id = $1",
-        [socket.me.id]
-      );
-      const postResponse = await db.query(
-        "SELECT id FROM posts WHERE author_id = $1",
-        [socket.me.id]
-      );
+    if (!socket.me?.id) return;
 
-      const socketRooms = [
-        ...followResponse.rows.map(row => `user${row.id}`),
-        ...postResponse.rows.map(row => `post${row.id}`),
-        socket.me.id,
-      ];
+    const followResponse = await db.query(
+      "SELECT followed_id id FROM follows WHERE follower_id = $1",
+      [socket.me.id]
+    );
+    const postResponse = await db.query(
+      "SELECT id FROM posts WHERE author_id = $1",
+      [socket.me.id]
+    );
 
-      socket.join(socketRooms);
-      // socket.join("post7");
+    const socketRooms = [
+      ...followResponse.rows.map(row => `user${row.id}`),
+      ...postResponse.rows.map(row => `post${row.id}`),
+      socket.me.id,
+    ];
 
-      db.query(
-        "UPDATE users SET last_login = NOW() WHERE id = $1 AND password = $2",
-        [data?.id, data?.password]
-      );
-      db.query(
-        "UPDATE users SET online = TRUE WHERE id = $1 AND password = $2",
-        [data?.id, data?.password]
-      );
-    });
+    socket.join(socketRooms);
+    // socket.join("post7");
 
-    socket.on("disconnecting", () => {
-      db.query(
-        "UPDATE users SET last_login = NOW() WHERE id = $1 AND password = $2",
-        [socket.me?.id, socket.me?.password]
-      );
-      db.query(
-        "UPDATE users SET online = FALSE WHERE id = $1 AND password = $2",
-        [socket.me?.id, socket.me?.password]
-      );
-    });
-  }
-);
+    db.query(
+      "UPDATE users SET last_login = NOW() WHERE id = $1 AND password = $2",
+      [data?.id, data?.password]
+    );
+    db.query("UPDATE users SET online = TRUE WHERE id = $1 AND password = $2", [
+      data?.id,
+      data?.password,
+    ]);
+  });
+
+  socket.on("disconnecting", () => {
+    db.query(
+      "UPDATE users SET last_login = NOW() WHERE id = $1 AND password = $2",
+      [socket.me?.id, socket.me?.password]
+    );
+    db.query(
+      "UPDATE users SET online = FALSE WHERE id = $1 AND password = $2",
+      [socket.me?.id, socket.me?.password]
+    );
+  });
+});
 
 httpServer.listen(PORT, async () => {
   await db.connect();

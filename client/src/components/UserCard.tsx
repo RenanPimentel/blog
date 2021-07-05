@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { FaEye } from "react-icons/fa";
 import { MainContext } from "../context/context";
 import FollowButton from "./FollowButton";
 

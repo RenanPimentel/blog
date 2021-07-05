@@ -32,11 +32,13 @@ function SendComment({ addComment, post }: Props) {
         comment,
         post_author_id: post.author_id,
       });
-
-      socket.emit("notification", {
+      const data = {
         for: [post.author_id],
-        data: { type: "comment", from: me.id, content: comment },
-      });
+        data: { type: "comment", from: me.id, content: comment, at: post_id },
+      } as { data: INotification; for: string[] };
+
+      api.post("/notifications", data);
+      socket.emit("notification", data);
       addComment(response.data.data.comment);
     })();
   };

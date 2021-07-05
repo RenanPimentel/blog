@@ -46,8 +46,10 @@ interface Action {
 }
 
 interface INotification {
-  for: string[];
-  data: { type: string; from: string; content: string };
+  type: string;
+  from: string;
+  content: string;
+  at: string;
 }
 
 interface MainContext {

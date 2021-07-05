@@ -22,7 +22,7 @@ interface Props {
 function MyContextProvider({ children }: Props) {
   const [isDark, setIsDark] = useState(localStorage.getItem("dark") === "true");
   const [state, dispatch] = useReducer(reducer, defaultState);
-  const socket = io("ws://localhost:4000");
+  const socket = state.me.id ? io("ws://localhost:4000") : null;
 
   const getMe = useCallback(async () => {
     try {

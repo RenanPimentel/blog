@@ -31,6 +31,8 @@ function LoginPage() {
     e.preventDefault();
     try {
       await api.post("/account/login", { login, password });
+      // eslint-disable-next-line no-restricted-globals
+      location.reload();
       history.push("/me");
 
       getMe();
