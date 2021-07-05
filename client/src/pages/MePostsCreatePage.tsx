@@ -18,10 +18,11 @@ function MePostsCreatePage() {
     const { post: completePost } = response.data.data;
     addMyPost(completePost);
 
-    socket.emit("notification", {
-      for: [completePost.author_id],
-      data: { type: "post", from: me.id, content: completePost.title },
-    });
+    const data = { type: "post", from: me.id, content: completePost.title };
+
+    socket.emit("notification", { for: [completePost.author_id], data });
+
+    api.post("/notifications", data);
 
     history.push(`/posts/${completePost.id}`);
   };
