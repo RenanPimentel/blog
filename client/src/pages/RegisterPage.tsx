@@ -65,7 +65,7 @@ function RegisterPage() {
           <div className="form-control">
             <div className="same-line right">
               <label htmlFor="cookies">
-                Accept <Link to="/legal">legal</Link> terms:
+                Accept <Link to="/terms">terms</Link>:
               </label>
               <input
                 type="checkbox"

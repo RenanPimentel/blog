@@ -13,6 +13,7 @@
   --max-width: 800px;
   --nav-size: 50px;
   --page-width: 50vw;
+  --footer-height: 120px;
 }
 
 #root {
@@ -412,6 +413,8 @@ button.svg svg {
 
 .wrapper {
   padding: var(--padding);
+  margin-bottom: 2rem;
+  min-height: calc(100vh - var(--footer-height) * 1.7 - 2rem);
   position: relative;
 }
 
@@ -561,16 +564,21 @@ a.no-bg {
   list-style: none;
   background: var(--main-bg);
   border-radius: 20px;
-  box-shadow: 0 0 10px -5px var(--main-fcolor);
+  transition: background 0.3s ease;
 }
 
 .profile-container:hover .profile-settings {
+  border: 1px solid var(--main-color);
   padding: 1rem 2rem;
   padding-right: 1rem;
 }
 
-.nav-user .profile-settings:hover {
-  box-shadow: 0 0 14px -7px var(--main-fcolor);
+.profile-container .profile-settings:hover {
+  background: var(--pure-bg);
+}
+
+.profile-settings *:hover {
+  color: var(--pure-fcolor);
 }
 
 .container {
@@ -721,7 +729,7 @@ a.no-bg {
 .container-wrapper {
   position: absolute;
   top: 50px;
-  right: 0;
+  right: 2px;
   transition: var(--transition);
   z-index: -1;
   max-width: 0;
@@ -1055,6 +1063,28 @@ svg {
   margin-top: 1rem;
   color: gray;
   text-align: left;
+}
+
+.notification-bell {
+  --size: 30px;
+  display: grid;
+  place-items: center;
+}
+
+footer.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pure-bg);
+  box-shadow: 0 0 10px -5px black;
+  width: 100%;
+  height: var(--footer-height);
+  position: static;
+}
+
+footer.footer * {
+  font-family: Arial, sans-serif;
+  font-weight: 100;
 }
 
 @media (max-width: 450px) {

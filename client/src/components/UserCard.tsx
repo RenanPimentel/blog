@@ -1,7 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import { useEffect } from "react";
+import { FaUserPlus, FaUserSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
-import FollowButton from "./FollowButton";
+import { api } from "../util/api";
 
 interface Props extends IUser {}
 
@@ -15,6 +17,24 @@ function UserCard({
   online,
 }: Props) {
   const { defaultAvatar } = useContext(MainContext);
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      if (!id) return;
+      const response = await api.get(`/users/${id}/followers/count`);
+      setIsFollowing(response.data.data.follows);
+    })();
+  }, [id]);
+
+  const handleClick = async () => {
+    await api.post(`/users/${id}/follow`);
+    if (isFollowing) {
+      setIsFollowing(false);
+    } else {
+      setIsFollowing(true);
+    }
+  };
 
   return (
     <article className="card">
@@ -24,7 +44,11 @@ function UserCard({
             {username}
           </h2>
         </Link>
-        <FollowButton user_id={id} />
+        <div className="follow-container">
+          <button title="follow" onClick={handleClick} className="link">
+            {isFollowing ? <FaUserSlash /> : <FaUserPlus />}
+          </button>
+        </div>
       </div>
       <Link className="no-dec" to={`/users/${id}`}>
         <div className="avatar-container">

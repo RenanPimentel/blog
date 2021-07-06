@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import ToggleDark from "./components/ToggleDark";
 import { MainContext } from "./context/context";
 import ForgotPage from "./pages/ForgotPage";
 import HomePage from "./pages/HomePage";
-import LegalPage from "./pages/LegalPage";
+import TermsPage from "./pages/TermsPage";
 import LoginPage from "./pages/LoginPage";
 import MePage from "./pages/MePage";
 import MePostsCreatePage from "./pages/MePostsCreatePage";
@@ -19,6 +20,7 @@ import SearchPage from "./pages/SearchPage";
 import SettingsPage from "./pages/SettingsPage";
 import UserPage from "./pages/UserPage";
 import { api } from "./util/api";
+import PrivacyPage from "./pages/PrivacyPage";
 
 function App() {
   const { me, socket } = useContext(MainContext);
@@ -80,8 +82,11 @@ function App() {
         <Route exact path="/search">
           <SearchPage />
         </Route>
-        <Route exact path="/legal">
-          <LegalPage />
+        <Route exact path="/terms">
+          <TermsPage />
+        </Route>
+        <Route exact path="/privacy">
+          <PrivacyPage />
         </Route>
         <Route exact path="/me">
           <MePage />
@@ -105,6 +110,7 @@ function App() {
           <NotFoundPage />
         </Route>
       </Switch>
+      <Footer />
     </BrowserRouter>
   );
 }
