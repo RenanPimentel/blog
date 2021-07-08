@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import { MainContext } from "../context/context";
 import Logo from "./Logo";
 import NavUser from "./NavUser";
+import Notifications from "./Notifications";
 import SearchBar from "./SearchBar";
 
 function Navbar() {
-  const { getMe, me } = useContext(MainContext) as MainContext;
+  const { me, getMe } = useContext(MainContext) as MainContext;
 
   useEffect(() => {
     getMe();
@@ -17,6 +18,9 @@ function Navbar() {
       <Link className="logo-container" to="/">
         <Logo />
       </Link>
+      <div style={{ marginLeft: "1rem" }}>
+        <Notifications />
+      </div>
       <div
         className="container"
         style={{ display: "flex", justifyContent: "flex-start", maxWidth: "" }}
@@ -25,7 +29,9 @@ function Navbar() {
       </div>
       <ul className="links">
         {me?.id ? (
-          <NavUser />
+          <>
+            <NavUser />
+          </>
         ) : (
           <>
             <li>

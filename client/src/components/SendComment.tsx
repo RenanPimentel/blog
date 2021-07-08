@@ -34,7 +34,12 @@ function SendComment({ addComment, post }: Props) {
       });
       const data = {
         for: [post.author_id],
-        data: { type: "comment", from: me.id, content: comment, at: post_id },
+        data: {
+          type: "comment",
+          sender_id: me.id,
+          content: comment,
+          at_id: post_id,
+        },
       } as { data: INotification; for: string[] };
 
       api.post("/notifications", data);
@@ -55,15 +60,22 @@ function SendComment({ addComment, post }: Props) {
     <form className="send-comment">
       <div className="line-v"></div>
       <div className="form-control comment-div">
-        <input
-          type="text"
-          className="input"
-          value={comment}
-          onChange={e => setComment(e.target.value)}
-          style={{
-            border: `1px solid ${error ? "rgb(200, 50, 50)" : "transparent"}`,
-          }}
-        />
+        {error ? (
+          <input
+            type="text"
+            className="input"
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+            style={{ border: "1px solid rgb(200, 50, 50)" }}
+          />
+        ) : (
+          <input
+            type="text"
+            className="input"
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+          />
+        )}
         <button type="submit" className="btn large" onClick={handleClick}>
           Comment
         </button>

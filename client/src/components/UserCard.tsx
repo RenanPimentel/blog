@@ -16,7 +16,7 @@ function UserCard({
   username,
   online,
 }: Props) {
-  const { defaultAvatar } = useContext(MainContext);
+  const { me, defaultAvatar } = useContext(MainContext);
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
@@ -45,12 +45,18 @@ function UserCard({
           </h2>
         </Link>
         <div className="follow-container">
-          <button title="follow" onClick={handleClick} className="link">
-            {isFollowing ? <FaUserSlash /> : <FaUserPlus />}
-          </button>
+          {id !== me.id && (
+            <button
+              title={isFollowing ? "Unfollow" : "Follow"}
+              onClick={handleClick}
+              className="link"
+            >
+              {isFollowing ? <FaUserSlash /> : <FaUserPlus />}
+            </button>
+          )}
         </div>
       </div>
-      <Link className="no-dec" to={`/users/${id}`}>
+      <Link className="no-dec" to={id === me.id ? "/me" : `/users/${id}`}>
         <div className="avatar-container">
           <div className="card-avatar">
             <img src={avatar || defaultAvatar} alt={`${username} avatar`} />
@@ -65,7 +71,6 @@ function UserCard({
           ></div>
         </div>
       </Link>
-      {}
     </article>
   );
 }

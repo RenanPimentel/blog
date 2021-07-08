@@ -84,6 +84,7 @@ router.post("/login", async (req, res) => {
       [login]
     );
     const user = response.rows[0];
+    console.log(user);
 
     if (!user) {
       res.status(404).json({

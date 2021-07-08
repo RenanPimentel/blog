@@ -9,6 +9,7 @@ interface IPost {
   updated_at?: string;
   created_at?: string;
   author_id?: string;
+  view?: boolean;
 }
 
 interface IMe extends IUser {
@@ -46,18 +47,22 @@ interface Action {
 }
 
 interface INotification {
-  type: string;
-  from: string;
+  id: string;
+  sender_id: string;
+  at_id: string;
+  type: "comment" | "post";
+  created_at: string;
   content: string;
-  at: string;
 }
 
 interface MainContext {
   defaultAvatar: string;
   defaultBanner: string;
-  me: IMe;
   isDark: boolean;
+  me: IMe;
   socket: Socket<DefaultEventsMap, DefaultEventsMap>;
+  notifications: INotification[];
+  setNotifications: CallableFunction;
   setIsDark(isDark: boolean): void;
   getMe(): void;
   setMe(me: IMe): void;

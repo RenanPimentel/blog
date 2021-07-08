@@ -8,21 +8,38 @@ import { handleErr } from "../utils/handleErr";
 */
 const router = Router();
 
+/* TODO: add views to posts table to display different card to user */
 router.get("/", async (req, res) => {
   const { me } = req.cookies;
 
   try {
     const response = req.query.author
       ? await db.query(
-          "SELECT posts.id, author_id, title, username, avatar, content, topic, last_login, online FROM users RIGHT JOIN posts ON users.id = posts.author_id"
+          "SELECT * FROM (SELECT DISTINCT ON(posts.id) posts.id, author_id, title, username, avatar, content, topic, online, last_login, posts.updated_at FROM users RIGHT JOIN posts ON users.id = posts.author_id JOIN post_views ON posts.id = post_id ORDER BY posts.id) as posts ORDER BY posts.updated_at"
         )
-      : await db.query<Post>("SELECT * FROM posts ORDER BY updated_at", [
-          me.id,
-        ]);
+      : await db.query<Post>("SELECT * FROM posts ORDER BY updated_at");
+
+    const query = response.rows.map((_, i) => i + 2).join(", $");
+    const viewsResponse = await db.query(
+      `SELECT post_id FROM post_views WHERE user_id = $1 AND post_id IN ($${query})`,
+      [me.id, ...response.rows.map(row => row.id)]
+    );
+    const views = viewsResponse.rows.map(row => row.post_id);
 
     response.rows.forEach(row => delete row.password);
 
-    res.json({ errors: null, data: { posts: response.rows } } as MyResponse);
+    const posts = response.rows.map(row => {
+      if (views.find(view => view === row.id)) {
+        return { ...row, view: true };
+      } else {
+        return { ...row, view: false };
+      }
+    });
+
+    res.json({
+      data: { posts },
+      errors: null,
+    } as MyResponse);
   } catch (err) {
     handleErr(res, err);
   }

@@ -53,6 +53,7 @@ body {
   font-family: "Ubuntu", sans-serif;
   width: 100%;
   height: 10rem;
+  scroll-behavior: smooth;
 }
 
 html {
@@ -69,10 +70,10 @@ textarea {
   background: var(--main-bg);
 }
 
-textarea:focus,
+/* textarea:focus,
 input:focus {
   box-shadow: 0 0 10px -5px var(--main-fcolor);
-}
+} */
 
 hr {
   background: var(--main-fcolor);
@@ -281,6 +282,7 @@ button.svg svg {
   padding: 0 1.25rem;
   outline: none;
   box-shadow: 0 0 10px -5px black;
+  border: 1px solid transparent;
   transition: var(--transition);
 }
 
@@ -323,7 +325,7 @@ button.svg svg {
 }
 
 .form-control .input:focus {
-  box-shadow: 0 0 12px -5px var(--main-fcolor);
+  border: 1px solid var(--main-color);
 }
 
 .nav {
@@ -564,13 +566,14 @@ a.no-bg {
   list-style: none;
   background: var(--main-bg);
   border-radius: 20px;
-  transition: background 0.3s ease;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  padding: 1rem 2rem;
+  padding-right: 1rem;
 }
 
 .profile-container:hover .profile-settings {
   border: 1px solid var(--main-color);
-  padding: 1rem 2rem;
-  padding-right: 1rem;
 }
 
 .profile-container .profile-settings:hover {
@@ -606,11 +609,12 @@ a.no-bg {
 }
 
 .comment-content {
-  margin-top: 1rem;
+  position: relative;
   display: flex;
   flex-direction: column;
+  border: 1px solid transparent;
+  margin-top: 1rem;
   gap: 1rem;
-  position: relative;
 }
 
 .comment-content .close-btn {
@@ -668,7 +672,7 @@ a.no-bg {
 .comment {
   background: var(--pure-bg);
   border-radius: 20px;
-  box-shadow: 0 0 10px -7px var(--pure-fcolor);
+  box-shadow: 0 0 10px -7px black;
   transition: all 0.2s ease;
   text-overflow: clip;
   padding: 1rem;
@@ -710,12 +714,13 @@ a.no-bg {
 }
 
 .send-comment .input {
-  box-shadow: 0 0 10px -5px var(--pure-fcolor);
+  border: 1px solid transparent;
+  box-shadow: 0 0 10px -5px black;
 }
 
 .send-comment .input:focus,
 .send-comment .input:hover {
-  box-shadow: 0 0 10px -3px var(--pure-fcolor);
+  border: 1px solid var(--main-color);
 }
 
 .rel {
@@ -729,25 +734,83 @@ a.no-bg {
 .container-wrapper {
   position: absolute;
   top: 50px;
-  right: 2px;
-  transition: var(--transition);
-  z-index: -1;
+  right: 0;
+  padding: 20px;
   max-width: 0;
+  width: 200px;
+  overflow: hidden;
+  display: flex;
+  transition: var(--transition);
+}
+
+.container-wrapper * {
+  color: transparent;
+}
+
+.single-notification {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.notifications:hover {
+  background: var(--pure-bg);
+}
+
+.single-notification .content {
+  text-align: left;
+}
+
+.snt-line {
+  gap: 1rem;
+  flex-wrap: wrap;
+  text-align: start;
   width: 100%;
 }
 
+.notifications .line {
+  border-color: gray;
+  max-width: 100%;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.snt-line a p {
+  text-align: start;
+  width: fit-content;
+  margin: none;
+}
+
+.notifications * {
+  font-size: 16px;
+}
+
 .profile-container:hover .container-wrapper {
-  padding: 20px;
-  height: fit-content;
   z-index: 100;
-  max-width: fit-content;
+  max-width: 100%;
+  right: 10px;
+}
+
+.profile-container:hover .container-wrapper * {
+  color: inherit;
 }
 
 .profile-settings li {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   align-items: flex-end;
+  overflow: hidden;
+}
+
+.profile-settings li * {
+  white-space: nowrap;
 }
 
 .profile-settings li:hover .line {
@@ -901,7 +964,7 @@ svg {
 
 .comment-div .input {
   flex-grow: 1;
-  transition: all 0.2s ease;
+  transition: var(--transition);
 }
 
 .comment-edit-form {
@@ -996,7 +1059,6 @@ svg {
 
 .card {
   box-shadow: 0 0 10px -5px black;
-  transition: box-shadow 0.3s ease;
   border: 1px solid transparent;
   border-radius: 20px;
   padding: 1rem;
@@ -1016,10 +1078,6 @@ svg {
   text-align: start;
   flex: 1;
 }
-
-/* .card:hover .title {
-  color: var(--main-color);
-} */
 
 .color {
   color: var(--main-color);
@@ -1069,6 +1127,96 @@ svg {
   --size: 30px;
   display: grid;
   place-items: center;
+}
+
+.time {
+  color: gray;
+  text-align: end;
+}
+
+.notifications-container {
+  position: relative;
+}
+
+.notifications {
+  height: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
+  background: var(--main-bg);
+  border-radius: 20px;
+  top: var(--nav-size);
+  left: 0;
+  width: 300px;
+  padding: 0 1rem;
+  z-index: 200;
+  transition: var(--transition);
+}
+
+.notifications::-webkit-scrollbar {
+  background: transparent;
+}
+
+.notifications.show {
+  height: 200px;
+  border: 1px solid var(--main-color);
+  padding: 1rem;
+}
+
+.notification-bell-container {
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.red-circle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: red;
+  --size: 15px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+}
+
+.dismiss-all-not-btn {
+  text-align: center;
+}
+
+.dismiss-all-not-btn button {
+  background: red;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dismiss-not-btn {
+  text-align: center;
+  display: grid;
+  place-items: center;
+  width: 40px;
+}
+
+.dismiss-not-btn button {
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  border-bottom: 1px solid transparent;
+  transition: border 0.3s ease;
+}
+
+.dismiss-not-btn button svg {
+  --size: 30px;
+  height: var(--size);
+  width: var(--size);
+  fill: rgb(200, 50, 50);
 }
 
 footer.footer {

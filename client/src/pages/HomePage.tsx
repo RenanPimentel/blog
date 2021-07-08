@@ -12,7 +12,7 @@ function HomePage() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await api.get<SearchResponse>("/posts?author=true");
+        const response = await api.get<PostsResponse>("/posts?author=true");
         setPosts(response.data.data.posts);
       } catch (err) {
         console.dir(err);

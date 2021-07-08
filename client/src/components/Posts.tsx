@@ -27,6 +27,7 @@ function Posts({ posts }: Props) {
             topic={post.topic}
             isOwner={post.author_id === me.id}
             key={post.id}
+            view={post.view}
           />
         ))
       ) : (

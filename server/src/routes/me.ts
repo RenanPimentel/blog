@@ -74,19 +74,23 @@ router.get("/follows", async (req, res) => {
     .map((_, i) => i + 1)
     .join(", $")})`;
 
-  const postsResponse = await db.query(
-    `SELECT * FROM posts WHERE author_id IN ${queryInStr} ORDER BY updated_at desc`,
-    [...followsResponse.rows.map(row => Number(row.followed_id))]
-  );
-  const usersResponse = await db.query(
-    `SELECT * FROM users WHERE id IN ${queryInStr} ORDER BY username`,
-    [...followsResponse.rows.map(row => Number(row.followed_id))]
-  );
+  if (followsResponse.rows.length > 0) {
+    const postsResponse = await db.query(
+      `SELECT * FROM posts WHERE author_id IN ${queryInStr} ORDER BY updated_at desc`,
+      [...followsResponse.rows.map(row => Number(row.followed_id))]
+    );
+    const usersResponse = await db.query(
+      `SELECT * FROM users WHERE id IN ${queryInStr} ORDER BY username`,
+      [...followsResponse.rows.map(row => Number(row.followed_id))]
+    );
 
-  res.json({
-    data: { posts: postsResponse.rows, users: usersResponse.rows },
-    errors: null,
-  } as MyResponse);
+    res.json({
+      data: { posts: postsResponse.rows, users: usersResponse.rows },
+      errors: null,
+    } as MyResponse);
+  } else {
+    res.json({ data: { posts: [], users: [] }, errors: null } as MyResponse);
+  }
 });
 
 export default router;

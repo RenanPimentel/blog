@@ -20,8 +20,9 @@ interface Props {
 }
 
 function MyContextProvider({ children }: Props) {
-  const [isDark, setIsDark] = useState(localStorage.getItem("dark") === "true");
   const [state, dispatch] = useReducer(reducer, defaultState);
+  const [isDark, setIsDark] = useState(localStorage.getItem("dark") === "true");
+  const [notifications, setNotifications] = useState<INotification[]>([]);
   const socket = state.me.id ? io("ws://localhost:4000") : null;
 
   const getMe = useCallback(async () => {
@@ -65,6 +66,8 @@ function MyContextProvider({ children }: Props) {
     defaultBanner,
     setIsDark,
     isDark,
+    notifications,
+    setNotifications,
     getMe,
     setMyPosts,
     setMe,

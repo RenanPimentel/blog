@@ -16,6 +16,7 @@ function MePage() {
       const response = await api.get<PostsResponse & UsersResponse>(
         "/me/follows"
       );
+
       setPosts(response.data.data.posts);
       setUsers(response.data.data.users);
     })();
@@ -38,10 +39,12 @@ function MePage() {
 
   return (
     <main className="wrapper">
+      <br />
+      <h2>Follows posts</h2>
       <section className="posts-container">
         {posts.map(post => (
           <PostCard
-            author={users.find(user => user.id === post.author_id) || users[0]}
+            author={users.find(user => user.id === post.author_id)}
             showBy={true}
             {...post}
             isOwner={false}
@@ -50,7 +53,7 @@ function MePage() {
         ))}
       </section>
       <br />
-      <h2>Your follows</h2>
+      <h2>Users you follow</h2>
       <section className="posts-container">
         {users.map(user => (
           <UserCard {...user} key={user.id} />

@@ -20,6 +20,7 @@ function PostCard({
   topic,
   isOwner,
   showBy,
+  view,
 }: Props) {
   const { removeMyPost } = useContext(MainContext);
   const history = useHistory();
@@ -42,7 +43,13 @@ function PostCard({
       <div className="same-line">
         <Link className="no-dec" to={`/posts/${id}`} style={{ width: "0" }}>
           {showBy && <i className="by">By {author?.username}</i>}
-          <h2 className="title overflow" style={{ maxWidth: "100%" }}>
+          <h2
+            className="title overflow"
+            style={{
+              maxWidth: "100%",
+              color: view ? "var(--main-color)" : "inherit",
+            }}
+          >
             {title}
           </h2>
         </Link>

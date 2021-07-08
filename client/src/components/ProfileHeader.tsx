@@ -23,7 +23,7 @@ function ProfileHeader({
   showFollow,
   isAuthor,
 }: Props) {
-  const context = useContext(MainContext);
+  const { me, defaultAvatar, defaultBanner } = useContext(MainContext);
   const [viewCount, setViewCount] = useState(0);
   const history = useHistory();
 
@@ -49,21 +49,15 @@ function ProfileHeader({
       <div className="line-v"></div>
       <div className="profile">
         <div className="profile-banner">
-          <img
-            src={banner || context.defaultBanner}
-            alt={`${username} banner`}
-          />
+          <img src={banner || defaultBanner} alt={`${username} banner`} />
         </div>
         <div className="under-profile-banner">
           <div className="same-line right top">
             <Link
-              to={id === context.me.id ? "/me" : `/users/${id}`}
+              to={id === me.id ? "/me" : `/users/${id}`}
               className="profile-picture"
             >
-              <img
-                src={avatar || context.defaultAvatar}
-                alt={`${username} avatar`}
-              />
+              <img src={avatar || defaultAvatar} alt={`${username} avatar`} />
             </Link>
             <h2 className="username" style={{ marginTop: "10px" }}>
               {username}

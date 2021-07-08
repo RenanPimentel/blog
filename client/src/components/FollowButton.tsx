@@ -35,9 +35,17 @@ function FollowButton({ user_id }: Props) {
 
   return (
     <div className="follow-container">
-      <div className="same-line" style={{ alignItems: "center" }}>
-        {followerCount}
-        <button title="follow" onClick={handleClick} className="link">
+      <div
+        className="same-line"
+        style={{ alignItems: "center", justifyContent: "center" }}
+      >
+        <span>{followerCount}</span>
+        <button
+          title={isFollowing ? "Unfollow" : "Follow"}
+          onClick={handleClick}
+          className="link"
+          style={{ height: "16px" }}
+        >
           {isFollowing ? <FaUserSlash /> : <FaUserPlus />}
         </button>
       </div>

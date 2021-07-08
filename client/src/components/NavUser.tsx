@@ -34,6 +34,7 @@ function NavUser() {
             </li>
             <li>
               <span className="link">Notifications</span>
+
               <div className="line"></div>
             </li>
             <li>

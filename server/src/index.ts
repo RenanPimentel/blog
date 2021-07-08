@@ -55,8 +55,6 @@ type MySocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap> & {
 
 io.on("connection", (socket: MySocket) => {
   socket.on("notification", msg => {
-    /* notify comments in author posts or new posts from followed user */
-
     if (msg.data.type === "post")
       msg.for = msg.for.map((str: string) => `user${str}`);
 
@@ -84,7 +82,6 @@ io.on("connection", (socket: MySocket) => {
     ];
 
     socket.join(socketRooms);
-    // socket.join("post7");
 
     db.query(
       "UPDATE users SET last_login = NOW() WHERE id = $1 AND password = $2",

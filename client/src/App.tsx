@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
@@ -6,7 +6,6 @@ import ToggleDark from "./components/ToggleDark";
 import { MainContext } from "./context/context";
 import ForgotPage from "./pages/ForgotPage";
 import HomePage from "./pages/HomePage";
-import TermsPage from "./pages/TermsPage";
 import LoginPage from "./pages/LoginPage";
 import MePage from "./pages/MePage";
 import MePostsCreatePage from "./pages/MePostsCreatePage";
@@ -14,26 +13,26 @@ import MePostsPage from "./pages/MePostsPage";
 import MePostsUpdatePage from "./pages/MePostsUpdatePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import PostPage from "./pages/PostPage";
+import PrivacyPage from "./pages/PrivacyPage";
 import RegisterPage from "./pages/RegisterPage";
 import ResetpassPage from "./pages/ResetpassPage";
 import SearchPage from "./pages/SearchPage";
 import SettingsPage from "./pages/SettingsPage";
+import TermsPage from "./pages/TermsPage";
 import UserPage from "./pages/UserPage";
 import { api } from "./util/api";
-import PrivacyPage from "./pages/PrivacyPage";
 
 function App() {
-  const { me, socket } = useContext(MainContext);
-  const [notifications, setNotifications] = useState<INotification[]>([]);
+  const { me, socket, notifications, setNotifications } =
+    useContext(MainContext);
 
   socket?.once("connect", () => {
     if (me.id) socket?.emit("connect_message", me);
   });
 
-  socket?.on("notification", (msg: INotification) => {
-    /* TODO: implement notification in NavUser component */
+  socket?.on("notification", (msg: { data: INotification }) => {
     console.log(msg);
-    setNotifications([msg, ...notifications]);
+    setNotifications([msg.data, ...notifications]);
   });
 
   useEffect(() => {
@@ -41,13 +40,13 @@ function App() {
       const response = await api.get("/notifications");
       setNotifications(response.data.data.notifications);
     })();
-  }, []);
+  }, [setNotifications]);
 
   useEffect(() => {
-    /*
-      TODO: add a sound effect
-    */
-    if (notifications.length !== 0) {
+    /* TODO: add a sound effect */
+    if (notifications.length === 0) {
+      document.title = document.title.replace(/\([0-9]+\)/g, "");
+    } else {
       document.title = document.title.match(/\([0-9]+\)/g)
         ? document.title.replace(/\([0-9]+\)/g, `(${notifications.length})`)
         : `${document.title} (${notifications.length})`;

@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { api } from "../util/api";
 import Comment from "./Comment";
 import SendComment from "./SendComment";
 
-interface Props extends IPost {}
+interface Props {
+  post: IPost;
+  comments: IComment[];
+  setComments: CallableFunction;
+}
 
-function CommentSection({ id }: Props) {
-  const [comments, setComments] = useState<IComment[]>([]);
-  const [post, setPost] = useState<IPost>({});
-
-  useEffect(() => {
-    (async () => {
-      if (!id) return;
-      const commentResponse = await api.get<CommentsResponse>(
-        `/posts/${id}/comments`
-      );
-      const postResponse = await api.get<PostResponse>(`/posts/${id}`);
-
-      setComments(commentResponse.data.data.comments);
-      setPost(postResponse.data.data.post);
-    })();
-  }, [id]);
-
+function CommentSection({ comments, post, setComments }: Props) {
   const addComment = (comment: IComment) => {
     setComments([comment, ...comments]);
   };
