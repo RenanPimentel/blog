@@ -26,8 +26,10 @@ function Posts({ posts }: Props) {
             title={post.title}
             topic={post.topic}
             isOwner={post.author_id === me.id}
-            key={post.id}
             view={post.view}
+            created_at={post.created_at}
+            updated_at={post.updated_at}
+            key={post.id}
           />
         ))
       ) : (

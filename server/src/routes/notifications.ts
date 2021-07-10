@@ -52,7 +52,7 @@ router.post("/", async (req, res) => {
     );
 
     await Promise.all(promises);
-    res.status(204).send();
+    res.json({ data: { notification }, errors: null } as MyResponse);
   } catch (err) {
     handleErr(res, err);
   }

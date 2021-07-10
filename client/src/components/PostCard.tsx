@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
+import { getTimeBetween } from "../util/getTimeBetween";
 import BtnContainer from "./BtnContainer";
 import Markdown from "./Markdown";
 import Topics from "./Topics";
@@ -21,6 +22,7 @@ function PostCard({
   isOwner,
   showBy,
   view,
+  updated_at,
 }: Props) {
   const { removeMyPost } = useContext(MainContext);
   const history = useHistory();
@@ -42,7 +44,19 @@ function PostCard({
     <article className="card">
       <div className="same-line">
         <Link className="no-dec" to={`/posts/${id}`} style={{ width: "0" }}>
-          {showBy && <i className="by">By {author?.username}</i>}
+          {showBy && (
+            <div
+              className="same-line"
+              style={{
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              <i className="by">By {author?.username}</i>
+              <i className="by">{getTimeBetween(updated_at || "")}</i>
+            </div>
+          )}
           <h2
             className="title overflow"
             style={{

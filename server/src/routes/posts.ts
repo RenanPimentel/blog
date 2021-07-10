@@ -13,11 +13,9 @@ router.get("/", async (req, res) => {
   const { me } = req.cookies;
 
   try {
-    const response = req.query.author
-      ? await db.query(
-          "SELECT * FROM (SELECT DISTINCT ON(posts.id) posts.id, author_id, title, username, avatar, content, topic, online, last_login, posts.updated_at FROM users RIGHT JOIN posts ON users.id = posts.author_id JOIN post_views ON posts.id = post_id ORDER BY posts.id) as posts ORDER BY posts.updated_at"
-        )
-      : await db.query<Post>("SELECT * FROM posts ORDER BY updated_at");
+    const response = await db.query(
+      "SELECT * FROM (SELECT DISTINCT ON(posts.id) posts.id, author_id, title, username, avatar, content, topic, online, last_login, posts.updated_at FROM users RIGHT JOIN posts ON users.id = posts.author_id FULL JOIN post_views ON posts.id = post_id ORDER BY posts.id) as posts ORDER BY posts.updated_at"
+    );
 
     const query = response.rows.map((_, i) => i + 2).join(", $");
     const viewsResponse = await db.query(
@@ -28,13 +26,10 @@ router.get("/", async (req, res) => {
 
     response.rows.forEach(row => delete row.password);
 
-    const posts = response.rows.map(row => {
-      if (views.find(view => view === row.id)) {
-        return { ...row, view: true };
-      } else {
-        return { ...row, view: false };
-      }
-    });
+    const posts = response.rows.map(row => ({
+      ...row,
+      view: Boolean(views.find(view => view === row.id)),
+    }));
 
     res.json({
       data: { posts },
@@ -232,15 +227,30 @@ router.put("/:post_id", async (req, res) => {
 });
 
 router.get("/by/:author_id", async (req, res) => {
+  const { me } = req.cookies;
   const { author_id } = req.params;
 
   try {
     const response = await db.query(
-      "SELECT posts.id, title, content, topic, username FROM posts RIGHT JOIN users ON posts.author_id = users.id WHERE author_id = $1",
+      "SELECT posts.id, title, content, topic, username, posts.created_at, posts.updated_at FROM posts RIGHT JOIN users ON posts.author_id = users.id WHERE author_id = $1",
       [author_id]
     );
 
-    res.json({ data: { posts: response.rows }, errors: null } as MyResponse);
+    const query = response.rows.map((_, i) => i + 2).join(", $");
+    const viewsResponse = await db.query(
+      `SELECT post_id FROM post_views WHERE user_id = $1 AND post_id IN ($${query})`,
+      [me.id, ...response.rows.map(row => row.id)]
+    );
+    const views = viewsResponse.rows.map(row => row.post_id);
+
+    response.rows.forEach(row => delete row.password);
+
+    const posts = response.rows.map(row => ({
+      ...row,
+      view: Boolean(views.find(view => view === row.id)),
+    }));
+
+    res.json({ data: { posts }, errors: null } as MyResponse);
   } catch (err) {
     handleErr(res, err);
   }

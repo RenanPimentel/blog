@@ -28,7 +28,7 @@ function Notification({ content, type, author, at_id, created_at, id }: Props) {
   }
 
   return (
-    <div className="single-notification">
+    <div className="single-notification" title={getTimeBetween(created_at)}>
       <div className="same-line snt-line">
         <Link
           onClick={dismiss}
@@ -51,7 +51,6 @@ function Notification({ content, type, author, at_id, created_at, id }: Props) {
                 ? "posted"
                 : null}
             </span>
-            <i className="time">{getTimeBetween(created_at)}</i>
           </header>
         </Link>
       </div>
@@ -61,7 +60,12 @@ function Notification({ content, type, author, at_id, created_at, id }: Props) {
             <RiCloseFill />
           </button>
         </div>
-        <Link className="content no-dec" onClick={dismiss} to={toUrl}>
+        <Link
+          title={content}
+          className="content truncate no-dec"
+          onClick={dismiss}
+          to={toUrl}
+        >
           {content}
         </Link>
       </div>

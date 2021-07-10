@@ -19,14 +19,25 @@ function MePostsCreatePage() {
     addMyPost(completePost);
 
     const data = {
-      type: "post",
-      from: me.id,
-      content: completePost.title,
-      at: me.id,
-    };
+      for: [completePost.author_id],
+      data: {
+        type: "post",
+        sender_id: me.id,
+        content: completePost.title,
+        at_id: me.id,
+      },
+    } as { data: INotification; for: string[] };
 
-    socket.emit("notification", { for: [completePost.author_id], data });
-    api.post("/notifications", { for: [completePost.author_id], data });
+    const notificationsResponse = await api.post<NotificationResponse>(
+      "/notifications",
+      data
+    );
+
+    socket.emit("notification", {
+      notification: notificationsResponse.data.data.notification,
+      for: data.for,
+    });
+    api.post("/notifications", data);
 
     history.push(`/posts/${completePost.id}`);
   };

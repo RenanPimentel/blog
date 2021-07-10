@@ -30,9 +30,8 @@ function App() {
     if (me.id) socket?.emit("connect_message", me);
   });
 
-  socket?.on("notification", (msg: { data: INotification }) => {
-    console.log(msg);
-    setNotifications([msg.data, ...notifications]);
+  socket?.on("notification", (msg: INotification) => {
+    setNotifications([msg, ...notifications]);
   });
 
   useEffect(() => {
@@ -51,8 +50,6 @@ function App() {
         ? document.title.replace(/\([0-9]+\)/g, `(${notifications.length})`)
         : `${document.title} (${notifications.length})`;
     }
-
-    console.log(notifications);
   }, [notifications]);
 
   return (

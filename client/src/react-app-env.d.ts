@@ -82,6 +82,7 @@ type CountResponse = { data: { count: string } };
 type LikesResponse = { data: { likes: boolean } };
 type FollowerCountResponse = { data: { follows: boolean; count: string } };
 type UsersResponse = { data: { users: IUser[] } };
+type NotificationResponse = { data: { notification: INotification } };
 type SearchResponse = {
   data: { posts: (IPost & { username: string })[]; users: IUser[] };
 };

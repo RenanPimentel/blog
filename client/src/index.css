@@ -1138,6 +1138,14 @@ svg {
   position: relative;
 }
 
+.truncate {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
 .notifications {
   height: 0;
   overflow-x: hidden;
@@ -1158,7 +1166,8 @@ svg {
 }
 
 .notifications.show {
-  height: 200px;
+  max-height: 200px;
+  height: fit-content;
   border: 1px solid var(--main-color);
   padding: 1rem;
 }
@@ -1168,6 +1177,13 @@ svg {
   place-items: center;
   cursor: pointer;
   position: relative;
+  transition: filter 0.2s ease;
+}
+
+.notification-bell-container:hover,
+.notification-bell-container:focus,
+.notification-bell-container:focus-within {
+  filter: drop-shadow(0 0 2px inherit);
 }
 
 .red-circle {

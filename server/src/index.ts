@@ -55,10 +55,10 @@ type MySocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap> & {
 
 io.on("connection", (socket: MySocket) => {
   socket.on("notification", msg => {
-    if (msg.data.type === "post")
+    if (msg.notification.type === "post")
       msg.for = msg.for.map((str: string) => `user${str}`);
 
-    io.to(msg.for).emit("notification", { ...msg, for: null });
+    io.to(msg.for).emit("notification", { ...msg.notification });
   });
 
   socket.on("connect_message", async data => {

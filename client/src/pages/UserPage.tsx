@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import PostCard from "../components/PostCard";
+import Posts from "../components/Posts";
 import ProfileHeader from "../components/ProfileHeader";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
@@ -31,7 +31,10 @@ function UserPage() {
         setError(true);
       }
 
-      const postsResponse = await api.get(`/posts/by/${user_id}`);
+      const postsResponse = await api.get<PostsResponse>(
+        `/posts/by/${user_id}`
+      );
+      console.log(postsResponse.data.data.posts);
       setUserPosts(postsResponse.data.data.posts);
     })();
   }, [user_id]);
@@ -62,21 +65,7 @@ function UserPage() {
         ) : (
           <>
             <h2>User Posts</h2>
-            <div className="posts-container">
-              {userPosts.map(post => (
-                <PostCard
-                  isOwner={false}
-                  content={post.content}
-                  author={user}
-                  id={post.id}
-                  title={post.title}
-                  topic={post.topic}
-                  showBy={false}
-                  author_id={user.id}
-                  key={post.id}
-                />
-              ))}
-            </div>
+            <Posts posts={userPosts} />
           </>
         )}
       </section>

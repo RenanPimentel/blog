@@ -42,22 +42,26 @@ function SendComment({ addComment, post }: Props) {
         },
       } as { data: INotification; for: string[] };
 
-      api.post("/notifications", data);
-      socket.emit("notification", data);
+      const notificationsResponse = await api.post<NotificationResponse>(
+        "/notifications",
+        data
+      );
+      socket.emit("notification", {
+        notification: notificationsResponse.data.data.notification,
+        for: data.for,
+      });
       addComment(response.data.data.comment);
     })();
   };
 
-  const handleClick = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await sendComment();
     setComment("");
   };
 
   return (
-    <form className="send-comment">
+    <form className="send-comment" onSubmit={handleSubmit}>
       <div className="line-v"></div>
       <div className="form-control comment-div">
         {error ? (
@@ -76,7 +80,7 @@ function SendComment({ addComment, post }: Props) {
             onChange={e => setComment(e.target.value)}
           />
         )}
-        <button type="submit" className="btn large" onClick={handleClick}>
+        <button type="submit" className="btn large">
           Comment
         </button>
       </div>
