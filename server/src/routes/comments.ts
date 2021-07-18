@@ -99,42 +99,4 @@ router.put("/:comment_id/like", async (req, res) => {
   }
 });
 
-router.get("/:comment_id/like", async (req, res) => {
-  const { comment_id } = req.params;
-  const { me } = req.cookies;
-
-  try {
-    const response = await db.query(
-      "SELECT * FROM comment_likes WHERE user_id = $1 AND comment_id = $2",
-      [me.id, comment_id]
-    );
-
-    res.json({
-      data: { likes: response.rowCount > 0 },
-      errors: null,
-    } as MyResponse);
-  } catch (err) {
-    handleErr(res, err);
-  }
-});
-
-router.get("/:comment_id/likes/count", async (req, res) => {
-  const { comment_id } = req.params;
-
-  try {
-    const response = await db.query(
-      "SELECT COUNT(DISTINCT(user_id)) FROM comment_likes WHERE comment_id = $1",
-      [comment_id]
-    );
-    const { count } = response.rows[0];
-
-    res.json({
-      data: { count },
-      errors: null,
-    } as MyResponse);
-  } catch (err) {
-    handleErr(res, err);
-  }
-});
-
 export default router;

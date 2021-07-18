@@ -50,8 +50,8 @@ function PostPage() {
       <Post {...post} />
       <CommentSection
         comments={comments}
-        post={post}
         setComments={setComments}
+        post={post}
       />
     </main>
   );

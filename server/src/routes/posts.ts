@@ -112,14 +112,34 @@ router.get("/:post_id", async (req, res) => {
 
 router.get("/:post_id/comments", async (req, res) => {
   const { post_id } = req.params;
+  const { me } = req.cookies;
 
   try {
     const response = await db.query(
-      "SELECT * FROM comments WHERE post_id = $1 ORDER BY created_at DESC",
+      "SELECT users.id as curr_user_id, username, avatar, comments.id, author_id, comments.created_at, comments.updated_at, content, post_id, post_author_id, COUNT(user_id) as like_count FROM comments LEFT JOIN comment_likes ON comments.id = comment_id LEFT JOIN users ON users.id = author_id WHERE post_id = $1 GROUP BY comments.id, users.id ORDER BY created_at DESC",
       [post_id]
     );
 
-    res.json({ errors: null, data: { comments: response.rows } } as MyResponse);
+    const likesResponse = await db.query(
+      "SELECT comment_id, user_id, post_id FROM comment_likes JOIN comments ON comment_id = id WHERE user_id = $1 AND post_id = $2",
+      [me.id, post_id]
+    );
+
+    const comments = response.rows;
+    comments.forEach(comment => {
+      const index = likesResponse.rows.findIndex(
+        lr => lr.comment_id === comment.id
+      );
+
+      if (index !== -1) {
+        comment.likes = true;
+        likesResponse.rows.splice(index, 1);
+      } else {
+        comment.likes = false;
+      }
+    });
+
+    res.json({ errors: null, data: { comments } } as MyResponse);
   } catch (err) {
     handleErr(res, err);
   }

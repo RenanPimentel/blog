@@ -1,9 +1,9 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Footer from "./components/Footer";
+import HandleSocket from "./components/HandleSocket";
 import Navbar from "./components/Navbar";
 import ToggleDark from "./components/ToggleDark";
-import { MainContext } from "./context/context";
 import ForgotPage from "./pages/ForgotPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -20,45 +20,11 @@ import SearchPage from "./pages/SearchPage";
 import SettingsPage from "./pages/SettingsPage";
 import TermsPage from "./pages/TermsPage";
 import UserPage from "./pages/UserPage";
-import { api } from "./util/api";
 
 function App() {
-  const { me, socket, notifications, setNotifications, title, setTitle } =
-    useContext(MainContext);
-
-  socket?.once("connect", () => {
-    if (me.id) socket?.emit("connect_message", me);
-  });
-
-  socket?.on("notification", (msg: INotification) => {
-    setNotifications([msg, ...notifications]);
-  });
-
-  useEffect(() => {
-    (async () => {
-      const response = await api.get("/notifications");
-      setNotifications(response.data.data.notifications);
-    })();
-  }, [setNotifications]);
-
-  useEffect(() => {
-    if (notifications.length === 0) {
-      setTitle(title.replace(/\([0-9]+\)/g, ""));
-    } else {
-      setTitle(
-        title.match(/\([0-9]+\)/g)
-          ? title.replace(/\([0-9]+\)/g, `(${notifications.length})`)
-          : `${title} (${notifications.length})`
-      );
-    }
-  }, [notifications, setTitle, title]);
-
-  useEffect(() => {
-    document.title = title;
-  }, [title]);
-
   return (
     <BrowserRouter>
+      <HandleSocket />
       <Navbar />
       <ToggleDark />
       <Switch>

@@ -20,6 +20,10 @@ function Comment({
   content: defaultComment,
   id,
   post_id,
+  like_count,
+  likes,
+  avatar,
+  username,
   changeComment,
   removeComment,
 }: Props) {
@@ -29,30 +33,15 @@ function Comment({
   const [editing, setEditing] = useState(false);
   const [comment, setComment] = useState(defaultComment);
   const [error, setError] = useState("");
-  const [likeCount, setLikeCount] = useState(0);
-  const [likes, setLikes] = useState(false);
-  const [author, setAuthor] = useState<IUser>({ avatar: "", username: "" });
+  const [likeCount, setLikeCount] = useState(Number(like_count));
+  const [userLikes, setUserLikes] = useState(likes);
   const contentPRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     if (!author_id || !post_id || !id || !post_author_id) return;
     setIsCommentAuthor(me.id === author_id);
-    (async () => {
-      const userPromise = api.get<UserResponse>(`/users/${author_id}`);
-      const likeCountPromise = api.get<CountResponse>(
-        `/comments/${id}/likes/count`
-      );
-      const likesPromise = api.get<LikesResponse>(`/comments/${id}/like`);
-
-      const [userResponse, likeCountResponse, likesResponse] =
-        await Promise.all([userPromise, likeCountPromise, likesPromise]);
-
-      setLikes(likesResponse.data.data.likes);
-      setAuthor(userResponse.data.data.user);
-      setIsPostAuthor(post_author_id === me.id);
-      setLikeCount(Number(likeCountResponse.data.data.count));
-    })();
-  }, [author_id, id, me.id, post_author_id, post_id]);
+    setIsPostAuthor(post_author_id === me.id);
+  }, [author_id, avatar, id, me.id, post_author_id, post_id, username]);
 
   useEffect(() => {
     if (256 < comment.length) {
@@ -84,10 +73,10 @@ function Comment({
   const handleLikeClick = async () => {
     await api.put(`/comments/${id}/like`);
     if (likes) {
-      setLikes(false);
+      setUserLikes(false);
       setLikeCount(likeCount - 1);
     } else {
-      setLikes(true);
+      setUserLikes(true);
       setLikeCount(likeCount + 1);
     }
   };
@@ -111,13 +100,10 @@ function Comment({
           <div className="same-line right" style={{ alignItems: "center" }}>
             <Link to={author_id === me.id ? "/me" : `/users/${author_id}`}>
               <div className="profile-picture no-dec">
-                <img
-                  src={author.avatar || defaultAvatar}
-                  alt={`${author.username} avatar`}
-                />
+                <img src={avatar || defaultAvatar} alt={`${username} avatar`} />
               </div>
             </Link>
-            <h3 className="username">{author.username}</h3>
+            <h3 className="username">{username}</h3>
           </div>
           <div className="same-line" style={{ gap: "1rem" }}>
             {new Date(created_at) < new Date(updated_at) && (
@@ -172,7 +158,7 @@ function Comment({
                   title="Like"
                   onClick={handleLikeClick}
                 >
-                  {likes ? <FaHeart /> : <FaRegHeart />}
+                  {userLikes ? <FaHeart /> : <FaRegHeart />}
                 </button>
                 <p>{likeCount}</p>
               </div>

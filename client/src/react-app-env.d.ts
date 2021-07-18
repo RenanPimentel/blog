@@ -38,6 +38,10 @@ interface IComment {
   updated_at: string;
   content: string;
   post_id: string;
+  likes: boolean;
+  like_count: string;
+  username: string;
+  avatar: string;
 }
 
 interface Action {
