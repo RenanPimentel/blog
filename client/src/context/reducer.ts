@@ -12,8 +12,10 @@ export function reducer(state: IState, action: Action): IState {
       },
     };
   } else if (action.type === "ADD_MY_POST") {
-    state.me.posts?.push(action.payload);
-    return { ...state };
+    return {
+      ...state,
+      me: { ...state.me, posts: [action.payload, ...(state.me.posts || [])] },
+    };
   }
 
   throw new Error("reducer couldn't find it");

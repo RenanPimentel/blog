@@ -30,6 +30,7 @@
     "@types/socket.io": "^3.0.2",
     "@types/ws": "^7.4.6",
     "argon2": "^0.28.2",
+    "axios": "^0.21.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

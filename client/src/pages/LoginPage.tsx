@@ -60,23 +60,25 @@ function LoginPage() {
       <div className="form-container">
         <form onSubmit={handleSubmit} ref={formEl}>
           <Input
+            inputDetails={{
+              className: "input",
+              type: "text",
+              placeholder: "AwesomeName",
+            }}
             label="Login"
-            onChange={e => setLogin(e.target.value)}
             value={login}
-            className="input"
-            type="text"
-            id="login"
-            placeholder="AwesomeName"
+            setValue={setLogin}
             error={loginError}
           />
           <Input
+            inputDetails={{
+              className: "input",
+              type: "password",
+              placeholder: "my safe password",
+            }}
             label="Password"
-            onChange={e => setPassword(e.target.value)}
             value={password}
-            className="input"
-            type="password"
-            id="password"
-            placeholder="my safe password"
+            setValue={setPassword}
             error={passwordError}
           />
           <div className="form-control">

@@ -15,24 +15,19 @@ function Navbar() {
 
   return (
     <nav className="nav">
-      <Link className="logo-container" to="/">
-        <Logo />
-      </Link>
-      <div style={{ marginLeft: "1rem" }}>
-        <Notifications />
+      <div className="same-line right" style={{ gap: "2rem", width: "100px" }}>
+        <Link className="logo-container" to="/">
+          <Logo />
+        </Link>
       </div>
-      <div
-        className="container"
-        style={{ display: "flex", justifyContent: "flex-start", maxWidth: "" }}
-      >
-        <SearchBar />
-      </div>
-      <ul className="links">
-        {me?.id ? (
-          <>
-            <NavUser />
-          </>
-        ) : (
+      <SearchBar />
+      {me?.id ? (
+        <div className="same-line left" style={{ gap: "2rem", width: "100px" }}>
+          <Notifications />
+          <NavUser />
+        </div>
+      ) : (
+        <ul className="links">
           <>
             <li>
               <Link className="link" to="/register">
@@ -45,8 +40,8 @@ function Navbar() {
               </Link>
             </li>
           </>
-        )}
-      </ul>
+        </ul>
+      )}
     </nav>
   );
 }

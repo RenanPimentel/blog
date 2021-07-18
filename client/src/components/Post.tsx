@@ -71,7 +71,7 @@ function Post({
         </span>
         {new Date(updated_at || "") > new Date(created_at || "") ? (
           <div>
-            <span>created at {getDate(created_at)}</span>{" "}
+            <span>created at {getDate(created_at)} • </span>
             <span>updated at {getDate(updated_at)}</span>
           </div>
         ) : (

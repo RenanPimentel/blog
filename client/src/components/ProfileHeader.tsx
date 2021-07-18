@@ -60,7 +60,12 @@ function ProfileHeader({
               <img src={avatar || defaultAvatar} alt={`${username} avatar`} />
             </Link>
             <h2 className="username" style={{ marginTop: "10px" }}>
-              {username}
+              <Link
+                style={{ textDecoration: "none" }}
+                to={id === me.id ? "/me" : `/users/${id}`}
+              >
+                {username}
+              </Link>
             </h2>
             <div>
               {isAuthor && (

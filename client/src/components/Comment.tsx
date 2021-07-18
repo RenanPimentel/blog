@@ -110,7 +110,7 @@ function Comment({
         <div className="same-line flex-spaced">
           <div className="same-line right" style={{ alignItems: "center" }}>
             <Link to={author_id === me.id ? "/me" : `/users/${author_id}`}>
-              <div className="profile-picture">
+              <div className="profile-picture no-dec">
                 <img
                   src={author.avatar || defaultAvatar}
                   alt={`${author.username} avatar`}

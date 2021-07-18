@@ -8,31 +8,16 @@ import { handleErr } from "../utils/handleErr";
 */
 const router = Router();
 
-/* TODO: add views to posts table to display different card to user */
-router.get("/", async (req, res) => {
-  const { me } = req.cookies;
-
+router.get("/", async (_, res) => {
   try {
     const response = await db.query(
-      "SELECT * FROM (SELECT DISTINCT ON(posts.id) posts.id, author_id, title, username, avatar, content, topic, online, last_login, posts.updated_at FROM users RIGHT JOIN posts ON users.id = posts.author_id FULL JOIN post_views ON posts.id = post_id ORDER BY posts.id) as posts ORDER BY posts.updated_at"
+      "SELECT * FROM (SELECT DISTINCT ON(posts.id) posts.id, author_id, title, username, avatar, content, topic, online, last_login, posts.updated_at FROM users RIGHT JOIN posts ON users.id = posts.author_id FULL JOIN post_views ON posts.id = post_id ORDER BY posts.id) as posts ORDER BY posts.updated_at DESC"
     );
-
-    const query = response.rows.map((_, i) => i + 2).join(", $");
-    const viewsResponse = await db.query(
-      `SELECT post_id FROM post_views WHERE user_id = $1 AND post_id IN ($${query})`,
-      [me.id, ...response.rows.map(row => row.id)]
-    );
-    const views = viewsResponse.rows.map(row => row.post_id);
 
     response.rows.forEach(row => delete row.password);
 
-    const posts = response.rows.map(row => ({
-      ...row,
-      view: Boolean(views.find(view => view === row.id)),
-    }));
-
     res.json({
-      data: { posts },
+      data: { posts: response.rows },
       errors: null,
     } as MyResponse);
   } catch (err) {
@@ -43,7 +28,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const errors: FieldError[] = [];
   const { post }: PostsBody = req.body;
-  const { id: userId } = req.cookies.me;
+  const { me } = req.cookies;
 
   try {
     if (!post) {
@@ -80,7 +65,7 @@ router.post("/", async (req, res) => {
         post.content,
         getReadTime(post.content),
         Array.from(new Set(post.topic.split(" ").filter(Boolean))).join(" "),
-        userId,
+        me.id,
       ]
     );
 
@@ -227,7 +212,6 @@ router.put("/:post_id", async (req, res) => {
 });
 
 router.get("/by/:author_id", async (req, res) => {
-  const { me } = req.cookies;
   const { author_id } = req.params;
 
   try {
@@ -236,21 +220,9 @@ router.get("/by/:author_id", async (req, res) => {
       [author_id]
     );
 
-    const query = response.rows.map((_, i) => i + 2).join(", $");
-    const viewsResponse = await db.query(
-      `SELECT post_id FROM post_views WHERE user_id = $1 AND post_id IN ($${query})`,
-      [me.id, ...response.rows.map(row => row.id)]
-    );
-    const views = viewsResponse.rows.map(row => row.post_id);
-
     response.rows.forEach(row => delete row.password);
 
-    const posts = response.rows.map(row => ({
-      ...row,
-      view: Boolean(views.find(view => view === row.id)),
-    }));
-
-    res.json({ data: { posts }, errors: null } as MyResponse);
+    res.json({ data: { posts: response.rows }, errors: null } as MyResponse);
   } catch (err) {
     handleErr(res, err);
   }

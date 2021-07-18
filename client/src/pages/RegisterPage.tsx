@@ -1,26 +1,30 @@
-import React, { MutableRefObject, useContext, useRef, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
+import Input from "../components/Input";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function RegisterPage() {
   const { getMe } = useContext(MainContext);
-  const formEl: MutableRefObject<null | HTMLFormElement> = useRef(null);
-  const history = useHistory();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [check, setCheck] = useState(false);
+  const [usernameError, setUsernameError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    if (!check) return;
     e.preventDefault();
+    if (!check) return;
+
+    if (username.includes(" ")) {
+      setUsernameError("Your username can not contain space");
+      return;
+    }
 
     try {
       await api.post("/account/register", { username, email, password });
       // eslint-disable-next-line no-restricted-globals
-      location.reload();
-      history.push("/me");
+      location.assign("/me");
       getMe();
     } catch (e) {}
   };
@@ -28,18 +32,23 @@ function RegisterPage() {
   return (
     <main className="wrapper">
       <div className="form-container">
-        <form onSubmit={handleSubmit} ref={formEl}>
-          <div className="form-control">
-            <label htmlFor="username">Username</label>
-            <input
-              onChange={e => setUsername(e.target.value)}
-              value={username}
-              className="input"
-              type="text"
-              id="username"
-              placeholder="my_username"
-            />
-          </div>
+        <form onSubmit={handleSubmit}>
+          <Input
+            error={usernameError}
+            errorTimeSpan={2500}
+            maxChars={64}
+            constraints={[!username.trim().includes(" ")]}
+            value={username}
+            setValue={setUsername}
+            label="Username"
+            inputDetails={{
+              className: "input",
+              type: "text",
+              placeholder: "my_username",
+              id: "username",
+            }}
+          />
+
           <div className="form-control">
             <label htmlFor="email">Email</label>
             <input
@@ -65,14 +74,16 @@ function RegisterPage() {
           <div className="form-control">
             <div className="same-line right">
               <label htmlFor="cookies">
-                Accept <Link to="/terms">terms</Link>:
+                Accept <Link to="/terms">terms of service</Link>:
               </label>
-              <input
-                type="checkbox"
-                id="cookies"
-                checked={check}
-                onChange={e => setCheck(e.target.checked)}
-              />
+              <div className="switch-box">
+                <input
+                  type="checkbox"
+                  id="cookies"
+                  checked={check}
+                  onChange={e => setCheck(e.target.checked)}
+                />
+              </div>
             </div>
           </div>
           <div className="form-control">

@@ -40,6 +40,7 @@ function CommentSection({ comments, post, setComments }: Props) {
     <section className="comments-container">
       <div className="rel">
         <div className="line-v"></div>
+        <h2>Discussion ({comments.length})</h2>
         <SendComment post={post} addComment={addComment} />
       </div>
       {comments?.length === 0 ? (

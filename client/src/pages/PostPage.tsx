@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import CommentSection from "../components/CommentSection";
 import Post from "../components/Post";
 import { api } from "../util/api";
@@ -10,7 +10,6 @@ function PostPage() {
   const [comments, setComments] = useState<IComment[]>([]);
   const [error, setError] = useState(false);
   const { post_id } = useParams<{ post_id: string }>();
-  const history = useHistory();
 
   useEffect(() => {
     (async () => {

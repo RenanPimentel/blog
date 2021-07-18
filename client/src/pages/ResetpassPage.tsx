@@ -58,21 +58,23 @@ function ResetpassPage() {
       <div className="form-container">
         <form onSubmit={handleSubmit}>
           <Input
+            inputDetails={{
+              type: "password",
+            }}
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            setValue={setPassword}
             error={passwordError}
             label="new password"
-            type="password"
-            id="password"
-          ></Input>
+          />
           <Input
+            inputDetails={{
+              type: "password",
+            }}
             value={repeatedPassword}
-            onChange={e => setRepeatedPassword(e.target.value)}
+            setValue={setRepeatedPassword}
             error={repeatedPasswordError}
             label="repeat new password"
-            type="password"
-            id="reapeted-password"
-          ></Input>
+          />
           <button type="submit" className="btn btn-large">
             Send
           </button>

@@ -38,13 +38,15 @@ function ForgotPage() {
       <div className="form-container">
         <form onSubmit={handleSubmit}>
           <Input
+            inputDetails={{
+              onChange: e => setEmail(e.target.value),
+              className: "input",
+              type: "email",
+              placeholder: "me@example.com",
+            }}
             label="Your email"
-            onChange={e => setEmail(e.target.value)}
             value={email}
-            className="input"
-            type="email"
-            id="email"
-            placeholder="me@example.com"
+            setValue={setEmail}
             error={emailError}
           />
           <div className="form-control">

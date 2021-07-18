@@ -21,10 +21,9 @@ function PostCard({
   topic,
   isOwner,
   showBy,
-  view,
   updated_at,
 }: Props) {
-  const { removeMyPost } = useContext(MainContext);
+  const { me, removeMyPost } = useContext(MainContext);
   const history = useHistory();
 
   const deletePost = async (id: string) => {
@@ -42,8 +41,8 @@ function PostCard({
 
   return (
     <article className="card">
-      <div className="same-line">
-        <Link className="no-dec" to={`/posts/${id}`} style={{ width: "0" }}>
+      <div className="same-line right">
+        <div style={{ minWidth: "0" }}>
           {showBy && (
             <div
               className="same-line"
@@ -53,20 +52,29 @@ function PostCard({
                 flexWrap: "wrap",
               }}
             >
-              <i className="by">By {author?.username}</i>
-              <i className="by">{getTimeBetween(updated_at || "")}</i>
+              <span className="by no-dec">
+                <Link
+                  to={author?.id === me.id ? "/me" : `/users/${author?.id}`}
+                >
+                  By {author?.id === me.id ? "you" : author?.username}
+                </Link>
+                <Link
+                  className="no-dec"
+                  to={`/posts/${id}`}
+                  title={new Date(updated_at || "").toLocaleString()}
+                >
+                  {" "}
+                  • {getTimeBetween(updated_at || "")}
+                </Link>
+              </span>
             </div>
           )}
-          <h2
-            className="title overflow"
-            style={{
-              maxWidth: "100%",
-              color: view ? "var(--main-color)" : "inherit",
-            }}
-          >
-            {title}
-          </h2>
-        </Link>
+          <Link className="no-dec" to={`/posts/${id}`} style={{ width: "0" }}>
+            <h2 className="title overflow" style={{ maxWidth: "100%" }}>
+              {title}
+            </h2>
+          </Link>
+        </div>
         {isOwner && (
           <BtnContainer
             showEdit={true}
@@ -80,8 +88,8 @@ function PostCard({
         <div className="content-container">
           <Markdown content={content || ""} />
         </div>
-        <Topics topics={topic?.split(" ")} />
       </Link>
+      <Topics topics={topic?.split(" ")} />
     </article>
   );
 }

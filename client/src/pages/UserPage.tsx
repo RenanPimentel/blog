@@ -34,7 +34,6 @@ function UserPage() {
       const postsResponse = await api.get<PostsResponse>(
         `/posts/by/${user_id}`
       );
-      console.log(postsResponse.data.data.posts);
       setUserPosts(postsResponse.data.data.posts);
     })();
   }, [user_id]);

@@ -75,8 +75,9 @@ router.get("/follows", async (req, res) => {
     .join(", $")})`;
 
   if (followsResponse.rows.length > 0) {
+    //
     const postsResponse = await db.query(
-      `SELECT * FROM posts WHERE author_id IN ${queryInStr} ORDER BY updated_at desc`,
+      `SELECT * FROM (SELECT DISTINCT ON(posts.id) posts.id, author_id, title, username, avatar, content, topic, online, last_login, posts.updated_at FROM users RIGHT JOIN posts ON users.id = posts.author_id FULL JOIN post_views ON posts.id = post_id ORDER BY posts.id) as posts WHERE author_id IN ${queryInStr} ORDER BY updated_at DESC`,
       [...followsResponse.rows.map(row => Number(row.followed_id))]
     );
     const usersResponse = await db.query(
@@ -84,8 +85,22 @@ router.get("/follows", async (req, res) => {
       [...followsResponse.rows.map(row => Number(row.followed_id))]
     );
 
+    const query = postsResponse.rows.map((_, i) => i + 2).join(", $");
+    const viewsResponse = await db.query(
+      `SELECT post_id FROM post_views WHERE user_id = $1 AND post_id IN ($${query})`,
+      [me.id, ...postsResponse.rows.map(row => row.id)]
+    );
+    const views = viewsResponse.rows.map(row => row.post_id);
+
+    usersResponse.rows.map(row => delete row.password);
+
+    const posts = postsResponse.rows.map(row => ({
+      ...row,
+      view: Boolean(views.find(view => view === row.id)),
+    }));
+
     res.json({
-      data: { posts: postsResponse.rows, users: usersResponse.rows },
+      data: { posts, users: usersResponse.rows },
       errors: null,
     } as MyResponse);
   } else {

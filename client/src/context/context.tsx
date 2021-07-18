@@ -64,9 +64,10 @@ function MyContextProvider({ children }: Props) {
   const value: MainContext = {
     defaultAvatar,
     defaultBanner,
-    setIsDark,
     isDark,
+    socket,
     notifications,
+    setIsDark,
     setNotifications,
     getMe,
     setMyPosts,
@@ -74,7 +75,6 @@ function MyContextProvider({ children }: Props) {
     removeMyPost,
     addMyPost,
     updateMyPost,
-    socket,
     ...state,
   };
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;

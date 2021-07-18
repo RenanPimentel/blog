@@ -9,7 +9,6 @@ interface IPost {
   updated_at?: string;
   created_at?: string;
   author_id?: string;
-  view?: boolean;
 }
 
 interface IMe extends IUser {

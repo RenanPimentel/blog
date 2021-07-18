@@ -6,7 +6,7 @@
   --main-bg: whitesmoke;
   --pure-fcolor: black;
   --pure-bg: white;
-  --padding: 0.5rem 2rem;
+  --padding: 8px 16px;
   --blue: blue;
   --blue-bg: rgba(0, 0, 255, 0.1);
   --transition: all 0.3s ease-out;
@@ -39,7 +39,6 @@
   --pure-bg: black;
   --blue-bg: rgba(0, 0, 255, 0.2);
   --blue: rgb(150, 150, 255);
-  transition: var(--transition);
 }
 
 * {
@@ -52,12 +51,8 @@ body {
   box-sizing: border-box;
   font-family: "Ubuntu", sans-serif;
   width: 100%;
-  height: 10rem;
   scroll-behavior: smooth;
-}
-
-html {
-  width: 100%;
+  transition: var(--transition);
 }
 
 textarea,
@@ -70,10 +65,9 @@ textarea {
   background: var(--main-bg);
 }
 
-/* textarea:focus,
-input:focus {
-  box-shadow: 0 0 10px -5px var(--main-fcolor);
-} */
+ol li {
+  line-height: 23px;
+}
 
 hr {
   background: var(--main-fcolor);
@@ -93,6 +87,65 @@ pre::-webkit-scrollbar {
 
 textarea::-webkit-scrollbar {
   border-radius: 50px;
+}
+
+form .input-wrapper,
+.form-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin-bottom: 1rem;
+}
+
+form .input-wrapper .input:focus,
+.form-control .input:focus {
+  border: 1px solid var(--main-color);
+}
+
+form .input {
+  width: 100%;
+}
+
+form label {
+  width: fit-content;
+}
+
+input[type="checkbox"] {
+  --size: 1.5rem;
+  font-size: 30px;
+  appearance: none;
+  width: calc(var(--size) * 2);
+  height: var(--size);
+  background: #ddd;
+  border-radius: 3em;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+input[type="checkbox"]:checked {
+  background: var(--main-color);
+}
+
+input[type="checkbox"]:after {
+  content: "";
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  left: 0;
+  transform: scale(0.7);
+  transition: all 0.15s ease-out;
+}
+
+input[type="checkbox"]:checked:after {
+  left: calc(100% - var(--size));
+}
+
+.form-container form {
+  width: 100%;
 }
 
 .btn {
@@ -139,15 +192,9 @@ textarea::-webkit-scrollbar {
   place-items: center;
 }
 
-.form-container form {
-  width: 100%;
-}
-
-.form-control {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  margin-bottom: 1rem;
+.switch-box {
+  display: grid;
+  place-items: center;
 }
 
 .select {
@@ -214,7 +261,7 @@ textarea::-webkit-scrollbar {
   max-width: 50rem;
   width: 100%;
   padding: 0 20px;
-  margin: 0 1rem;
+  margin: 0;
   transition: all 0.2s ease;
   background: var(--pure-bg);
   width: 100%;
@@ -270,35 +317,35 @@ button.svg svg {
   flex-wrap: wrap !important;
 }
 
+form .input-wrapper .input,
 .form-control .input {
+  display: block;
   height: 2.5rem;
   margin: 0.5rem 0;
   font-size: 16px;
-  min-width: 100px;
+  max-width: calc(100% - 2.5rem - 2px);
   line-height: 20px;
+  padding: 0 1.25rem;
   background: var(--pure-bg);
   border: none;
   border-radius: 20px;
-  padding: 0 1.25rem;
   outline: none;
   box-shadow: 0 0 10px -5px black;
   border: 1px solid transparent;
   transition: var(--transition);
 }
 
+form .input-wrapper .btn,
 .form-control .btn {
   height: 2.5rem;
 }
 
+form .input-wrapper .container,
 .form-control .container {
   position: relative;
 }
 
 .error {
-  position: absolute;
-  right: -40px;
-  bottom: 5px;
-  font-size: 20px;
   color: red;
   line-height: 30px;
   padding: 0 0.2rem;
@@ -324,19 +371,21 @@ button.svg svg {
   color: red;
 }
 
-.form-control .input:focus {
-  border: 1px solid var(--main-color);
-}
-
 .nav {
+  position: fixed;
+  width: calc(100% - 32px);
+  z-index: 100;
   padding: var(--padding);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 2rem;
   height: 50px;
   font-size: 23px;
   line-height: 35px;
-  position: relative;
+  min-width: max-content;
+  background: var(--main-bg);
 }
 
 .nav h2 {
@@ -367,7 +416,6 @@ button.svg svg {
 }
 
 .links {
-  /* position: relative; */
   list-style: none;
   display: flex;
   align-items: center;
@@ -375,9 +423,6 @@ button.svg svg {
   gap: 1rem;
   margin: 0;
   padding: 0;
-  /* max-width: var(--max-width);
-  width: 100%;
-  margin: auto; */
 }
 
 .toggle-dark {
@@ -415,6 +460,7 @@ button.svg svg {
 
 .wrapper {
   padding: var(--padding);
+  padding-top: calc(var(--nav-size) + 2rem);
   margin-bottom: 2rem;
   min-height: calc(100vh - var(--footer-height) * 1.7 - 2rem);
   position: relative;
@@ -431,7 +477,7 @@ a.no-bg {
 .border-red:focus,
 .border-red:focus-within,
 .border-red {
-  border: 1px solid rgb(200, 50, 50);
+  border: 1px solid rgb(200, 50, 50) !important;
   transition: all 0.2s ease;
 }
 
@@ -446,7 +492,7 @@ a.no-bg {
   color: red;
 }
 
-.red svg {
+.red * {
   fill: red;
 }
 
@@ -520,11 +566,11 @@ a.no-bg {
   align-items: center;
 }
 
-.profile .profile-picture img {
+.profile-picture img {
   width: 100%;
 }
 
-.profile .profile-banner img {
+.profile-banner img {
   width: 100%;
 }
 
@@ -565,14 +611,19 @@ a.no-bg {
 .profile-container .profile-settings {
   list-style: none;
   background: var(--main-bg);
+  width: 100%;
+  max-width: 0;
+  overflow: hidden;
   border-radius: 20px;
-  border: 1px solid transparent;
-  transition: all 0.3s ease;
-  padding: 1rem 2rem;
-  padding-right: 1rem;
+  color: transparent !important;
+  transition: var(--transition);
 }
 
 .profile-container:hover .profile-settings {
+  color: var(--pure-fcolor) !important;
+  max-width: 100%;
+  padding: 1rem 2rem;
+  padding-right: 1rem;
   border: 1px solid var(--main-color);
 }
 
@@ -701,6 +752,7 @@ a.no-bg {
 .left {
   align-self: flex-end;
   justify-self: flex-end;
+  justify-content: flex-end !important;
 }
 
 .center {
@@ -733,17 +785,18 @@ a.no-bg {
 
 .container-wrapper {
   position: absolute;
-  top: 50px;
+  top: calc(var(--nav-size));
+  width: inherit;
   right: 0;
-  padding: 20px;
   max-width: 0;
-  width: 200px;
+  height: auto;
   overflow: hidden;
+  color: transparent;
   display: flex;
   transition: var(--transition);
 }
 
-.container-wrapper * {
+.profile-container * {
   color: transparent;
 }
 
@@ -795,7 +848,9 @@ a.no-bg {
 .profile-container:hover .container-wrapper {
   z-index: 100;
   max-width: 100%;
-  right: 10px;
+  padding: var(--padding);
+  padding-top: 20px;
+  right: 0;
 }
 
 .profile-container:hover .container-wrapper * {
@@ -955,6 +1010,10 @@ svg {
   text-decoration: none;
 }
 
+.no-dec * {
+  text-decoration: none;
+}
+
 .comment-div * {
   display: flex;
   align-items: center;
@@ -993,10 +1052,10 @@ svg {
 
 .container,
 .post-container {
-  width: 100%;
-  max-width: var(--max-width);
   position: relative;
   margin: auto;
+  width: 100%;
+  max-width: var(--max-width);
 }
 
 .logo-container {
@@ -1123,6 +1182,10 @@ svg {
   text-align: left;
 }
 
+.by * {
+  color: gray;
+}
+
 .notification-bell {
   --size: 30px;
   display: grid;
@@ -1154,10 +1217,10 @@ svg {
   background: var(--main-bg);
   border-radius: 20px;
   top: var(--nav-size);
-  left: 0;
+  right: 0;
   width: 300px;
   padding: 0 1rem;
-  z-index: 200;
+  z-index: 100;
   transition: var(--transition);
 }
 
@@ -1249,6 +1312,63 @@ footer.footer {
 footer.footer * {
   font-family: Arial, sans-serif;
   font-weight: 100;
+}
+
+.hiding {
+  position: relative;
+}
+
+.change-settings .show {
+  position: absolute;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  max-width: 0;
+  overflow: hidden;
+  fill: transparent;
+  background: rgba(0, 0, 0, 0.5);
+  transition: var(--transition);
+}
+
+.change-settings .hiding:hover .show {
+  fill: white;
+  max-width: 100%;
+}
+
+.show svg {
+  fill: inherit;
+}
+
+.popup-fade {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 101;
+  background: rgba(0, 0, 0, 0.5);
+  display: grid;
+  place-items: center;
+}
+
+.popup-container {
+  padding: 1rem;
+  border-radius: 10px;
+  background: var(--main-bg);
+  display: grid;
+  width: 100%;
+  max-width: 500px;
+}
+
+.popup-container .close-btn-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.popup-preview {
+  margin-top: 2rem;
+  display: grid;
+  place-items: center;
 }
 
 @media (max-width: 450px) {

@@ -64,8 +64,8 @@ function UserCard({
           <div
             title={
               online
-                ? `online since ${new Date(last_login || "").toLocaleString()}`
-                : `last time on ${new Date(last_login || "").toLocaleString()}`
+                ? `Online since ${new Date(last_login || "").toLocaleString()}`
+                : `Offline since ${new Date(last_login || "").toLocaleString()}`
             }
             className={`online ${online}`}
           ></div>

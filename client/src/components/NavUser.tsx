@@ -33,11 +33,6 @@ function NavUser() {
               <div className="line"></div>
             </li>
             <li>
-              <span className="link">Notifications</span>
-
-              <div className="line"></div>
-            </li>
-            <li>
               <Link to="/settings" className="link">
                 Settings
               </Link>

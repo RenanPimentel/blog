@@ -37,10 +37,11 @@ function SearchBar() {
     <form className="search-bar" onSubmit={handleSubmit}>
       <div className={`search-input-container ${error ? "border-red" : ""}`}>
         <input
-          className={`search-input `}
+          className="search-input"
           type="text"
           value={query}
           onChange={handleInputChange}
+          style={{ width: "100%" }}
         />
         <button type="submit" className="link">
           <FaSearch />
