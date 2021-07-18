@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { MainContext } from "../context/context";
 
 function PrivacyPage() {
+  const { setTitle } = useContext(MainContext);
+
+  useEffect(() => {
+    setTitle("Three Dots");
+  }, [setTitle]);
+
   return (
     <main className="wrapper">
       <div className="container">

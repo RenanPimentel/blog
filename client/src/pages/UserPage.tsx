@@ -11,14 +11,14 @@ interface Params {
 }
 
 function UserPage() {
-  const context = useContext(MainContext);
+  const { me, setTitle } = useContext(MainContext);
   const [error, setError] = useState(false);
   const [user, setUser] = useState<IUser>({});
   const [userPosts, setUserPosts] = useState<IPost[]>([]);
   const history = useHistory();
   const { user_id } = useParams() as Params;
 
-  if (user_id === context.me.id) {
+  if (user_id === me.id) {
     history.push("/me");
   }
 
@@ -37,6 +37,10 @@ function UserPage() {
       setUserPosts(postsResponse.data.data.posts);
     })();
   }, [user_id]);
+
+  useEffect(() => {
+    setTitle(`${user.username} • Three Dots`);
+  }, [setTitle, user.username]);
 
   if (error) {
     return <NotFoundPage notFound="User" />;

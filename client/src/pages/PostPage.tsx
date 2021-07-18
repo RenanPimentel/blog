@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import CommentSection from "../components/CommentSection";
 import Post from "../components/Post";
+import { MainContext } from "../context/context";
 import { api } from "../util/api";
 import NotFoundPage from "./NotFoundPage";
 
 function PostPage() {
+  const { setTitle } = useContext(MainContext);
   const [post, setPost] = useState<IPost>({});
   const [comments, setComments] = useState<IComment[]>([]);
   const [error, setError] = useState(false);
@@ -25,6 +28,10 @@ function PostPage() {
       }
     })();
   }, [post_id]);
+
+  useEffect(() => {
+    setTitle(`${post.title} • Three Dots`);
+  }, [post.title, setTitle]);
 
   if (error) {
     return <NotFoundPage notFound="Post" />;

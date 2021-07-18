@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { MainContext } from "../context/context";
 
 interface Props {
   notFound?: string;
 }
 
 function NotFoundPage({ notFound }: Props) {
+  const { setTitle } = useContext(MainContext);
   const history = useHistory();
+
+  useEffect(() => {
+    setTitle("Not Found • Three Dots");
+  }, [setTitle]);
 
   return (
     <div className="wrapper">

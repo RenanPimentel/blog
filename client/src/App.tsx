@@ -23,7 +23,7 @@ import UserPage from "./pages/UserPage";
 import { api } from "./util/api";
 
 function App() {
-  const { me, socket, notifications, setNotifications } =
+  const { me, socket, notifications, setNotifications, title, setTitle } =
     useContext(MainContext);
 
   socket?.once("connect", () => {
@@ -42,15 +42,20 @@ function App() {
   }, [setNotifications]);
 
   useEffect(() => {
-    /* TODO: add a sound effect */
     if (notifications.length === 0) {
-      document.title = document.title.replace(/\([0-9]+\)/g, "");
+      setTitle(title.replace(/\([0-9]+\)/g, ""));
     } else {
-      document.title = document.title.match(/\([0-9]+\)/g)
-        ? document.title.replace(/\([0-9]+\)/g, `(${notifications.length})`)
-        : `${document.title} (${notifications.length})`;
+      setTitle(
+        title.match(/\([0-9]+\)/g)
+          ? title.replace(/\([0-9]+\)/g, `(${notifications.length})`)
+          : `${title} (${notifications.length})`
+      );
     }
-  }, [notifications]);
+  }, [notifications, setTitle, title]);
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
 
   return (
     <BrowserRouter>

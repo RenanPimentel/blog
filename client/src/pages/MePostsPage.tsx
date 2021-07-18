@@ -6,7 +6,7 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function MePostsPage() {
-  const { me, setMyPosts } = useContext(MainContext);
+  const { me, setMyPosts, setTitle } = useContext(MainContext);
 
   useEffect(() => {
     (async () => {
@@ -16,6 +16,10 @@ function MePostsPage() {
       }
     })();
   }, [me.id, me.posts, setMyPosts]);
+
+  useEffect(() => {
+    setTitle("My Posts • Three Dots");
+  }, [setTitle]);
 
   if (!me.posts) {
     return (

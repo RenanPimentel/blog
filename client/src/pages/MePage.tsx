@@ -7,7 +7,7 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function MePage() {
-  const { me } = useContext(MainContext) as MainContext;
+  const { me, setTitle } = useContext(MainContext) as MainContext;
   const [posts, setPosts] = useState<IPost[]>([]);
   const [users, setUsers] = useState<IUser[]>([]);
 
@@ -21,6 +21,10 @@ function MePage() {
       setUsers(response.data.data.users);
     })();
   }, []);
+
+  useEffect(() => {
+    setTitle("Me • Three Dots");
+  }, [setTitle]);
 
   if (!me?.id) {
     return (

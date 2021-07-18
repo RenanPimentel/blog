@@ -12,7 +12,8 @@ interface Popup {
 }
 
 function SettingsPage() {
-  const { me, defaultAvatar, defaultBanner } = useContext(MainContext);
+  const { me, defaultAvatar, defaultBanner, setTitle } =
+    useContext(MainContext);
   const [popup, setPopup] = useState<null | Popup>(null);
   const [popupInputVal, setPopupInputVal] = useState("");
   const [popupError, setPopupError] = useState("");
@@ -73,6 +74,10 @@ function SettingsPage() {
   useEffect(() => {
     setPopupInputVal(popup?.defaultValue || "");
   }, [popup]);
+
+  useEffect(() => {
+    setTitle("Settings • Three Dots");
+  }, [setTitle]);
 
   return (
     <>

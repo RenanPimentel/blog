@@ -5,7 +5,7 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function HomePage() {
-  const { me } = useContext(MainContext);
+  const { me, setTitle } = useContext(MainContext);
   const [posts, setPosts] = useState<IPost[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,9 +18,10 @@ function HomePage() {
         console.dir(err);
       } finally {
         setLoading(false);
+        setTitle("Three Dots");
       }
     })();
-  }, []);
+  }, [setTitle]);
 
   if (loading) {
     return (

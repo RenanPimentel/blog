@@ -1,16 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Input from "../components/Input";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function RegisterPage() {
-  const { getMe } = useContext(MainContext);
+  const { getMe, setTitle } = useContext(MainContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [check, setCheck] = useState(false);
   const [usernameError, setUsernameError] = useState("");
+
+  useEffect(() => {
+    setTitle("Register • Three Dots");
+  }, [setTitle]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,9 +27,9 @@ function RegisterPage() {
 
     try {
       await api.post("/account/register", { username, email, password });
+      await getMe();
       // eslint-disable-next-line no-restricted-globals
       location.assign("/me");
-      getMe();
     } catch (e) {}
   };
 

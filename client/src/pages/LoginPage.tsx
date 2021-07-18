@@ -13,8 +13,8 @@ import { api } from "../util/api";
 type DataError = { field: string; reason: string };
 
 function LoginPage() {
+  const { me, getMe, setTitle } = useContext(MainContext) as MainContext;
   const formEl: MutableRefObject<null | HTMLFormElement> = useRef(null);
-  const { me, getMe } = useContext(MainContext) as MainContext;
   const history = useHistory();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -22,20 +22,20 @@ function LoginPage() {
   const [loginError, setLoginError] = useState("");
 
   useEffect(() => {
-    if (me?.id) {
-      history.push("/me");
-    }
+    if (me?.id) history.push("/me");
   }, [history, me]);
+
+  useEffect(() => {
+    setTitle("Login • Three Dots");
+  }, [setTitle]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await api.post("/account/login", { login, password });
+      await getMe();
       // eslint-disable-next-line no-restricted-globals
-      location.reload();
-      history.push("/me");
-
-      getMe();
+      location.assign("/me");
     } catch (err) {
       console.dir(err);
       const errors: DataError[] = err.response?.data.errors;

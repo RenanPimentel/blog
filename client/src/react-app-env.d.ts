@@ -62,6 +62,8 @@ interface MainContext {
   socket: Socket<DefaultEventsMap, DefaultEventsMap>;
   notifications: INotification[];
   setNotifications: CallableFunction;
+  title: string;
+  setTitle: CallableFunction;
   setIsDark(isDark: boolean): void;
   getMe(): void;
   setMe(me: IMe): void;

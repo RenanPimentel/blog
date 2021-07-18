@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import CreatePost from "../components/CreatePost";
@@ -6,7 +6,7 @@ import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function MePostsCreatePage() {
-  const { addMyPost, socket, me } = useContext(MainContext);
+  const { addMyPost, socket, me, setTitle } = useContext(MainContext);
   const history = useHistory();
 
   const sendPost = async (post: {
@@ -41,6 +41,10 @@ function MePostsCreatePage() {
 
     history.push(`/posts/${completePost.id}`);
   };
+
+  useEffect(() => {
+    setTitle(`Create Post • Three Dots`);
+  }, [setTitle]);
 
   return (
     <main className="wrapper">

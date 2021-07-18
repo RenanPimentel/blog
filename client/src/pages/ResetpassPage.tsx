@@ -6,7 +6,7 @@ import { api } from "../util/api";
 import NotFoundPage from "./NotFoundPage";
 
 function ResetpassPage() {
-  const { setMe } = useContext(MainContext);
+  const { setMe, setTitle } = useContext(MainContext);
   const [password, setPassword] = useState("");
   const [repeatedPassword, setRepeatedPassword] = useState("");
   const [repeatedPasswordError, setRepeatedPasswordError] = useState("");
@@ -22,10 +22,6 @@ function ResetpassPage() {
       setFound(true);
     });
   }, [user_id, user_pass]);
-
-  if (!found) {
-    return <NotFoundPage />;
-  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,6 +48,14 @@ function ResetpassPage() {
       );
     }
   };
+
+  useEffect(() => {
+    setTitle("Resset Password • Three Dots");
+  }, [setTitle]);
+
+  if (!found) {
+    return <NotFoundPage />;
+  }
 
   return (
     <main className="wrapper">

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import Input from "../components/Input";
-import { api } from "../util/api";
+import React, { useContext, useEffect, useState } from "react";
 import Loader from "react-loader-spinner";
+import Input from "../components/Input";
+import { MainContext } from "../context/context";
+import { api } from "../util/api";
 
 function ForgotPage() {
+  const { setTitle } = useContext(MainContext);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [details, setDetails] = useState("");
@@ -32,6 +34,10 @@ function ForgotPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setTitle("Three Dots");
+  }, [setTitle]);
 
   return (
     <main className="wrapper">

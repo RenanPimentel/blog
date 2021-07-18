@@ -21,16 +21,24 @@ function SearchPage() {
   return (
     <main className="wrapper">
       <section>
-        {elements.posts.length > 0 && <h2>Posts</h2>}
-        <Posts posts={elements.posts} />
+        {elements.posts.length > 0 && (
+          <>
+            <h2>Posts</h2>
+            <Posts posts={elements.posts} />
+          </>
+        )}
       </section>
       <section>
-        {elements.users.length > 0 && <h2>Users</h2>}
-        <div className="posts-container">
-          {elements.users.map(user => (
-            <UserCard {...user} key={user.id} />
-          ))}
-        </div>
+        {elements.users.length > 0 && (
+          <>
+            <h2>Users</h2>
+            <div className="posts-container">
+              {elements.users.map(user => (
+                <UserCard {...user} key={user.id} />
+              ))}
+            </div>
+          </>
+        )}
       </section>
     </main>
   );

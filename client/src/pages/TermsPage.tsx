@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useContext } from "react";
+import { MainContext } from "../context/context";
 
 function TermsPage() {
+  const { setTitle } = useContext(MainContext);
+
+  useEffect(() => {
+    setTitle("Three Dots");
+  }, [setTitle]);
+
   return (
     <main className="wrapper">
       <div className="container">

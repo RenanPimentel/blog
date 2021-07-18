@@ -38,6 +38,7 @@ function SearchBar() {
       <div className={`search-input-container ${error ? "border-red" : ""}`}>
         <input
           className="search-input"
+          placeholder="Search"
           type="text"
           value={query}
           onChange={handleInputChange}
