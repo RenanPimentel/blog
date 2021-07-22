@@ -9,6 +9,7 @@
   --padding: 8px 16px;
   --blue: blue;
   --blue-bg: rgba(0, 0, 255, 0.1);
+  --bg-inverse: rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease-out;
   --max-width: 800px;
   --nav-size: 50px;
@@ -39,6 +40,7 @@
   --pure-bg: black;
   --blue-bg: rgba(0, 0, 255, 0.2);
   --blue: rgb(150, 150, 255);
+  --bg-inverse: rgba(255, 255, 255, 0.05);
 }
 
 * {
@@ -1126,7 +1128,8 @@ svg {
   background: var(--main-bg);
 }
 
-.card:hover {
+.card:hover,
+.card:active {
   border: 1px solid var(--main-color);
   background: var(--pure-bg);
 }
@@ -1210,7 +1213,8 @@ svg {
 }
 
 .notifications {
-  height: 0;
+  max-height: 0;
+  height: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
@@ -1221,7 +1225,7 @@ svg {
   width: 300px;
   padding: 0 1rem;
   z-index: 100;
-  transition: var(--transition);
+  transition: all 0.2s ease;
 }
 
 .notifications::-webkit-scrollbar {
@@ -1229,8 +1233,8 @@ svg {
 }
 
 .notifications.show {
-  max-height: 200px;
-  height: fit-content;
+  max-height: 100px;
+  min-height: 100px;
   border: 1px solid var(--main-color);
   padding: 1rem;
 }
@@ -1258,6 +1262,15 @@ svg {
   width: var(--size);
   height: var(--size);
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.red-circle span {
+  font-size: calc(var(--size) - 2px);
+  line-height: var(--size);
+  color: white;
 }
 
 .dismiss-all-not-btn {
@@ -1369,6 +1382,57 @@ footer.footer * {
   margin-top: 2rem;
   display: grid;
   place-items: center;
+}
+
+*[contenteditable="true"] {
+  background: var(--bg-inverse);
+  border: 1px solid transparent;
+  padding: 0 10px;
+  border-radius: 10px;
+  transition: border 0.15s ease;
+  outline: none;
+}
+
+*[contenteditable="true"]:focus {
+  border: 1px solid var(--main-color);
+}
+
+.slash {
+  background: var(--bg-inverse);
+  padding: 5px;
+}
+
+.options-container {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+  border-radius: 20px;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.options-container .option {
+  border: none;
+  background: transparent;
+  padding: 0 1rem;
+  font-size: 16px;
+  line-height: 1.5rem;
+  color: white;
+  cursor: pointer;
+  outline: none;
+}
+
+.options-container .option:hover,
+.options-container .option:focus {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.options-container .option:hover:focus {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 @media (max-width: 450px) {

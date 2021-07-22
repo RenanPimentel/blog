@@ -1,4 +1,6 @@
 import React, { useContext } from "react";
+import { useEffect } from "react";
+import { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { MainContext } from "../context/context";
 import Markdown from "./Markdown";
@@ -13,7 +15,14 @@ interface Props {
 
 function PostPreview({ title, topic, content }: Props) {
   const { me } = useContext(MainContext);
+  const sectRef = useRef(null);
   const { post_id } = useParams<{ post_id: string }>();
+
+  useEffect(() => {
+    const sect = sectRef.current as unknown as HTMLDivElement;
+    if (!sect) return;
+    sect.contentEditable = "true";
+  }, []);
 
   return (
     <section className="post-preview">
@@ -28,9 +37,11 @@ function PostPreview({ title, topic, content }: Props) {
           username={me.username}
           id={me.id}
         />
-        <h1>{title}</h1>
-        <Markdown content={content} />
-        <Topics topics={topic.split(" ")} />
+        <section ref={sectRef}>
+          <h1>{title}</h1>
+          <Markdown content={content} />
+          <Topics topics={topic.split(" ")} />
+        </section>
       </div>
     </section>
   );

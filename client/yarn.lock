@@ -2059,6 +2059,11 @@
   dependencies:
     "@types/jest" "*"
 
+"@types/turndown@^5.0.1":
+  "integrity" "sha512-N8Ad4e3oJxh9n9BiZx9cbe/0M3kqDpOTm2wzj13wdDUxDPjfjloWIJaquZzWE1cYTAHpjOH3rcTnXQdpEfS/SQ=="
+  "resolved" "https://registry.npmjs.org/@types/turndown/-/turndown-5.0.1.tgz"
+  "version" "5.0.1"
+
 "@types/uglify-js@*":
   "integrity" "sha512-sYAF+CF9XZ5cvEBkI7RtrG9g2GtMBkviTnBxYYyq+8BWvO4QtXfwwR6a2LFwCi4evMKZfpv6U43ViYvv17Wz3Q=="
   "resolved" "https://registry.npmjs.org/@types/uglify-js/-/uglify-js-3.12.0.tgz"
@@ -4548,6 +4553,11 @@
   "version" "2.4.2"
   dependencies:
     "domelementtype" "1"
+
+"domino@^2.1.6":
+  "integrity" "sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ=="
+  "resolved" "https://registry.npmjs.org/domino/-/domino-2.1.6.tgz"
+  "version" "2.1.6"
 
 "domutils@^1.5.1", "domutils@^1.7.0":
   "integrity" "sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg=="
@@ -11800,6 +11810,13 @@
   "version" "0.6.0"
   dependencies:
     "safe-buffer" "^5.0.1"
+
+"turndown@^7.1.1":
+  "integrity" "sha512-BEkXaWH7Wh7e9bd2QumhfAXk5g34+6QUmmWx+0q6ThaVOLuLUqsnkq35HQ5SBHSaxjSfSM7US5o4lhJNH7B9MA=="
+  "resolved" "https://registry.npmjs.org/turndown/-/turndown-7.1.1.tgz"
+  "version" "7.1.1"
+  dependencies:
+    "domino" "^2.1.6"
 
 "tweetnacl@^0.14.3", "tweetnacl@~0.14.0":
   "integrity" "sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q="

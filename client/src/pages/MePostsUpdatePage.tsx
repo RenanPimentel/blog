@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import CreatePost from "../components/CreatePost";
+import PostEdit from "../components/PostEdit";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
@@ -22,7 +23,8 @@ function MePostsUpdatePage() {
   return (
     <main className="wrapper">
       <h2>Update your post</h2>
-      <CreatePost sendPost={sendPost} postId={post_id} />
+      <PostEdit />
+      {/* <CreatePost sendPost={sendPost} postId={post_id} /> */}
     </main>
   );
 }

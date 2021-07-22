@@ -72,7 +72,7 @@ function Comment({
 
   const handleLikeClick = async () => {
     await api.put(`/comments/${id}/like`);
-    if (likes) {
+    if (userLikes) {
       setUserLikes(false);
       setLikeCount(likeCount - 1);
     } else {

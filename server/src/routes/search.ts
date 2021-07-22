@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 
   try {
     const postsPromise = db.query(
-      "SELECT title, posts.id, topic, content, username, author_id FROM posts RIGHT JOIN users ON users.id = posts.author_id WHERE title ILIKE $1 OR topic ILIKE $1",
+      "SELECT title, posts.id, topic, content, username, author_id, posts.created_at, posts.updated_at FROM posts RIGHT JOIN users ON users.id = posts.author_id WHERE title ILIKE $1 OR topic ILIKE $1",
       [query]
     );
     const usersPromise = db.query(

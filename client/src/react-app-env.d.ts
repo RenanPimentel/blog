@@ -44,6 +44,14 @@ interface IComment {
   avatar: string;
 }
 
+interface IBlock {
+  value: string;
+  prevValue: string;
+  tag: string;
+  id: string;
+  showOptions: boolean;
+}
+
 interface Action {
   type: string;
   payload: any;

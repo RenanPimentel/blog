@@ -71,7 +71,13 @@ function Notifications() {
         onClick={toggleNotificationContainer}
       >
         <FaRegBell className="notification-bell" />
-        {notifications.length > 0 && <div className="red-circle"></div>}
+        {notifications.length > 0 && (
+          <div className="red-circle">
+            <span>
+              {notifications.length < 10 ? notifications.length : "9+"}
+            </span>
+          </div>
+        )}
       </div>
       <div className="notifications" ref={notificationsContainerDiv}>
         {notifications.map((ntf, i) => (

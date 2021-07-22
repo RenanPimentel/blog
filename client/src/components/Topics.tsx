@@ -1,4 +1,6 @@
 import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 interface Props {
@@ -6,10 +8,16 @@ interface Props {
 }
 
 function Topics({ topics }: Props) {
-  topics = topics?.filter(Boolean);
+  const [currTopics, setCurrTopics] = useState<string[]>([]);
+
+  useEffect(() => {
+    const topicsSet = new Set(topics?.filter(Boolean));
+    setCurrTopics(Array.from(topicsSet));
+  }, [topics]);
+
   return (
     <div className="topic-container">
-      {Array.from(new Set(topics)).map((topic, i) => (
+      {currTopics.map((topic, i) => (
         <Link to={`/search?query=${topic}`} className="topic no-dec" key={i}>
           {topic}
         </Link>
