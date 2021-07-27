@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { FaRegBell } from "react-icons/fa";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
@@ -12,11 +6,11 @@ import Notification from "./Notification";
 
 function Notifications() {
   const { notifications, setNotifications } = useContext(MainContext);
-  const notificationsContainerDiv = useRef<HTMLDivElement>(null);
+  const [showContainer, setShowContainer] = useState(false);
   const [authors, setAuthors] = useState<IUser[]>([]);
 
   const toggleNotificationContainer = () => {
-    notificationsContainerDiv.current?.classList.toggle("show");
+    setShowContainer(!showContainer);
   };
 
   const dismissAll = async () => {
@@ -48,18 +42,6 @@ function Notifications() {
     return isClickable(target.parentElement);
   }, []);
 
-  useEffect(() => {
-    window.addEventListener("click", e => {
-      const target = e.target as HTMLElement;
-
-      if (
-        !anyParentContains(target, "notifications-container") ||
-        !isClickable(target)
-      )
-        notificationsContainerDiv.current?.classList.remove("show");
-    });
-  }, [anyParentContains, isClickable]);
-
   if (notifications.length === 0) {
     return <></>;
   }
@@ -79,7 +61,11 @@ function Notifications() {
           </div>
         )}
       </div>
-      <div className="notifications" ref={notificationsContainerDiv}>
+      <div
+        className={`notifications ${showContainer ? "show" : ""}`}
+        onBlur={() => setShowContainer(false)}
+        onMouseLeave={() => setShowContainer(false)}
+      >
         {notifications.map((ntf, i) => (
           <Notification {...ntf} author={authors[i]} key={i} />
         ))}

@@ -69,6 +69,7 @@ function LoginPage() {
             value={login}
             setValue={setLogin}
             error={loginError}
+            setError={setLoginError}
           />
           <Input
             inputDetails={{
@@ -80,6 +81,7 @@ function LoginPage() {
             value={password}
             setValue={setPassword}
             error={passwordError}
+            setError={setPasswordError}
           />
           <div className="form-control">
             <button type="submit" className="btn btn-large">

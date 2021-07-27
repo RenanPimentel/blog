@@ -11,7 +11,7 @@ const router = Router();
 router.get("/", async (_, res) => {
   try {
     const response = await db.query(
-      "SELECT * FROM (SELECT DISTINCT ON(posts.id) posts.id, author_id, title, username, avatar, content, topic, online, last_login, posts.updated_at FROM users RIGHT JOIN posts ON users.id = posts.author_id FULL JOIN post_views ON posts.id = post_id ORDER BY posts.id) as posts ORDER BY posts.updated_at DESC"
+      "SELECT * FROM (SELECT DISTINCT ON(posts.id) posts.id, author_id, title, username, avatar, content, topic, online, last_login, posts.updated_at, posts.created_at FROM users RIGHT JOIN posts ON users.id = posts.author_id FULL JOIN post_views ON posts.id = post_id ORDER BY posts.id) as posts ORDER BY posts.updated_at DESC"
     );
 
     response.rows.forEach(row => delete row.password);

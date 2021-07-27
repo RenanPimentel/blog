@@ -46,11 +46,12 @@ interface IComment {
 
 interface IBlock {
   value: string;
-  prevValue: string;
-  tag: string;
-  id: string;
+  editing: boolean;
   showOptions: boolean;
+  optionValue: OptionValue;
 }
+
+type OptionValue = "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "block";
 
 interface Action {
   type: string;

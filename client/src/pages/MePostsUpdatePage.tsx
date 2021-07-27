@@ -1,30 +1,47 @@
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import CreatePost from "../components/CreatePost";
 import PostEdit from "../components/PostEdit";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
 function MePostsUpdatePage() {
   const { updateMyPost, setTitle } = useContext(MainContext);
+  const [post, setPost] = useState<IPost>({});
   const { post_id } = useParams<{ post_id: string }>();
   const history = useHistory();
 
-  const sendPost = async (post: IPost) => {
+  const updatePost = async (post: IPost) => {
     await api.put(`/posts/${post_id}`, { post });
     updateMyPost(post_id, post);
     history.push("/me/posts");
   };
 
+  const getPost = useCallback(async () => {
+    const postResponse = await api.get<PostResponse>(`/posts/${post_id}`);
+    setPost(postResponse.data.data.post);
+  }, [post_id]);
+
   useEffect(() => {
-    setTitle("Update Posts • Three Dots");
-  }, [setTitle]);
+    getPost();
+  }, [getPost]);
+
+  useEffect(() => {
+    setTitle(`Update ${post.title} • Three Dots`);
+  }, [post.title, setTitle]);
+
+  if (!post.id) {
+    return <></>;
+  }
 
   return (
     <main className="wrapper">
       <h2>Update your post</h2>
-      <PostEdit />
-      {/* <CreatePost sendPost={sendPost} postId={post_id} /> */}
+      <PostEdit
+        sendPost={updatePost}
+        content={post.content}
+        title={post.title}
+        topic={post.topic}
+      />
     </main>
   );
 }

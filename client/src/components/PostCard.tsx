@@ -21,7 +21,7 @@ function PostCard({
   topic,
   isOwner,
   showBy,
-  updated_at,
+  created_at,
 }: Props) {
   const { me, removeMyPost } = useContext(MainContext);
   const history = useHistory();
@@ -61,10 +61,10 @@ function PostCard({
                 <Link
                   className="no-dec"
                   to={`/posts/${id}`}
-                  title={new Date(updated_at || "").toLocaleString()}
+                  title={new Date(created_at || "").toLocaleString()}
                 >
                   {" "}
-                  • {getTimeBetween(updated_at || "")}
+                  • {getTimeBetween(created_at || "")}
                 </Link>
               </span>
             </div>

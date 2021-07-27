@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import CreatePost from "../components/CreatePost";
+import PostEdit from "../components/PostEdit";
 import { MainContext } from "../context/context";
 import { api } from "../util/api";
 
@@ -9,11 +8,7 @@ function MePostsCreatePage() {
   const { addMyPost, socket, me, setTitle } = useContext(MainContext);
   const history = useHistory();
 
-  const sendPost = async (post: {
-    title: string;
-    topic: string;
-    content: string;
-  }) => {
+  const sendPost = async (post: IPost) => {
     const response = await api.post<PostResponse>("/posts", { post: post });
     const { post: completePost } = response.data.data;
     addMyPost(completePost);
@@ -49,7 +44,7 @@ function MePostsCreatePage() {
   return (
     <main className="wrapper">
       <h2 className="fit-content">Create new post</h2>
-      <CreatePost sendPost={sendPost} />
+      <PostEdit sendPost={sendPost} />
     </main>
   );
 }
